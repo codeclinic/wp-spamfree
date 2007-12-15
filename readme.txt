@@ -11,9 +11,9 @@ Plugin URL: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Comment spam has been a problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. The WP-SpamFree plugin virtually eliminates automated comment spam from bots.
 
 = Background =
-Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we managed had comment moderation enabled, Akismet and Bad Behavior plugins installed (which are fantastic plugins), but we still had a ton of comments tagged as spam by Akismet that we or our clients had to sort through. This wasted a lot of valuable time.
+Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
 
-Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show upon the Akismet Spam page each day - now the daily average is zero spam comments.
+Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show up on the Akismet Spam page each day - now the daily average is zero spam comments.
 
 = Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
