@@ -13,11 +13,11 @@ Comment spam has been a problem for bloggers since the inception of blogs, and i
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we managed had comment moderation enabled, Akismet and Bad Behavior plugins installed (which are fantastic plugins), but we still had a ton of comments tagged as spam by Akismet that we or our clients had to sort through. This wasted a lot of valuable time.
 
-Comment spam stems from an older problem – automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show upon the Akismet Spam page each day – now the daily average is zero spam comments.
+Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show upon the Akismet Spam page each day - now the daily average is zero spam comments.
 
 = Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
-2. No CAPTCHA's, challenge questions or other inconvenience to site visitors – it just works.
+2. No CAPTCHA's, challenge questions or other inconvenience to site visitors - it just works.
 3. The beauty of this plugin is the simplicity. Sometimes the best solutions are the simplest ones.
 4. The code is has an extremely low overhead and won't slow down your blog. (No database reading or writing.)
 5. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
@@ -30,9 +30,11 @@ Some would argue that this is too simplistic an approach, and that some spammers
 == Installation ==
 1. After downloading, unzip file and upload the enclosed "wp-spamfree" directory to your WordPress plugins folder ("wp-content/plugins/"). Then activate on your WordPress Plugins page.
 
-2. Open wp-comments-post.php in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with nocache_headers(); (located somewhere in the first few lines of code), add this line to your code:
+2. Open wp-comments-post.php in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with nocache_headers(); (located somewhere in the first few lines of code), add this single line to your code:
 
 include( dirname(__FILE__) . '/wp-content/plugins/wp-spamfree/inc-commentvalidation.php' );
+
+(The previous line may not show up correctly on WordPress.org, so copy it from the readme.txt file.)
 
 You're done! Sit back and see what it feels like to live without comment spam!
 
