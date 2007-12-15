@@ -1,5 +1,5 @@
 === WP-SpamFree ===
-Contributors: Scott Allen
+Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.1
 Stable tag: 1.03
