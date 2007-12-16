@@ -61,20 +61,20 @@ If you're having trouble getting things to work after installing the plugin, her
 5. If have checked these, and still can't quite get it working, please either post a support request in the comments section of the WP-SpamFree release announcement blog post [http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-Version 1.03, released 12/01/07
+Version 1.03, released 12/01/07 - 
 * Improved compatibility and minor bug fixes. Fixes a problem that some people had when their blog uses "Fancy Permalinks". 
 
-Version 1.02, released 11/14/07
+Version 1.02, released 11/14/07 - 
 * While 1.01 fixed several of the problems with 1.0, it somehow interfered with comment moderation. To fix it I begrudgingly had to go back to manually editing the wp-comments-post.php file. I was trying to make the installation process as simple as possible for users. That's one of the frustrating things in development - you fix one problem and another pops up. C'est la vie. I'll keep working on eliminating the external editing for future versions.
 * The installation process is still very easy.
 
-Version 1.01, released 11/13/07
+Version 1.01, released 11/13/07 - 
 * Simplified installation. No need to edit external files as in Version 1.0.
 * Improved compatibility.
 
 = Updates / Documentation =
 For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: 
-[http://www.hybrid6.com/webgeek/plugins/wp-spamfree/](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/)
+http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 
 = WordPress Security Note =
-As with any WordPress plugin, for security reasons, you should only download plugins from the author's site and from official WordPress repositories. When other sites host a plugin that is developed by someone else, they may inject code into that could compromise the security of your blog. We cannot endorse a version of this that you may have downloaded from another site. If you have downloaded the "WP-SpamFree" plugin from another site, please download the current release from the official site, [http://www.hybrid6.com/webgeek/plugins/wp-spamfree/](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/), or from the official WordPress.org page at: http://wordpress.org/extend/plugins/wp-spamfree/.
+As with any WordPress plugin, for security reasons, you should only download plugins from the author's site and from official WordPress repositories. When other sites host a plugin that is developed by someone else, they may inject code into that could compromise the security of your blog. We cannot endorse a version of this that you may have downloaded from another site. If you have downloaded the "WP-SpamFree" plugin from another site, please download the current release from the official site, http://www.hybrid6.com/webgeek/plugins/wp-spamfree/, or from the official WordPress.org page at: http://wordpress.org/extend/plugins/wp-spamfree/.
