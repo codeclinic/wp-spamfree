@@ -32,7 +32,7 @@ Some would argue that this is too simplistic an approach, and that some spammers
 
 2. Open wp-comments-post.php in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with nocache_headers(); (located somewhere in the first few lines of code), add this single line to your code:
 
-include( dirname(__FILE__) . '/wp-content/plugins/wp-spamfree/inc-commentvalidation.php' );
+include(dirname(__FILE__).'/wp-content/plugins/wp-spamfree/inc-commentvalidation.php');
 
 (The previous line may not show up correctly on WordPress.org, so copy it from the readme.txt file.)
 
