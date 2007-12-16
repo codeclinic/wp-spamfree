@@ -63,16 +63,22 @@ If you're having trouble getting things to work after installing the plugin, her
 5. If have checked these, and still can't quite get it working, please either post a support request in the comments section of the WP-SpamFree release announcement blog post [http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-Version 1.03, released 12/01/07  
-1. Improved compatibility and minor bug fixes. 
+Version 1.03, released 12/01/07: 
+
+1. Improved compatibility and minor bug fixes.
+ 
 2. Fixes a problem that some people had when their blog uses "Fancy Permalinks". 
 
-Version 1.02, released 11/14/07  
+Version 1.02, released 11/14/07: 
+
 1. While 1.01 fixed several of the problems with 1.0, it somehow interfered with comment moderation. To fix it I begrudgingly had to go back to manually editing the wp-comments-post.php file. I was trying to make the installation process as simple as possible for users. That's one of the frustrating things in development - you fix one problem and another pops up. C'est la vie. I'll keep working on eliminating the external editing for future versions.
+
 2. The installation process is still very easy.
 
-Version 1.01, released 11/13/07  
+Version 1.01, released 11/13/07: 
+
 1. Simplified installation. No need to edit external files as in Version 1.0.
+
 2. Improved compatibility.
 
 = Updates / Documentation =
