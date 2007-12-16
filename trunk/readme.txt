@@ -60,7 +60,7 @@ If you're having trouble getting things to work after installing the plugin, her
 
 4. If you have JavaScript and cookies enabled, and get a WordPress error message of "Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.", then there may be a JavaScript conflict that is preventing the WP-SpamFree code from setting a cookie. If you are familiar with JavaScript, view the source code of your page. JavaScript code containing "window.onload" that appears after the line of code calling the wpSpamFree.js file may be conflicting with the WP-SpamFree code.
 
-5. If have checked these, and still can't quite get it working, please either post a support request in the comments section of the WP-SpamFree release announcement blog post [http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
+5. If have checked these, and still can't quite get it working, please post a support request in the comments section of the WP-SpamFree release announcement blog post [http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
 Version 1.03, released 12/01/07: 
