@@ -8,6 +8,8 @@ Author URL: http://www.hybrid6.com/webgeek/
 Plugin URL: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 
 == Description ==
+
+= A Powerful Weapon Against Comment Spam =
 Comment spam has been a problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. The WP-SpamFree plugin virtually eliminates automated comment spam from bots.
 
 = Background =
@@ -23,9 +25,9 @@ Comment spam stems from an older problem - automated spamming of email contact f
 5. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
 
 = How It Works =
-Most of the spam hitting your blog originates from bots. Few bots can process JavaScript. Few bots can process cookies. Fewer still, can handle both. This plugin uses a combo of JavaScript and cookies, since most bots choke on them, to weed out the humans from bots, preventing 99% of automated spam from ever getting to your site. Almost 100% of web site visitors will have these turned on by default, so this type of solution works silently in the background, with no inconviences. There may be a few users (approx 2%) that have JavaScript and/or cookies turned off by default, but they will be prompted to turn those back on to post their comment. Overall, the few might be inconvenienced because they have JS and cookies turned off will be far fewer than the 100% who would be annoyed by CAPTCHA's, challenge questions, and other validation methods.
+Most of the spam hitting your blog originates from bots. Few bots can process JavaScript. Few bots can process cookies. Fewer still, can handle both. This plugin uses a combo of JavaScript and cookies, since most bots choke on them, to weed out the humans from bots, preventing 99% of automated spam from ever getting to your site. Almost 100% of web site visitors will have these turned on by default, so this type of solution works silently in the background, with no inconveniences. There may be a few users (approx 2%) that have JavaScript and/or cookies turned off by default, but they will be prompted to turn those back on to post their comment. Overall, the few might be inconvenienced because they have JS and cookies turned off will be far fewer than the 100% who would be annoyed by CAPTCHA's, challenge questions, and other validation methods.
 
-Some would argue that this is too simplistic an approach, and that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience for people, and a 99% reduction in spam would definitely make a difference for most bloggers. :) The bottom line, is that this plugin just plain works, and is a great weapon against spam. Sometimes the best solutions are the simplest ones! 
+Some would argue that this is too simplistic an approach, and that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. It's simply a numbers game. Statistics tell us that an effective solution would involve using a technology that few bots can handle. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience, and a 99% reduction in spam would definitely make a difference for most bloggers and site visitors. :) The bottom line, is that this plugin just plain works, and is a powerful weapon against spam. Sometimes the best solutions are the simplest ones! 
 
 == Installation ==
 1. After downloading, unzip file and upload the enclosed "wp-spamfree" directory to your WordPress plugins folder ("wp-content/plugins/"). Then activate on your WordPress Plugins page.
@@ -61,16 +63,17 @@ If you're having trouble getting things to work after installing the plugin, her
 5. If have checked these, and still can't quite get it working, please either post a support request in the comments section of the WP-SpamFree release announcement blog post [http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-Version 1.03, released 12/01/07 - 
-* Improved compatibility and minor bug fixes. Fixes a problem that some people had when their blog uses "Fancy Permalinks". 
+Version 1.03, released 12/01/07  
+1. Improved compatibility and minor bug fixes. 
+2. Fixes a problem that some people had when their blog uses "Fancy Permalinks". 
 
-Version 1.02, released 11/14/07 - 
-* While 1.01 fixed several of the problems with 1.0, it somehow interfered with comment moderation. To fix it I begrudgingly had to go back to manually editing the wp-comments-post.php file. I was trying to make the installation process as simple as possible for users. That's one of the frustrating things in development - you fix one problem and another pops up. C'est la vie. I'll keep working on eliminating the external editing for future versions.
-* The installation process is still very easy.
+Version 1.02, released 11/14/07  
+1. While 1.01 fixed several of the problems with 1.0, it somehow interfered with comment moderation. To fix it I begrudgingly had to go back to manually editing the wp-comments-post.php file. I was trying to make the installation process as simple as possible for users. That's one of the frustrating things in development - you fix one problem and another pops up. C'est la vie. I'll keep working on eliminating the external editing for future versions.
+2. The installation process is still very easy.
 
-Version 1.01, released 11/13/07 - 
-* Simplified installation. No need to edit external files as in Version 1.0.
-* Improved compatibility.
+Version 1.01, released 11/13/07  
+1. Simplified installation. No need to edit external files as in Version 1.0.
+2. Improved compatibility.
 
 = Updates / Documentation =
 For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: 
