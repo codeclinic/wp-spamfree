@@ -3,9 +3,6 @@ Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.1
 Stable tag: 1.03
-Author: Scott Allen
-Author URL: http://www.hybrid6.com/webgeek/
-Plugin URL: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 
 A powerful weapon against comment spam. Virtually eliminates automated comment spam from bots.
 
