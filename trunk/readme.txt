@@ -4,7 +4,7 @@ Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.1
 Stable tag: 1.03
 
-A powerful weapon against comment spam. Virtually eliminates automated comment spam from bots.
+A powerful weapon against comment spam. Virtually eliminates automated comment spam.
 
 == Description ==
 
