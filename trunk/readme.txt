@@ -57,6 +57,9 @@ If you're having trouble getting things to work after installing the plugin, her
 
 5. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
+= Notes =
+WP-SpamFree was created specifically to stop comment spam, not trackback and pingback spam. Akismet is able to recognize the latter two fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. 
+
 = Changelog =
 Version 1.03, released 12/01/07: 
 
