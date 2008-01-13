@@ -1,8 +1,8 @@
 === WP-SpamFree ===
 Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
-Tested up to: 2.3.1
-Stable tag: 1.03
+Tested up to: 2.3.2
+Stable tag: 1.1
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -29,11 +29,15 @@ Most of the spam hitting your blog originates from bots. Few bots can process Ja
 Some would argue that this is too simplistic an approach, and that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. It's simply a numbers game. Statistics tell us that an effective solution would involve using a technology that few bots can handle. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience, and a 99% reduction in spam would definitely make a difference for most bloggers and site visitors. :) The bottom line, is that this plugin just plain works, and is a powerful weapon against spam. Sometimes the best solutions are the simplest ones! 
 
 == Installation ==
-1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`. Then activate on your WordPress Plugins page.
+1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
 2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: `include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
 
+3. As always, **activate** the plugin on your WordPress plugins page.
+
 You're done! Sit back and see what it feels like to live without comment spam!
+
+**Note:** Each time you upgrade WordPress, be sure to repeat step #2 after the update, as it will have overwritten your changes to `wp-comments-post.php`.
 
 = Upgrading from Version 1.0 =
 Simply undo any edits you made to your `header.php` and `wp-comments-post.php` files when installing Version 1.0. Then install the most recent version!
@@ -55,12 +59,19 @@ If you're having trouble getting things to work after installing the plugin, her
 
 4. If you have JavaScript and cookies enabled, and get a WordPress error message asking you to enable these and go back to the comment form, then there may be a JavaScript conflict that is preventing the WP-SpamFree code from setting a cookie. If you are familiar with JavaScript, view the source code of your page. JavaScript code containing "window.onload" that appears after the line of code calling the `wpSpamFree.js` file may be conflicting with the WP-SpamFree code.
 
-5. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
+5. If you have recently upgraded WordPress, you will need to repeat step #2 from the installation instructions, as the update will have overwritten your changes to `wp-comments-post.php`.
+
+6. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Notes =
 WP-SpamFree was created specifically to stop comment spam, not trackback and pingback spam. Akismet is able to recognize the latter two fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. 
 
 = Changelog =
+Version 1.1, released 01/13/08: 
+
+* Improved security by preventing site visitors from browsing contents of private directories. 
+* Improved SEO by ensuring plugin pages don't get indexed in search engines. You don't want backend pages indexed for a number of reason, including security. 
+
 Version 1.03, released 12/01/07: 
 
 * Improved compatibility and minor bug fixes.
