@@ -53,6 +53,8 @@ if (!class_exists('wgSpamFree')) {
 </ol>	
 
 <p>You're done! Sit back and see what it feels like to live without comment spam!</p>
+
+<p><strong>Note:</strong> Each time you upgrade WordPress, be sure to repeat step #2 after the update, as it will have overwritten your changes to <strong>wp-comments-post.php</strong>.</p>
 					
 	<p>&nbsp;</p>
 	
