@@ -1,4 +1,4 @@
-// WP-SpamFree 1.03 JS Code :: BEGIN
+// WP-SpamFree 1.1 JS Code :: BEGIN
 
 // Cookie Handler :: BEGIN
 function GetCookie( name ) {
@@ -45,4 +45,4 @@ function commentValidation2() {
 
 window.onload = commentValidation2();
 
-// WP-SpamFree 1.03 JS Code :: END
+// WP-SpamFree 1.1 JS Code :: END
