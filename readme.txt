@@ -11,17 +11,17 @@ A powerful anti-spam plugin that virtually eliminates automated comment spam fro
 = A Powerful Weapon Against Comment Spam =
 Comment spam has been a problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **The WP-SpamFree plugin virtually eliminates automated comment spam from bots.**
 
-= Background =
-Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
-
-Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show up on the Akismet Spam page each day - now the daily average is zero spam comments.
-
 = Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
 2. No CAPTCHA's, challenge questions or other inconvenience to site visitors - it just works.
 3. The beauty of this plugin is the simplicity. Sometimes the best solutions are the simplest ones.
 4. The code is has an extremely low overhead and won't slow down your blog. (No database reading or writing.)
 5. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
+
+= Background =
+Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
+
+Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show up on the Akismet Spam page each day - now the daily average is zero spam comments.
 
 = How It Works =
 Most of the spam hitting your blog originates from bots. Few bots can process JavaScript. Few bots can process cookies. Fewer still, can handle both. This plugin uses a combo of JavaScript and cookies, since most bots choke on them, to weed out the humans from bots, preventing 99% of automated spam from ever getting to your site. Almost 100% of web site visitors will have these turned on by default, so this type of solution works silently in the background, with no inconveniences. There may be a few users (approx 2%) that have JavaScript and/or cookies turned off by default, but they will be prompted to turn those back on to post their comment. Overall, the few might be inconvenienced because they have JS and cookies turned off will be far fewer than the 100% who would be annoyed by CAPTCHA's, challenge questions, and other validation methods.
