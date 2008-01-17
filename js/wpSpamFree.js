@@ -1,4 +1,4 @@
-// WP-SpamFree 1.1 JS Code :: BEGIN
+// WP-SpamFree 1.2 JS Code :: BEGIN
 
 // Cookie Handler :: BEGIN
 function GetCookie( name ) {
@@ -35,14 +35,11 @@ function DeleteCookie( name, path, domain ) {
 }
 // Cookie Handler :: END
 
-function commentValidation1() {
-	document.getElementById("submit").setAttribute("onclick", "SetCookie('WPCOMVALJ','1')");
-}
 
-function commentValidation2() {
+function commentValidation() {
 	SetCookie('WPCOMVALJ','1','','/');
 }
 
-window.onload = commentValidation2();
+commentValidation();
 
-// WP-SpamFree 1.1 JS Code :: END
+// WP-SpamFree 1.2 JS Code :: END

@@ -2,7 +2,7 @@
 Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.2
-Stable tag: 1.1
+Stable tag: 1.2
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -31,7 +31,10 @@ Some would argue that this is too simplistic an approach, and that some spammers
 == Installation ==
 1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
-2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: `include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
+2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: 
+`include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
+
+(Be sure to remove backticks if copying this line from the readme.txt.)
 
 3. As always, **activate** the plugin on your WordPress plugins page.
 
@@ -67,6 +70,10 @@ If you're having trouble getting things to work after installing the plugin, her
 WP-SpamFree was created specifically to stop comment spam, not trackback and pingback spam. Akismet is able to recognize the latter two fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. 
 
 = Changelog =
+Version 1.2, released 01/17/08: 
+
+* Improved JavaScript compatibility with Internet Explorer 6 and 7. Even though everything worked perfectly in all browsers, it triggered a JavaScript error icon in the bottom of the Internet Explorer browser window due to IE's lack of standards compliance. This worried a few users, so I took care of it.
+
 Version 1.1, released 01/13/08: 
 
 * Improved security by preventing site visitors from browsing contents of private directories. 

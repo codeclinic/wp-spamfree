@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.1
+Version: 1.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -48,7 +48,7 @@ if (!class_exists('wgSpamFree')) {
     <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
 	<li>Open <strong>wp-comments-post.php</strong> in the root directory of your WordPress install. Near the beginning of the file and <strong>immediately</strong> after the line with <strong>nocache_headers();</strong> (located somewhere around lines 4-10), add this line to your code:<br /><br />
 	
-	<code>include( dirname(__FILE__) . '/wp-content/plugins/wp-spamfree/inc-commentvalidation.php' );</code><br />&nbsp;</li>
+	<code>include( dirname(__FILE__) . "/wp-content/plugins/wp-spamfree/inc-commentvalidation.php" );</code><br />&nbsp;</li>
 	<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.</li>
 </ol>	
 
@@ -80,7 +80,7 @@ If you're having trouble getting things to work after installing the plugin, her
 	
 	<p>&nbsp;</p>
 	
-	<p><em>Version 1.1</em></p>
+	<p><em>Version 1.2</em></p>
 	
 			<p>&nbsp;</p>
 			</div>
