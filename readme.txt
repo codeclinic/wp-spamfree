@@ -31,8 +31,7 @@ Some would argue that this is too simplistic an approach, and that some spammers
 == Installation ==
 1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
-2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: 
-`include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
+2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: `include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
 
 3. As always, **activate** the plugin on your WordPress plugins page.
 
