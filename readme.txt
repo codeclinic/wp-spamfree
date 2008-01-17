@@ -34,8 +34,6 @@ Some would argue that this is too simplistic an approach, and that some spammers
 2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: 
 `include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
 
-(Be sure to remove backticks if copying this line from the readme.txt.)
-
 3. As always, **activate** the plugin on your WordPress plugins page.
 
 You're done! Sit back and see what it feels like to live without comment spam!
