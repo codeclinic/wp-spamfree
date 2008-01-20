@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.2
+Version: 1.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,19 +25,96 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if (!class_exists('wgSpamFree')) {
-    class wgSpamFree {
+// Prevent Spammers from overloading server - Set Delay
+define('SPAMFREE_DELAY', 10);
 
-	    function wgSpamFree(){
-		add_action("admin_menu", array(&$this,"add_admin_pages"));
-		add_action('wp_head', array(&$this, 'wp_head_intercept'));
-        }
+function spamfree_init() {
+	session_start();
+	$wpSpamFreeVer="1.3";
+	$_SESSION["wpSpamFreeVer"]=$wpSpamFreeVer;
+	if (!isset($_SESSION["ServerRequestTime"])) {
+		$_SESSION["ServerRequestTime"]=$_SERVER['REQUEST_TIME'];
+		}
+	if (!isset($_SESSION["CommentValidationKeyP"])||!isset($_COOKIE['WPCOMVALP'])) {
+		$randomComValCodeP = createRandomKey();
+		$CommentValidationKeyP=$_SESSION["ServerRequestTime"].'-'.$randomComValCodeP;
+		//$CommentValidationKeyP=$_SERVER['REQUEST_TIME'].'!'.$randomComValCodeP;
+		$_SESSION["CommentValidationKeyP"]=$CommentValidationKeyP;
+		setcookie('WPCOMVALP', $CommentValidationKeyP, 0, '/');
+		}
+	}
 	
+function createRandomKey() {
+    $chars = "abcdefghijkmnopqrstuvwxyz023456789";
+    srand((double)microtime()*1000000);
+    $i = 0;
+    $pass = '' ;
+
+    while ($i <= 7) {
+        $num = rand() % 33;
+        $tmp = substr($chars, $num, 1);
+        $keyCode = $keyCode . $tmp;
+        $i++;
+    }
+    return $keyCode;
+}
+
+function spamfree_reset_key() {
+	$_SESSION["FormValidationKeyJS"]='';
+	$WPFormValidationKeyJS='';
+	}
+
+function spamfree_comment_form() {
+	$randomComValCodeJS1 = createRandomKey();
+	$randomComValCodeJS2 = createRandomKey();
+	$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
+	$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
+	echo '<script type="text/javascript">'."\n";
+	echo 'document.write(\'<input type="hidden" id="comment_post_verification_sf" name="comment_post_verification_sf" value="'.$FormValidationKeyJS.'">\');'."\n";
+	echo '</script>'."\n";
+	echo '<noscript><p>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</p></noscript>';
+	}
+
+function spamfree_allowed_post($approved) {
+	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
+	$WPCommentValidationJS=$_COOKIE['WPCOMVALJ'];
+	$WPCommentValidationP=$_COOKIE['WPCOMVALP'];
+	$WPFormValidationKeyJS=$_POST['comment_post_verification_sf'];	
+	//if($WPCommentValidationJS=='1'&&$WPCommentValidationP==$_SESSION["CommentValidationKeyP"]) {
+	if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPCommentValidationP==$_SESSION["CommentValidationKeyP"]&&eregi($_SESSION["ServerRequestTime"],$WPCommentValidationP)&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!=''&&$_SESSION["CommentValidationKeyP"]!='') {
+		spamfree_reset_key();
+		return $approved;
+		}
+	else {
+		// STATUS VERIFICATION
+		spamfree_reset_key();
+		sleep(SPAMFREE_DELAY);
+    	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
+		return false;
+		}
+	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: END
+	}
+
+if (!class_exists('wpSpamFree')) {
+    class wpSpamFree {
+
+	    function wpSpamFree(){
+		add_action('init', 'spamfree_init');
+		add_action('admin_menu', array(&$this,'add_admin_pages'));
+		add_action('wp_head', array(&$this, 'wp_head_intercept'));
+		add_action('comment_form', 'spamfree_comment_form');
+		add_action('pre_comment_approved', 'spamfree_allowed_post');
+        }
+
 		function add_admin_pages(){
 		add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 		}
 		
 		function output_existing_menu_sub_admin_page(){
+			$wpSpamFreeVer=$_SESSION["wpSpamFreeVer"];
+			if ($_SESSION["wpSpamFreeVer"]!='') {
+				$wpSpamFreeVerAdmin='Version '.$wpSpamFreeVer;
+				}
 		?>
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
@@ -46,15 +123,10 @@ if (!class_exists('wgSpamFree')) {
 
 <ol>
     <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
-	<li>Open <strong>wp-comments-post.php</strong> in the root directory of your WordPress install. Near the beginning of the file and <strong>immediately</strong> after the line with <strong>nocache_headers();</strong> (located somewhere around lines 4-10), add this line to your code:<br /><br />
-	
-	<code>include( dirname(__FILE__) . "/wp-content/plugins/wp-spamfree/inc-commentvalidation.php" );</code><br />&nbsp;</li>
 	<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.</li>
 </ol>	
-
-<p>You're done! Sit back and see what it feels like to live without comment spam!</p>
-
-<p><strong>Note:</strong> Each time you upgrade WordPress, be sure to repeat step #2 after the update, as it will have overwritten your changes to <strong>wp-comments-post.php</strong>.</p>
+<p>&nbsp;</p>
+<p>You're done! Sit back and see what it feels like to blog without comment spam!</p>
 					
 	<p>&nbsp;</p>
 	
@@ -64,8 +136,6 @@ If you're having trouble getting things to work after installing the plugin, her
 <li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
 <li>Clear your browser's cache and clear your cookies. Then reload the page.<br />&nbsp;</li>
 <li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
-<li>If you have JavaScript and cookies enabled, and get a WordPress error message of &ldquo;Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.&rdquo;, then there may be a JavaScript conflict that is preventing the WP-SpamFree code from setting a cookie. If you are familiar with JavaScript, view the source code of your page. JavaScript code containing "window.onload" that appears after the line of code calling the wpSpamFree.js file may be conflicting with the WP-SpamFree code.<br />&nbsp;</li>
-<li>If you have recently upgraded WordPress, you will need to repeat step #2 from the installation instructions, as the update will have overwritten your changes to <strong>wp-comments-post.php</strong>.<br />&nbsp;</li>
 <li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request">send an email</a>.</li>
 </ol>
 <p>&nbsp;</p>			
@@ -76,11 +146,11 @@ If you're having trouble getting things to work after installing the plugin, her
 	
 	<p>&nbsp;</p>
 	
-	<p><strong>How does it feel to live without automated comment spam?</strong> If you're happy with WP-SpamFree, feel free to <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank">post a comment letting others know!</a></p>
+	<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, feel free to <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank">post a comment letting others know!</a></p>
 	
 	<p>&nbsp;</p>
 	
-	<p><em>Version 1.2</em></p>
+	<p><em><?=$wpSpamFreeVerAdmin?></em></p>
 	
 			<p>&nbsp;</p>
 			</div>
@@ -88,17 +158,23 @@ If you're having trouble getting things to work after installing the plugin, her
 		}
 
 
-function wp_head_intercept(){
-	echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFree.js"></script>';
-}
-
+		function wp_head_intercept(){
+			$wpSpamFreeVer=$_SESSION["wpSpamFreeVer"];
+			if ($_SESSION["wpSpamFreeVer"]!='') {
+				$wpSpamFreeVerJS=' v'.$wpSpamFreeVer;
+				}
+			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: BEGIN -->'."\n";
+			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFree.js"></script> '."\n";
+			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: END -->'."\n";
+			}
 
     }
 }
 
+
 //instantiate the class
-if (class_exists('wgSpamFree')) {
-	$wgSpamFree = new wgSpamFree();
+if (class_exists('wpSpamFree')) {
+	$wpSpamFree = new wpSpamFree();
 }
 
 ?>
