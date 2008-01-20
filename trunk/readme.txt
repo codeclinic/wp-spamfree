@@ -2,7 +2,7 @@
 Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.2
-Stable tag: 1.2
+Stable tag: 1.3
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -17,6 +17,7 @@ Comment spam has been a problem for bloggers since the inception of blogs, and i
 3. The beauty of this plugin is the simplicity. Sometimes the best solutions are the simplest ones.
 4. The code is has an extremely low overhead and won't slow down your blog. (No database reading or writing.)
 5. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
+6. Version 1.3 doesn't require editing any external files!
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
@@ -31,20 +32,15 @@ Some would argue that this is too simplistic an approach, and that some spammers
 == Installation ==
 1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
-2. Open `wp-comments-post.php` in the root directory of your WordPress install. Near the beginning of the file and immediately after the line with `nocache_headers();` (located somewhere in the first few lines of code), add this single line to your code: `include(dirname(__FILE__)."/wp-content/plugins/wp-spamfree/inc-commentvalidation.php");`
-
-3. As always, **activate** the plugin on your WordPress plugins page.
-
+2. As always, **activate** the plugin on your WordPress plugins page.
+e
 You're done! Sit back and see what it feels like to live without comment spam!
-
-**Note:** Each time you upgrade WordPress, be sure to repeat step #2 after the update, as it will have overwritten your changes to `wp-comments-post.php`.
 
 = Upgrading from Version 1.0 =
 Simply undo any edits you made to your `header.php` and `wp-comments-post.php` files when installing Version 1.0. Then install the most recent version!
 
 = For Best Results =
-This plugin is design to stop automated comment spam (which accounts for over 90% of comment spam), but it doesn't stop human comment spam. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, coupled with the Akismet (or equivalent) plugin.
-
+WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 90% of comment spam), not human comment spam, trackback spam or pingback spam. Akismet is able to recognize the latter three fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, coupled with the Akismet (or equivalent) plugin.
 
 == Other Notes ==
 
@@ -57,16 +53,15 @@ If you're having trouble getting things to work after installing the plugin, her
 
 3. Make sure JavaScript and cookies are enabled. (JavaScript is different from Java. Java is not required.)
 
-4. If you have JavaScript and cookies enabled, and get a WordPress error message asking you to enable these and go back to the comment form, then there may be a JavaScript conflict that is preventing the WP-SpamFree code from setting a cookie. If you are familiar with JavaScript, view the source code of your page. JavaScript code containing "window.onload" that appears after the line of code calling the `wpSpamFree.js` file may be conflicting with the WP-SpamFree code.
-
-5. If you have recently upgraded WordPress, you will need to repeat step #2 from the installation instructions, as the update will have overwritten your changes to `wp-comments-post.php`.
-
-6. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
-
-= Notes =
-WP-SpamFree was created specifically to stop comment spam, not trackback and pingback spam. Akismet is able to recognize the latter two fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. 
+4. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
+Version 1.3, released 01/20/08: 
+
+* This is a major upgrade!!
+* Super-simple installation - truly plug and play. No need to edit external files!! I've been working on making this possible since version 1.01 and finally got the bugs worked out.
+* Added advanced verification methods that enable WP-SpamFree to beat potential evolutions in spambots. It now creates multiple randomly generated verification keys, and a few other tricks that are near impossible for comment spambots to bypass. I'm thinking ahead here. No bots have beaten it yet, but eventually hackers will try to find a way to break through. Even if hackers try to reverse engineer it or create evolving smart bots, WP-SpamFree is smarter.
+
 Version 1.2, released 01/17/08: 
 
 * Improved JavaScript compatibility with Internet Explorer 6 and 7. Even though everything worked perfectly in all browsers, it triggered a JavaScript error icon in the bottom of the Internet Explorer browser window due to IE's lack of standards compliance. This worried a few users, so I took care of it.
