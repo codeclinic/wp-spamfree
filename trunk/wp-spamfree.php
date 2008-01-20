@@ -33,24 +33,16 @@ function spamfree_init() {
 	$wpSpamFreeVer="1.3";
 	$_SESSION["wpSpamFreeVer"]=$wpSpamFreeVer;
 	if (!isset($_SESSION["ServerRequestTime"])) {
-		$_SESSION["ServerRequestTime"]=time();
-		//$_SESSION["ServerRequestTime"]=$_SERVER['REQUEST_TIME'];
+		$_SESSION["ServerRequestTime"]=$_SERVER['REQUEST_TIME'];
 		}
-	if (!isset($_SESSION["CommentValidationKeyP"])||!isset($_COOKIE['WPCOMVALP'])) {
-		$randomComValCodeP = createRandomKey();
-		$CommentValidationKeyP=$_SESSION["ServerRequestTime"].'-'.$randomComValCodeP;
-		//$CommentValidationKeyP=$_SERVER['REQUEST_TIME'].'!'.$randomComValCodeP;
-		$_SESSION["CommentValidationKeyP"]=$CommentValidationKeyP;
-		setcookie('WPCOMVALP', $CommentValidationKeyP, 0, '/');
-		}
-	if (!isset($_SESSION["FormValidationKeyJS"])||!isset($_COOKIE['WPCOMVALJSF'])) {
+
+	if (!isset($_SESSION["FormValidationKeyJS"])) {
 		$randomComValCodeJS1 = createRandomKey();
 		$randomComValCodeJS2 = createRandomKey();
 		$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
 		$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
-		setcookie('WPCOMVALJSF', $FormValidationKeyJS, 0, '/');
-
 		}
+
 	}
 	
 function createRandomKey() {
@@ -74,6 +66,10 @@ function spamfree_reset_key() {
 	}
 
 function spamfree_comment_form() {
+	//$randomComValCodeJS1 = createRandomKey();
+	//$randomComValCodeJS2 = createRandomKey();
+	//$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
+	//$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
 	echo '<script type="text/javascript">'."\n";
 	echo 'document.write(\'<input type="hidden" id="comment_post_verification_sf" name="comment_post_verification_sf" value="'.$_SESSION["FormValidationKeyJS"].'">\');'."\n";
 	echo '</script>'."\n";
@@ -83,18 +79,24 @@ function spamfree_comment_form() {
 function spamfree_allowed_post($approved) {
 	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
 	$WPCommentValidationJS=$_COOKIE['WPCOMVALJ'];
-	$WPCommentValidationP=$_COOKIE['WPCOMVALP'];
 	$WPFormValidationKeyJS=$_POST['comment_post_verification_sf'];	
-	//if($WPCommentValidationJS=='1'&&$WPCommentValidationP==$_SESSION["CommentValidationKeyP"]) {
+	//	if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!='') {
 	if($WPCommentValidationJS=='xTJ97pDzW3') {
-	//if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPCommentValidationP==$_SESSION["CommentValidationKeyP"]&&eregi($_SESSION["ServerRequestTime"],$WPCommentValidationP)&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!=''&&$_SESSION["CommentValidationKeyP"]!='') {
-		spamfree_reset_key();
+		//spamfree_reset_key();
 		return $approved;
 		}
 	else {
 		// STATUS VERIFICATION
-		spamfree_reset_key();
-		sleep(SPAMFREE_DELAY);
+		echo $WPCommentValidationJS."<br>";
+		echo $_COOKIE['WPCOMVALJ']."<br>";
+		echo $WPFormValidationKeyJS."<br>";
+		echo $_POST['comment_post_verification_sf']."<br>";
+		echo $_SESSION["FormValidationKeyJS"]."<br>";
+		
+		
+		
+		//spamfree_reset_key();
+		//sleep(SPAMFREE_DELAY);
     	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
 		return false;
 		}
