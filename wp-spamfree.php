@@ -36,13 +36,14 @@ function spamfree_init() {
 		$_SESSION['ServerRequestTime']=$_SERVER['REQUEST_TIME'];
 		}
 
+/*
 	if (!isset($_SESSION['FormValidationKeyJS'])) {
 		$randomComValCodeJS1 = createRandomKey();
 		$randomComValCodeJS2 = createRandomKey();
 		$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
 		$_SESSION['FormValidationKeyJS']=$FormValidationKeyJS;
 		}
-
+*/
 	}
 	
 function createRandomKey() {
@@ -66,12 +67,12 @@ function spamfree_reset_key() {
 	}
 
 function spamfree_comment_form() {
-	//$randomComValCodeJS1 = createRandomKey();
-	//$randomComValCodeJS2 = createRandomKey();
-	//$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
-	//$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
+	$randomComValCodeJS1 = createRandomKey();
+	$randomComValCodeJS2 = createRandomKey();
+	$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
+	$_SESSION['FormValidationKeyJS']=$FormValidationKeyJS;
 	echo '<script type=\'text/javascript\'>'."\n";
-	echo 'document.write(\'<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$_SESSION['FormValidationKeyJS'].'\'>\');'."\n";
+	echo 'document.write(\'<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$FormValidationKeyJS.'\'>\');'."\n";
 	echo '</script>'."\n";
 	echo '<noscript><p>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</p></noscript>';
 	}
@@ -81,7 +82,7 @@ function spamfree_allowed_post($approved) {
 	$WPCommentValidationJS=$_COOKIE['WPCOMVALJ'];
 	$WPFormValidationKeyJS=$_POST['comment_post_verification_sf'];	
 	//	if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!='') {
-	if($WPCommentValidationJS=='xTJ97pDzW3') {
+	if($WPCommentValidationJS=='xTJ97pDzW3'&&$_POST['comment_post_verification_sf']==$_SESSION['FormValidationKeyJS']) {
 		//spamfree_reset_key();
 		return $approved;
 		}
