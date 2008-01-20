@@ -2,7 +2,7 @@
 Contributors: WebGeek
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree
 Tested up to: 2.3.2
-Stable tag: 1.3
+Stable tag: 1.2
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
