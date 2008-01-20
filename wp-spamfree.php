@@ -82,7 +82,7 @@ function spamfree_allowed_post($approved) {
 	$WPCommentValidationJS=$_COOKIE['WPCOMVALJ'];
 	$WPFormValidationKeyJS=$_POST['comment_post_verification_sf'];	
 	//	if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!='') {
-	if($WPCommentValidationJS=='xTJ97pDzW3'&&$_POST['comment_post_verification_sf']==$_SESSION['FormValidationKeyJS']) {
+	if($WPCommentValidationJS=='xTJ97pDzW3') {
 	// if($WPCommentValidationJS=='xTJ97pDzW3'&&$_POST['comment_post_verification_sf']==$_SESSION['FormValidationKeyJS']) {
 
 		//spamfree_reset_key();
