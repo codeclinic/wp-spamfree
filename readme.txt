@@ -33,14 +33,14 @@ Some would argue that this is too simplistic an approach, and that some spammers
 1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
 2. As always, **activate** the plugin on your WordPress plugins page.
-e
+
 You're done! Sit back and see what it feels like to live without comment spam!
 
 = Upgrading from Version 1.0 =
 Simply undo any edits you made to your `header.php` and `wp-comments-post.php` files when installing Version 1.0. Then install the most recent version!
 
 = For Best Results =
-WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 90% of comment spam), not human comment spam, trackback spam or pingback spam. Akismet is able to recognize the latter three fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, coupled with the Akismet (or equivalent) plugin.
+WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 95% of comment spam), not human comment spam, trackback spam or pingback spam. Akismet is able to recognize the latter three fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, coupled with the Akismet (or equivalent) plugin.
 
 == Other Notes ==
 
