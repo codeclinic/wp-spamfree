@@ -30,23 +30,23 @@ define('SPAMFREE_DELAY', 10);
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer="1.3";
-	$_SESSION["wpSpamFreeVer"]=$wpSpamFreeVer;
-	if (!isset($_SESSION["ServerRequestTime"])) {
-		$_SESSION["ServerRequestTime"]=$_SERVER['REQUEST_TIME'];
+	$wpSpamFreeVer='1.3';
+	$_SESSION['wpSpamFreeVer']=$wpSpamFreeVer;
+	if (!isset($_SESSION['ServerRequestTime'])) {
+		$_SESSION['ServerRequestTime']=$_SERVER['REQUEST_TIME'];
 		}
 
-	if (!isset($_SESSION["FormValidationKeyJS"])) {
+	if (!isset($_SESSION['FormValidationKeyJS'])) {
 		$randomComValCodeJS1 = createRandomKey();
 		$randomComValCodeJS2 = createRandomKey();
 		$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
-		$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
+		$_SESSION['FormValidationKeyJS']=$FormValidationKeyJS;
 		}
 
 	}
 	
 function createRandomKey() {
-    $chars = "abcdefghijkmnopqrstuvwxyz023456789";
+    $chars = 'abcdefghijkmnopqrstuvwxyz023456789';
     srand((double)microtime()*1000000);
     $i = 0;
     $pass = '' ;
@@ -61,7 +61,7 @@ function createRandomKey() {
 }
 
 function spamfree_reset_key() {
-	$_SESSION["FormValidationKeyJS"]='';
+	$_SESSION['FormValidationKeyJS']='';
 	$WPFormValidationKeyJS='';
 	}
 
@@ -70,8 +70,8 @@ function spamfree_comment_form() {
 	//$randomComValCodeJS2 = createRandomKey();
 	//$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
 	//$_SESSION["FormValidationKeyJS"]=$FormValidationKeyJS;
-	echo '<script type="text/javascript">'."\n";
-	echo 'document.write(\'<input type="hidden" id="comment_post_verification_sf" name="comment_post_verification_sf" value="'.$_SESSION["FormValidationKeyJS"].'">\');'."\n";
+	echo '<script type=\'text/javascript\'>'."\n";
+	echo 'document.write(\'<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$_SESSION['FormValidationKeyJS'].'\'>\');'."\n";
 	echo '</script>'."\n";
 	echo '<noscript><p>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</p></noscript>';
 	}
@@ -86,15 +86,7 @@ function spamfree_allowed_post($approved) {
 		return $approved;
 		}
 	else {
-		// STATUS VERIFICATION
-		echo $WPCommentValidationJS."<br>";
-		echo $_COOKIE['WPCOMVALJ']."<br>";
-		echo $WPFormValidationKeyJS."<br>";
-		echo $_POST['comment_post_verification_sf']."<br>";
-		echo $_SESSION["FormValidationKeyJS"]."<br>";
-		
-		
-		
+		// STATUS VERIFICATION	
 		//spamfree_reset_key();
 		//sleep(SPAMFREE_DELAY);
     	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
@@ -119,8 +111,8 @@ if (!class_exists('wpSpamFree')) {
 		}
 		
 		function output_existing_menu_sub_admin_page(){
-			$wpSpamFreeVer=$_SESSION["wpSpamFreeVer"];
-			if ($_SESSION["wpSpamFreeVer"]!='') {
+			$wpSpamFreeVer=$_SESSION['wpSpamFreeVer'];
+			if ($_SESSION['wpSpamFreeVer']!='') {
 				$wpSpamFreeVerAdmin='Version '.$wpSpamFreeVer;
 				}
 		?>
@@ -167,8 +159,8 @@ If you're having trouble getting things to work after installing the plugin, her
 
 
 		function wp_head_intercept(){
-			$wpSpamFreeVer=$_SESSION["wpSpamFreeVer"];
-			if ($_SESSION["wpSpamFreeVer"]!='') {
+			$wpSpamFreeVer=$_SESSION['wpSpamFreeVer'];
+			if ($_SESSION['wpSpamFreeVer']!='') {
 				$wpSpamFreeVerJS=' v'.$wpSpamFreeVer;
 				}
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: BEGIN -->'."\n";
