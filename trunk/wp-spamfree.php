@@ -25,9 +25,6 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// Prevent Spammers from overloading server - Set Delay
-define('SPAMFREE_DELAY', 10);
-
 function spamfree_init() {
 	session_start();
 	$wpSpamFreeVer='1.3';
@@ -35,15 +32,6 @@ function spamfree_init() {
 	if (!isset($_SESSION['ServerRequestTime'])) {
 		$_SESSION['ServerRequestTime']=$_SERVER['REQUEST_TIME'];
 		}
-
-/*
-	if (!isset($_SESSION['FormValidationKeyJS'])) {
-		$randomComValCodeJS1 = createRandomKey();
-		$randomComValCodeJS2 = createRandomKey();
-		$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
-		$_SESSION['FormValidationKeyJS']=$FormValidationKeyJS;
-		}
-*/
 	}
 	
 function createRandomKey() {
@@ -61,11 +49,6 @@ function createRandomKey() {
     return $keyCode;
 }
 
-function spamfree_reset_key() {
-	$_SESSION['FormValidationKeyJS']='';
-	$WPFormValidationKeyJS='';
-	}
-
 function spamfree_comment_form() {
 	$randomComValCodeJS1 = createRandomKey();
 	$randomComValCodeJS2 = createRandomKey();
@@ -81,17 +64,11 @@ function spamfree_allowed_post($approved) {
 	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
 	$WPCommentValidationJS=$_COOKIE['WPCOMVALJ'];
 	$WPFormValidationKeyJS=$_POST['comment_post_verification_sf'];	
-	//	if($WPCommentValidationJS=='xTJ97pDzW3'&&$WPFormValidationKeyJS==$_SESSION["FormValidationKeyJS"]&&eregi('x16x',$WPFormValidationKeyJS)&&$_SESSION["FormValidationKeyJS"]!='') {
 	if($WPCommentValidationJS=='xTJ97pDzW3') {
-	// if($WPCommentValidationJS=='xTJ97pDzW3'&&$_POST['comment_post_verification_sf']==$_SESSION['FormValidationKeyJS']) {
-
-		//spamfree_reset_key();
 		return $approved;
 		}
 	else {
 		// STATUS VERIFICATION	
-		//spamfree_reset_key();
-		//sleep(SPAMFREE_DELAY);
     	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
 		return false;
 		}
