@@ -62,7 +62,7 @@ function spamfree_comment_form() {
 	
 function spamfree_check_comment_type($commentdata) {
 	if ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) {
-		add_action('pre_comment_approved', 'spamfree_allowed_post');
+		add_filter('pre_comment_approved', 'spamfree_allowed_post');
 		}
 	return $commentdata;
 	}
