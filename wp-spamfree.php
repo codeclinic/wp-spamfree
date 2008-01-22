@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.3
+Version: 1.3.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -27,7 +27,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.3';
+	$wpSpamFreeVer='1.3.1';
 	$_SESSION['wpSpamFreeVer']=$wpSpamFreeVer;
 	if (!isset($_SESSION['ServerRequestTime'])) {
 		$_SESSION['ServerRequestTime']=$_SERVER['REQUEST_TIME'];
@@ -45,9 +45,9 @@ function createRandomKey() {
         $tmp = substr($chars, $num, 1);
         $keyCode = $keyCode . $tmp;
         $i++;
-    }
+    	}
     return $keyCode;
-}
+	}
 
 function spamfree_comment_form() {
 	$randomComValCodeJS1 = createRandomKey();
@@ -58,6 +58,13 @@ function spamfree_comment_form() {
 	echo 'document.write(\'<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$FormValidationKeyJS.'\'>\');'."\n";
 	echo '</script>'."\n";
 	echo '<noscript><p>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</p></noscript>';
+	}
+	
+function spamfree_check_comment_type($commentdata) {
+	if ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) {
+		add_action('pre_comment_approved', 'spamfree_allowed_post');
+		}
+	return $commentdata;
 	}
 
 function spamfree_allowed_post($approved) {
@@ -79,16 +86,16 @@ if (!class_exists('wpSpamFree')) {
     class wpSpamFree {
 
 	    function wpSpamFree(){
-		add_action('init', 'spamfree_init');
-		add_action('admin_menu', array(&$this,'add_admin_pages'));
-		add_action('wp_head', array(&$this, 'wp_head_intercept'));
-		add_action('comment_form', 'spamfree_comment_form');
-		add_action('pre_comment_approved', 'spamfree_allowed_post');
-        }
-
+			add_action('init', 'spamfree_init');
+			add_action('admin_menu', array(&$this,'add_admin_pages'));
+			add_action('wp_head', array(&$this, 'wp_head_intercept'));
+			add_action('comment_form', 'spamfree_comment_form');
+			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
+        	}
+		
 		function add_admin_pages(){
-		add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
-		}
+			add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
+			}
 		
 		function output_existing_menu_sub_admin_page(){
 			$wpSpamFreeVer=$_SESSION['wpSpamFreeVer'];
@@ -101,42 +108,49 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><strong>Installation Instructions</strong></p>
 
-<ol>
-    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
-	<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.</li>
-</ol>	
-<p>&nbsp;</p>
-<p>You're done! Sit back and see what it feels like to blog without comment spam!</p>
+			<ol>
+			    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
+				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.</li>
+			</ol>	
+			<p>&nbsp;</p>
+			<p>You're done! Sit back and see what it feels like to blog without comment spam!</p>
 					
-	<p>&nbsp;</p>
+			<p>&nbsp;</p>
 	
-	<p><strong>Troubleshooting</strong></p>
-If you're having trouble getting things to work after installing the plugin, here are a few things to check:
-<ol>
-<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
-<li>Clear your browser's cache and clear your cookies. Then reload the page.<br />&nbsp;</li>
-<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
-<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request">send an email</a>.</li>
-</ol>
-<p>&nbsp;</p>			
+			<p><strong>Troubleshooting</strong></p>
+			If you're having trouble getting things to work after installing the plugin, here are a few things to check:
+			<ol>
+				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
+				<li>Clear your browser's cache and clear your cookies. Then reload the page.<br />&nbsp;</li>
+				<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
+				<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request">send an email</a>.</li>
+			</ol>
+			<p>&nbsp;</p>			
 
 			
 			
-  	<p>For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/" target="_blank">http://www.hybrid6.com/webgeek/plugins/wp-spamfree/</a></p>
+  			<p>For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/" target="_blank">http://www.hybrid6.com/webgeek/plugins/wp-spamfree/</a></p>
 	
-	<p>&nbsp;</p>
+			<p>&nbsp;</p>
 	
-	<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, feel free to <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank">post a comment letting others know!</a></p>
+			<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, feel free to <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank">post a comment letting others know!</a></p>
 	
-	<p>&nbsp;</p>
+			<p>&nbsp;</p>
+			
+			<strong>Download Plugin / Documentation</strong><br />
+			Latest Version: <a href="http://downloads.wordpress.org/plugin/wp-spamfree.zip" target="_blank">Download Now</a><br />
+			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/">WP-SpamFree</a><br />
+			Blog Post: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php">WP-SpamFree Release Announcement</a><br />
+			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank">WP-SpamFree</a>
 	
-	<p><em><?=$wpSpamFreeVerAdmin?></em></p>
+			<p>&nbsp;</p>
+
+			<p><em><?=$wpSpamFreeVerAdmin?></em></p>
 	
 			<p>&nbsp;</p>
 			</div>
-		<?php
-		}
-
+			<?php
+			}
 
 		function wp_head_intercept(){
 			$wpSpamFreeVer=$_SESSION['wpSpamFreeVer'];
@@ -147,14 +161,15 @@ If you're having trouble getting things to work after installing the plugin, her
 			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFree.js"></script> '."\n";
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: END -->'."\n";
 			}
-
-    }
-}
+			
+    	}
+		
+	}
 
 
 //instantiate the class
 if (class_exists('wpSpamFree')) {
 	$wpSpamFree = new wpSpamFree();
-}
+	}
 
 ?>
