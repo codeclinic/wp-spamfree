@@ -1,4 +1,4 @@
-// WP-SpamFree 1.3.1 JS Code :: BEGIN
+// WP-SpamFree 1.3 JS Code :: BEGIN
 
 // Cookie Handler :: BEGIN
 function GetCookie( name ) {
@@ -42,4 +42,4 @@ function commentValidation() {
 
 commentValidation();
 
-// WP-SpamFree 1.3.1 JS Code :: END
+// WP-SpamFree 1.3 JS Code :: END
