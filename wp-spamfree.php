@@ -55,7 +55,7 @@ function spamfree_comment_form() {
 	$FormValidationKeyJS = $randomComValCodeJS1.'x16x'.$randomComValCodeJS2;
 	$_SESSION['FormValidationKeyJS']=$FormValidationKeyJS;
 	echo '<script type=\'text/javascript\'>'."\n";
-	echo 'document.write(\'<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$FormValidationKeyJS.'\'>\');'."\n";
+	echo 'document.write("<input type=\'hidden\' id=\'comment_post_verification_sf\' name=\'comment_post_verification_sf\' value=\''.$FormValidationKeyJS.'\'>");'."\n";
 	echo '</script>'."\n";
 	echo '<noscript><p>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</p></noscript>';
 	}
