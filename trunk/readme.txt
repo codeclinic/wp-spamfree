@@ -18,7 +18,7 @@ Comment spam has been a problem for bloggers since the inception of blogs, and i
 3. The beauty of this plugin is the simplicity. Sometimes the best solutions are the simplest ones.
 4. The code is has an extremely low overhead and won't slow down your blog. (No database reading or writing.)
 5. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
-6. Version 1.3 doesn't require editing any external files!
+6. Version 1.3+ doesn't require editing any external files!
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
