@@ -92,7 +92,7 @@ Version 1.01, released 11/13/07:
 * Improved compatibility.
 
 = Updates / Documentation =
-For updates and documentation, visit the [homepage of the WP-SpamFree Plugin for WordPress and start fighting comment spam](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/).
+For updates and documentation, visit the [homepage of the WP-SpamFree Comment Spam Plugin for WordPress](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/).
 
 = WordPress Security Note =
 As with any WordPress plugin, for security reasons, you should only download plugins from the author's site and from official WordPress repositories. When other sites host a plugin that is developed by someone else, they may inject code into that could compromise the security of your blog. We cannot endorse a version of this that you may have downloaded from another site. If you have downloaded the "WP-SpamFree" plugin from another site, please download the current release from the [official WP-SpamFree site](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/) or from the [official WP-SpamFree page on WordPress.org](http://wordpress.org/extend/plugins/wp-spamfree/).
