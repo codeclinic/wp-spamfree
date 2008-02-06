@@ -65,7 +65,7 @@ Version 1.3, released 01/20/08:
 
 * This is a major upgrade!!
 * Super-simple installation - truly plug and play. No need to edit external files!! I've been working on making this possible since version 1.01 and finally got the bugs worked out.
-* Added advanced verification methods that enable WP-SpamFree to beat potential evolutions in spambots. It now creates multiple randomly generated verification keys, and a few other tricks that are near impossible for comment spambots to bypass. I'm thinking ahead here. No bots have beaten it yet, but eventually hackers will try to find a way to break through. Even if hackers try to reverse engineer it or create evolving smart bots, WP-SpamFree is smarter.
+* [UPDATE - The following is rolled baack in 1.3.1, because of compatibility issues, but will be re-released in a future version.]Added advanced verification methods that enable WP-SpamFree to beat potential evolutions in spambots. It now creates multiple randomly generated verification keys, and a few other tricks that make it extremely difficult for comment spambots to bypass.[/UPDATE]
 
 Version 1.2, released 01/17/08: 
 
