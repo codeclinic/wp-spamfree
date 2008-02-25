@@ -62,7 +62,7 @@ If you're having trouble getting things to work after installing the plugin, her
 Version 1.5, released 02/25/08: 
 
 * Improved spam protection!
-* A counter on your WordPress Dashboard so you can see how much spam you didn't have to see!
+* A counter on your WordPress Dashboard so you can see how many spammers WP-SpamFree has kicked in the head!
 * Added advanced verification methods that make WP-SpamFree tougher to beat by potential evolutions in spambots.
 * It now creates multiple randomly generated verification keys, across several methods, including random cookie values (so bots can't just set a value and hit the page), along a few other tricks that make it extremely difficult for spambots to bypass.
 * Now uses WordPress's database to store important data. Don't worry, though - we're still keeping the overhead light so it doesn't slow down your blog.
