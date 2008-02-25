@@ -27,8 +27,8 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	//$wpSpamFreeVer='1.5.1';
-	//update_option('wp_spamfree_version', $wpSpamFreeVer);
+	$wpSpamFreeVer='1.5';
+	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
 	
