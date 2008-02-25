@@ -15,7 +15,7 @@ Comment spam has been a problem for bloggers since the inception of blogs, and i
 = Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
 2. No CAPTCHA's, challenge questions or other inconvenience to site visitors - it just works.
-3. No false positives, which leads to fewer frustrated readers, and less work for you. You won't have to sift through your Akismet queue anymore, because, there won't be much there.
+3. No false positives, which leads to fewer frustrated readers, and less work for you. You won't have to sift through your Akismet queue anymore, because there won't be much there.
 4. The beauty of this plugin is the method of blocking spam. It takes a different approach than most and stops spam at the door.  
 5. The code is has an extremely low overhead and won't slow down your blog. (Very light database access.)
 6. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
