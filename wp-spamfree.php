@@ -227,10 +227,14 @@ if (!class_exists('wpSpamFree')) {
 			?>
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
+			<?
+			if ($spamCount) {
+				echo "<p>Since we started counting, WP-SpamFree has protected your blog from <strong>".$spamCount."</strong> spam comments!</p>
+				<p>&nbsp;</p>";
+				}
+			?>
 			
-			<p>Since we started counting, WP-SpamFree has protected your blog from <strong><?php echo $spamCount; ?></strong> spam comments!</p>
 			
-			<p>&nbsp;</p>
 			
 			<p><strong>Installation Instructions</strong></p>
 
