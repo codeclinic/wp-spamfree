@@ -149,7 +149,7 @@ function spamfree_allowed_post($approved) {
 	$spamfree_options			= get_option('spamfree_options');
 	$CookieValidationName  		= $spamfree_options['cookie_validation_name'];
 	$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
-	$FormValidationFieldJS 	= $spamfree_options['form_validation_field_js'];
+	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
 	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification	
@@ -295,41 +295,13 @@ if (!class_exists('wpSpamFree')) {
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
 			
-				/*
-		
-				//*****************************************************************************************
-				// Create the sql - You will need to edit this to include the columns you need
-				// Using the dbdelta function to allow the table to be updated if this is an update.
-				// Read the limitations of the dbdelta function here: http://codex.wordpress.org/Creating_Tables_with_Plugins
-				// remember to update the version number every time you want to make a change.
-				//*****************************************************************************************
-				$sql = "CREATE TABLE " . $this->db_table_name . " (
-				id mediumint(9) NOT NULL AUTO_INCREMENT,
-				wp_spamfree_version VARCHAR(255),
-				spamfree_count VARCHAR(255),
-				wp_cache VARCHAR(255),
-				wp_super_cache VARCHAR(255),
-				use_captcha_backup VARCHAR(255),
-				block_all_trackbacks VARCHAR(255),
-				block_all_pingbacks VARCHAR(255),
-				use_trackback_verification VARCHAR(255),
-				cookie_validation_name VARCHAR(255),
-				cookie_validation_key VARCHAR(255),
-				form_validation_field_js VARCHAR(255),
-				form_validation_key_js VARCHAR(255),
-				UNIQUE KEY id (id)
-				);";
-			
-				require_once(ABSPATH . "wp-admin/upgrade-functions.php");
-				dbDelta($sql);
-				*/
 				//add a database version number for future upgrade purposes
-				add_option('wp_spamfree_version', $plugin_db_version);
+				update_option('wp_spamfree_version', $plugin_db_version);
 				
 				// Set Random Cookie Name
 				$randomComValCodeCVN1 = spamfree_create_random_key();
 				$randomComValCodeCVN2 = spamfree_create_random_key();
-				$CookieValidationName = strtoupper($rcookie_validation_nameandomComValCodeCKNM1.$randomComValCodeCVN2);
+				$CookieValidationName = strtoupper($randomComValCodeCVN1.$randomComValCodeCVN2);
 				// Set Random Cookie Value
 				$randomComValCodeCKV1 = spamfree_create_random_key();
 				$randomComValCodeCKV2 = spamfree_create_random_key();
@@ -342,12 +314,7 @@ if (!class_exists('wpSpamFree')) {
 				$randomComValCodeJS1 = spamfree_create_random_key();
 				$randomComValCodeJS2 = spamfree_create_random_key();
 				$FormValidationKeyJS = $randomComValCodeJS1.$randomComValCodeJS2;
-				/*
-				$spamfree_count = get_option('spamfree_count');
-				if (!$spamfree_count) {
-					update_option("spamfree_count", 0);
-					}
-				*/
+
 				// Options array
 				$spamfree_options_update = array (
 					'cookie_validation_name' 		=> $CookieValidationName,
@@ -361,8 +328,12 @@ if (!class_exists('wpSpamFree')) {
 					'block_all_pingbacks' 			=> 0,
 					'use_trackback_verification' 	=> 0,
 					);
-				add_option('spamfree_options', $spamfree_options_update);
-				add_option('spamfree_count', 0);
+				$spamfree_count = get_option('spamfree_count');
+				if (!$spamfree_count) {
+					update_option("spamfree_count", 0);
+					}
+				update_option('spamfree_options', $spamfree_options_update);
+
 				}
 			}
 					
