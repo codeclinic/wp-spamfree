@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.1
+Version: 1.5.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -27,7 +27,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.1';
+	$wpSpamFreeVer='1.5.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -202,7 +202,9 @@ if (!class_exists('wpSpamFree')) {
 
 		function wpSpamFree(){
 			
-			global $wpdb;			
+			global $wpdb;
+						
+			error_reporting(0); // Prevents errors when page is accessed directly, outside WordPress
 			
 			register_activation_hook(__FILE__,array(&$this,'install_on_activation'));
 			add_action('init', 'spamfree_init');
@@ -226,9 +228,9 @@ if (!class_exists('wpSpamFree')) {
 			?>
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
-			<?
+			<?php
 			if ($spamCount) {
-				echo "<p>Since we started counting, WP-SpamFree has protected your blog from <strong>".$spamCount."</strong> spam comments!</p>
+				echo "<p>Since we started counting, WP-SpamFree has protected your blog from <strong>".number_format($spamCount)."</strong> spam comments!</p>
 				<p>&nbsp;</p>";
 				}
 			?>
@@ -274,7 +276,7 @@ if (!class_exists('wpSpamFree')) {
 	
 			<p>&nbsp;</p>
 
-			<p><em><?=$wpSpamFreeVerAdmin?></em></p>
+			<p><em><?php echo $wpSpamFreeVerAdmin; ?></em></p>
 	
 			<p>&nbsp;</p>
 			</div>
@@ -293,7 +295,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.1";
+			$plugin_db_version = "1.5.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
