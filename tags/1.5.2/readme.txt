@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.3.3
-Stable tag: 1.5.3
+Stable tag: 1.5.2
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -59,10 +59,6 @@ If you're having trouble getting things to work after installing the plugin, her
 4. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-Version 1.5.3, released 02/27/08: 
-
-* Minor upgrade that improves compatibility and code efficiency.
-
 Version 1.5, released 02/25/08: 
 
 * Improved spam protection!

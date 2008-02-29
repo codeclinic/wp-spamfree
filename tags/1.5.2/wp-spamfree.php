@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.3
+Version: 1.5.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,19 +25,15 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-
-// Begin the Plugin
-
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.3';
+	$wpSpamFreeVer='1.5.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
 	
 function spamfree_create_random_key() {
-    $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ023456789';
+    $chars = 'abcdefghijkmnopqrstuvwxyz023456789';
     srand((double)microtime()*1000000);
     $i = 0;
     $pass = '' ;
@@ -133,9 +129,8 @@ function spamfree_count() {
 
 function spamfree_comment_form() {
 	$spamfree_options			= get_option('spamfree_options');
-	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
+	$FormValidationFieldJS 	= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
-	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 	echo '<script type=\'text/javascript\'>'."\n";
 	echo 'document.write("<input type=\'hidden\' id=\''.$FormValidationFieldJS.'\' name=\''.$FormValidationFieldJS.'\' value=\''.$FormValidationKeyJS.'\'>");'."\n";
 	echo '</script>'."\n";
@@ -144,7 +139,7 @@ function spamfree_comment_form() {
 	
 function spamfree_check_comment_type($commentdata) {
 	if ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) {
-		add_filter('pre_comment_approved', 'spamfree_allowed_post', 1);
+		add_filter('pre_comment_approved', 'spamfree_allowed_post');
 		}
 	return $commentdata;
 	}
@@ -157,26 +152,15 @@ function spamfree_allowed_post($approved) {
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
-	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
-	if($WPCommentValidationJS==$CookieValidationKey&&$WPFormValidationPost==$FormValidationKeyJS) { // Comment allowed
+	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification	
+	if($WPCommentValidationJS==$CookieValidationKey&&$WPFormValidationPost==$FormValidationKeyJS) {
 		// Clear Key Values and Update
 		spamfree_update_keys(1);
 		return $approved;
 		}
-	else { // Comment spam killed
-	
+	else {
 		// Update Count
-		update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
-		// Akismet Accuracy Fix :: BEGIN
-		// Akismet's counter is currently taking credit for some spams killed by WP-SpamFree - the following ensures accurate reporting.
-		// The reason for this fix is that Akismet may have marked the same comment as spam, but WP-SpamFree actually kills it - with or without Akismet.
-		$ak_count_pre	= get_option('ak_count_pre');
-		$ak_count_post	= get_option('akismet_spam_count');
-		if ($ak_count_post > $ak_count_pre) {
-			update_option( 'akismet_spam_count', get_option('akismet_spam_count') - 1 );
-			}
-		// Akismet Accuracy Fix :: END
-
+		update_option( 'spamfree_count', get_option('spamfree_count') + 1 );	
     	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
 		return false;
 		}
@@ -184,14 +168,12 @@ function spamfree_allowed_post($approved) {
 	}
 
 function spamfree_stats() {
-	echo '<h3>'.__('WP-SpamFree').'</h3>';
 	$spamfree_count = get_option('spamfree_count');
-	if ( !$spamfree_count ) {
-		echo '<p>No comment spam attempts have been detected yet.</p>';
-		}
-	else {
-		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree/',  number_format($spamfree_count) ).'</p>';
-		}
+	if ( !$spamfree_count )
+		return;
+	echo '<h3>'.__('WP-SpamFree').'</h3>';
+	
+	echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has protected your site from <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree/',  number_format($spamfree_count) ).'</p>';
 	}
 
 if (!class_exists('wpSpamFree')) {
@@ -248,7 +230,7 @@ if (!class_exists('wpSpamFree')) {
 			<h2>WP-SpamFree</h2>
 			<?php
 			if ($spamCount) {
-				echo "<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p>
+				echo "<p>Since we started counting, WP-SpamFree has protected your blog from <strong>".number_format($spamCount)."</strong> spam comments!</p>
 				<p>&nbsp;</p>";
 				}
 			?>
@@ -313,7 +295,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.3";
+			$plugin_db_version = "1.5.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
@@ -359,8 +341,11 @@ if (!class_exists('wpSpamFree')) {
 
 				}
 			}
+					
 		}
 	}
+
+
 
 //instantiate the class
 if (class_exists('wpSpamFree')) {
