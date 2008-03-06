@@ -5,7 +5,7 @@ Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, securit
 Tested up to: 2.3.3
 Stable tag: 1.5.3
 
-A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. One of the most effective spam plugins available for WordPress. Finally, you can enjoy a spam-free WordPress blog!
+A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
 == Description ==
 
