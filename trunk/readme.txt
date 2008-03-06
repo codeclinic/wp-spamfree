@@ -34,6 +34,8 @@ How does it feel to blog without being bombarded by automated comment spam?
 **If you're happy with WP-SpamFree, please let others know and give it a star rating below.**
 
 == Installation ==
+
+= Installation Instructions =
 1. After downloading, unzip file and upload the enclosed `wp-spamfree` directory to your WordPress plugins directory: `/wp-content/plugins/`.
 
 2. As always, **activate** the plugin on your WordPress plugins page.
