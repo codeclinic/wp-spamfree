@@ -29,9 +29,7 @@ Before I developed this plugin, our team and clients experienced the same frustr
 Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show up on the Akismet Spam page each day - now the daily average is zero spam comments.
 
 = Blogging Without Spam =
-How does it feel to blog without being bombarded by automated comment spam?
-
-**If you're happy with WP-SpamFree, please let others know and give it a star rating below.**
+How does it feel to blog without being bombarded by automated comment spam? **If you're happy with WP-SpamFree, please let others know and give it a star rating below.**
 
 == Installation ==
 
