@@ -36,7 +36,7 @@ As of Version 1.5, WP-SpamFree has multiple randomly generated keys across sever
 Some would argue that this is too simplistic an approach. Many programmers prefer using some type of low-level AI to fight bots by trying to figure out if a comment is spam. The problem with this is that no machine can ever accurately judge whether a comment is spam, so there are many false positives, and many non-spam comments get flagged as spam. Others would argue that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. It's simply a numbers game. Statistics tell us that an effective solution would involve using a technology that few bots can handle, therefore eliminating their ability to spam your site. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience, and a 99% reduction in spam would definitely make a difference for most bloggers and site visitors. :) The bottom line, is that this plugin just plain works, and is a powerful weapon against spam. Sometimes the best solutions are the simplest ones!
 
 = Blogging Without Spam =
-How does it feel to blog without being bombarded by automated comment spam? If you're happy with WP-SpamFree, please let others know and give it a star rating below.
+How does it feel to blog without being bombarded by automated comment spam? If you're happy with WP-SpamFree, please let others know and give it a positive rating below.
 
 == Installation ==
 
