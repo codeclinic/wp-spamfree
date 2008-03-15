@@ -24,9 +24,8 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 9. Easy to install - truly plug and play. Just upload and activate.
 
 = New Features in This Version =
-The admin page for the plugin now includes the following options:
-1. Ability to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
-2. Inclusion of a WP Super Cache compatibility mode to ensure the two plugins work well together.
+1. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
+2. Inclusion of a WP Super Cache compatibility mode in the configuration options to ensure the two plugins work well together. Simply check the box if you use WP Super Cache, then clear your cached pages and you're good to go.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
