@@ -20,7 +20,7 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 5. You won't have to waste valuable time sifting through your Akismet queue anymore, because there won't be much there.
 6. The beauty of this plugin is the method of blocking spam. It takes a different approach than most and stops spam at the door.  
 7. The code is has an extremely low bandwidth overhead and won't slow down your blog. (Very light database access.)
-8. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
+8. Completely compatible with all cache plugins, including WP Cache, and WP Super Cache. Not all anti-spam plugins can say that.
 9. Easy to install - truly plug and play. Just upload and activate.
 
 = New Features in This Version =
