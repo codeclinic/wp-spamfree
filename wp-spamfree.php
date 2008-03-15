@@ -4,11 +4,11 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.3
+Version: 1.5.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
-/*  Copyright 2007    Scott Allen  (email : scott@hybrid6.com)
+/*  Copyright 2007-2008    Scott Allen  (email : scott@hybrid6.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,18 +26,17 @@ Author URI: http://www.hybrid6.com/webgeek/
 */
 
 
-
 // Begin the Plugin
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.3';
+	$wpSpamFreeVer='1.5.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
 	
 function spamfree_create_random_key() {
-    $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ023456789';
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     srand((double)microtime()*1000000);
     $i = 0;
     $pass = '' ;
@@ -86,7 +85,7 @@ function spamfree_update_keys($reset_keys) {
 	if (!$CookieValidationName||$reset_keys==1) {
 		$randomComValCodeCVN1 = spamfree_create_random_key();
 		$randomComValCodeCVN2 = spamfree_create_random_key();
-		$CookieValidationName = strtoupper($randomComValCodeCVN1.$randomComValCodeCVN2);
+		$CookieValidationName = $randomComValCodeCVN1.$randomComValCodeCVN2;
 		}
 	// Set Random Cookie Value
 	$CookieValidationKey = $spamfree_options['cookie_validation_key'];
@@ -122,8 +121,6 @@ function spamfree_update_keys($reset_keys) {
 		'use_trackback_verification' 	=> $spamfree_options['use_trackback_verification'],
 		);
 	update_option('spamfree_options', $spamfree_options_update);		
-		
-
 	}
 	
 function spamfree_count() {
@@ -135,7 +132,13 @@ function spamfree_comment_form() {
 	$spamfree_options			= get_option('spamfree_options');
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
+	$WPSuperCache				= $spamfree_options['wp_super_cache'];
+	if ($WPSuperCache) {
+		$FormValidationFieldJS 		= 'xWPSCx8498gHKW3';
+		$FormValidationKeyJS 		= 'xWPSCx8953fTLK6';
+		}
 	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
+	
 	echo '<script type=\'text/javascript\'>'."\n";
 	echo 'document.write("<input type=\'hidden\' id=\''.$FormValidationFieldJS.'\' name=\''.$FormValidationFieldJS.'\' value=\''.$FormValidationKeyJS.'\'>");'."\n";
 	echo '</script>'."\n";
@@ -143,14 +146,20 @@ function spamfree_comment_form() {
 	}
 	
 function spamfree_check_comment_type($commentdata) {
-	if ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) {
+	if (get_option('wp_debug_mode')) {
+		wp_debug_section_2($commentdata,$wp_debug_var_2,$wp_debug_var_3);
+		}
+	$spamfree_options			= get_option('spamfree_options');
+	$BlockAllTrackbacks 		= $spamfree_options['block_all_trackbacks'];
+	$BlockAllPingbacks 			= $spamfree_options['block_all_pingbacks'];	
+	if ( ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) || ( $BlockAllTrackbacks && $BlockAllPingbacks ) || ( $BlockAllTrackbacks && $commentdata['comment_type'] == 'trackback' ) || ( $BlockAllPingbacks && $commentdata['comment_type'] == 'pingback' ) ) {
 		add_filter('pre_comment_approved', 'spamfree_allowed_post', 1);
 		}
 	return $commentdata;
 	}
 
 function spamfree_allowed_post($approved) {
-	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
+	// TEST TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
 	$spamfree_options			= get_option('spamfree_options');
 	$CookieValidationName  		= $spamfree_options['cookie_validation_name'];
 	$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
@@ -158,8 +167,13 @@ function spamfree_allowed_post($approved) {
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
 	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
+	$WPSuperCache				= $spamfree_options['wp_super_cache'];
 	if($WPCommentValidationJS==$CookieValidationKey&&$WPFormValidationPost==$FormValidationKeyJS) { // Comment allowed
 		// Clear Key Values and Update
+		spamfree_update_keys(1);
+		return $approved;
+		}
+	else if( $_POST['xWPSCx8498gHKW3'] == 'xWPSCx8953fTLK6' && $WPSuperCache ) { // WP-SuperCache - Comment allowed
 		spamfree_update_keys(1);
 		return $approved;
 		}
@@ -180,11 +194,11 @@ function spamfree_allowed_post($approved) {
     	wp_die( __('Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.') );
 		return false;
 		}
-	// CHECK COOKIE TO PREVENT COMMENT SPAM FROM BOTS :: END
+	// TEST TO PREVENT COMMENT SPAM FROM BOTS :: END
 	}
 
 function spamfree_stats() {
-	echo '<h3>'.__('WP-SpamFree').'</h3>';
+	echo '<h3>WP-SpamFree</h3>';
 	$spamfree_count = get_option('spamfree_count');
 	if ( !$spamfree_count ) {
 		echo '<p>No comment spam attempts have been detected yet.</p>';
@@ -251,15 +265,74 @@ if (!class_exists('wpSpamFree')) {
 				echo "<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p>
 				<p>&nbsp;</p>";
 				}
+			$spamfree_options = get_option('spamfree_options');
+			if ($_REQUEST['submitted']) {
+				$spamfree_options_update = array (
+						'cookie_validation_name' 			=> $spamfree_options['cookie_validation_name'],
+						'cookie_validation_key' 			=> $spamfree_options['cookie_validation_key'],
+						'form_validation_field_js' 			=> $spamfree_options['form_validation_field_js'],
+						'form_validation_key_js' 			=> $spamfree_options['form_validation_key_js'],
+						'cookie_get_function_name' 			=> $spamfree_options['cookie_get_function_name'],
+						'cookie_set_function_name' 			=> $spamfree_options['cookie_set_function_name'],
+						'cookie_delete_function_name' 		=> $spamfree_options['cookie_delete_function_name'],
+						'comment_validation_function_name' 	=> $spamfree_options['comment_validation_function_name'],
+						'wp_cache' 							=> $spamfree_options['wp_cache'],
+						'wp_super_cache' 					=> $_REQUEST['wp_super_cache'],
+						'use_captcha_backup' 				=> $spamfree_options['use_captcha_backup'],
+						'block_all_trackbacks' 				=> $_REQUEST['block_all_trackbacks'],
+						'block_all_pingbacks' 				=> $_REQUEST['block_all_pingbacks'],
+						'use_trackback_verification' 		=> $spamfree_options['use_trackback_verification'],
+						);
+				update_option('spamfree_options', $spamfree_options_update);
+				}
+				$spamfree_options = get_option('spamfree_options');
 			?>
+			<p><strong>Options</strong></p>
+
+			<form name="wpsf" method="post">
+			<input type="hidden" name="submitted" value="1" />
+
+			<fieldset class="options">
+				<ul>
+					<li>
+					<label for="block_all_trackbacks">
+						<input type="checkbox" id="block_all_trackbacks" name="block_all_trackbacks" <?php echo ($spamfree_options['block_all_trackbacks']==true?"checked=\"checked\"":"") ?> />
+						<strong>Disable trackbacks.</strong><br />(Use if trackback spam is excessive.)<br />&nbsp;
+					</label>
+					</li>
+					<li>
+					<label for="block_all_pingbacks">
+						<input type="checkbox" id="block_all_pingbacks" name="block_all_pingbacks" <?php echo ($spamfree_options['block_all_pingbacks']==true?"checked=\"checked\"":"") ?> />
+						<strong>Disable pingbacks.</strong><br />(Use if pingback spam is excessive. Disadvantage is reduction of blogosphere connectivity.)<br />&nbsp;
+					</label>
+					</li>
+					<li>
+					<label for="wp_super_cache">
+						<input type="checkbox" id="wp_super_cache" name="wp_super_cache" <?php echo ($spamfree_options['wp_super_cache']==true?"checked=\"checked\"":"") ?> />
+						<strong>Enable WP Super Cache compatibility mode.</strong> Use if WP Super Cache is installed and enabled.<br />(Disadvantage is <em>slight</em> reduction in anti-spam security, although spam protection is still strong. Be sure to clear cached pages in WP Super Cache after selecting this option.)<br />&nbsp;
+					</label>
+					</li>
+				</ul>
+			</fieldset>
+			<p class="submit">
+			<input type="submit" name="Submit" value="Update Options &raquo;" style="float:left;" />
+			</p>
+			</form>
 			
+			<p>&nbsp;</p>
 			
+			<p>&nbsp;</p>
+			
+			<p>&nbsp;</p>
 			
 			<p><strong>Installation Instructions</strong></p>
 
 			<ol>
 			    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
-				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.</li>
+				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.<br />&nbsp;</li>
+				
+				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours. If you are using WP Super Cache, it is highly recommended that you select the checkbox to ensure compatibility.</li>
+
 			</ol>	
 			<p>&nbsp;</p>
 			<p>You're done! Sit back and see what it feels like to blog without comment spam!</p>
@@ -272,6 +345,7 @@ if (!class_exists('wpSpamFree')) {
 				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
+				<li>Check the options you have selected to make sure they are not disabling a feature you want to use. If using WP Super Cache, make sure this option is checked to ensure compatibility, and be sure to clear your cached pages after selecting this option.<br />&nbsp;</li>
 				<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request">send an email</a>.</li>
 			</ol>
 			<p>&nbsp;</p>			
@@ -313,7 +387,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.3";
+			$plugin_db_version = "1.5.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
@@ -356,9 +430,13 @@ if (!class_exists('wpSpamFree')) {
 					update_option("spamfree_count", 0);
 					}
 				update_option('spamfree_options', $spamfree_options_update);
+				// Turn on Comment Moderation
+				//update_option('comment_moderation', 1);
+				//update_option('moderation_notify', 1);
 
 				}
 			}
+					
 		}
 	}
 

@@ -3,14 +3,14 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.3.3
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
 == Description ==
 
 = A Powerful Weapon Against Comment Spam =
-**One of the most effective anti-spam plugins for WordPress.** Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **The WP-SpamFree plugin virtually eliminates automated comment spam from bots.**
+Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **The WP-SpamFree plugin virtually eliminates automated comment spam from bots.**
 
 = Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
@@ -22,6 +22,11 @@ A powerful anti-spam plugin that virtually eliminates automated comment spam fro
 7. The code is has an extremely low bandwidth overhead and won't slow down your blog. (Very light database access.)
 8. Completely compatible with all cache plugins, including WP-Cache. Not all anti-spam plugins can say that.
 9. Easy to install - truly plug and play. Just upload and activate.
+
+= New Features in This Version =
+The admin page for the plugin now includes the following options:
+1. Ability to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
+2. Inclusion of a WP Super Cache compatibility mode to ensure the two plugins work well together.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
@@ -45,6 +50,8 @@ How does it feel to blog without being bombarded by automated comment spam? If y
 
 2. As always, **activate** the plugin on your WordPress plugins page.
 
+3. Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours. If you are using WP Super Cache, it is highly recommended that you select this checkbox to ensure compatibility.
+
 You're done! Sit back and see what it feels like to live without comment spam!
 
 = Upgrading from Version 1.0 =
@@ -64,9 +71,16 @@ If you're having trouble getting things to work after installing the plugin, her
 
 3. Make sure JavaScript and cookies are enabled. (JavaScript is different from Java. Java is not required.)
 
-4. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
+4. Check the options you have selected to make sure they are not disabling a feature you want to use. If using WP Super Cache, make sure this option is checked to ensure compatibility, and be sure to clear your cached pages after selecting this option.
+
+5. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
+Version 1.5.4, released 03/15/08: 
+
+* Addition of configuration option to Disable Trackbacks and/or Pingbacks if spam through these channels proves excessive.
+* Addition of WP Super Cache compatibility mode, which can be turned on in the Options section of admin page.
+
 Version 1.5.3, released 02/27/08: 
 
 * Minor upgrade that slightly improves compatibility and code efficiency.
