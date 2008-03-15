@@ -25,6 +25,7 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 
 = New Features in This Version =
 1. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
+
 2. Inclusion of a WP Super Cache compatibility mode in the configuration options to ensure the two plugins work well together. Simply check the box if you use WP Super Cache, then clear your cached pages and you're good to go.
 
 = Background =
