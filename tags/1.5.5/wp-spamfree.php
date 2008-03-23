@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.6
+Version: 1.5.5
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -30,7 +30,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.6';
+	$wpSpamFreeVer='1.5.5';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -138,7 +138,7 @@ function spamfree_comment_form() {
 		$FormValidationKeyJS 		= 'xWPSCx8953fTLK6';
 		}
 	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
-
+	
 	echo '<script type=\'text/javascript\'>'."\n";
 	echo 'document.write("<input type=\'hidden\' id=\''.$FormValidationFieldJS.'\' name=\''.$FormValidationFieldJS.'\' value=\''.$FormValidationKeyJS.'\'>");'."\n";
 	echo '</script>'."\n";
@@ -260,41 +260,10 @@ if (!class_exists('wpSpamFree')) {
 			?>
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
-			
-			<div style='width:600px;border-style:solid;border-width:1px;border-color:#000000;padding:0px 15px 0px 15px;'>
-			<p><strong>Installation Status:</strong>
-			<?php
-			$installation_plugins_get_test_1	= 'wp-spamfree/wp-spamfree.php';
-			$installation_file_test_0 			= ABSPATH . 'wp-content/plugins/wp-spamfree/wp-spamfree.php';
-			$installation_file_test_1 			= ABSPATH . 'wp-config.php';
-			$installation_file_test_2 			= ABSPATH . 'wp-includes/wp-db.php';
-			$installation_file_test_3 			= ABSPATH . 'wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php';
-			clearstatcache();
-			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&file_exists($installation_file_test_1)&&file_exists($installation_file_test_2)&&file_exists($installation_file_test_3)) {
-				$wp_installation_status = 1;
-				$wp_installation_status_color = 'green';
-				$wp_installation_status_msg_main = 'Installed Correctly';
-				$wp_installation_status_msg_text = strtolower($wp_installation_status_msg_main);
-				}
-			else {
-				$wp_installation_status = 0;
-				$wp_installation_status_color = 'red';
-				$wp_installation_status_msg_main = 'Not Installed Correctly';
-				$wp_installation_status_msg_text = strtolower($wp_installation_status_msg_main);
-				}
-			echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>";
-			?>
-			
-			</p>
-			</div>
-			<br />
-			
 			<?php
 			if ($spamCount) {
-				echo "
-				<div style='width:600px;border-style:solid;border-width:1px;border-color:#000000;padding:0px 15px 0px 15px;'>
-				<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p></div>
-				";
+				echo "<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p>
+				<p>&nbsp;</p>";
 				}
 			$spamfree_options = get_option('spamfree_options');
 			if ($_REQUEST['submitted']) {
@@ -318,9 +287,6 @@ if (!class_exists('wpSpamFree')) {
 				}
 				$spamfree_options = get_option('spamfree_options');
 			?>
-			
-			<p>&nbsp;</p>
-			
 			<p><strong>Options</strong></p>
 
 			<form name="wpsf" method="post">
@@ -365,8 +331,6 @@ if (!class_exists('wpSpamFree')) {
 			    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
 				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.<br />&nbsp;</li>
 				
-				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1. If it is installed correctly, then move on to the next step.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
-				
 				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours. If you are using WP Super Cache, it is highly recommended that you select the checkbox to ensure compatibility.</li>
 
 			</ol>	
@@ -379,7 +343,6 @@ if (!class_exists('wpSpamFree')) {
 			If you're having trouble getting things to work after installing the plugin, here are a few things to check:
 			<ol>
 				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
-				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use. If using WP Super Cache, make sure this option is checked to ensure compatibility, and be sure to clear your cached pages after selecting this option.<br />&nbsp;</li>
@@ -424,7 +387,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.6";
+			$plugin_db_version = "1.5.5";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
