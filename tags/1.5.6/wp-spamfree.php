@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.7
+Version: 1.5.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -30,7 +30,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.7';
+	$wpSpamFreeVer='1.5.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -132,6 +132,11 @@ function spamfree_comment_form() {
 	$spamfree_options			= get_option('spamfree_options');
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
+	$WPSuperCache				= $spamfree_options['wp_super_cache'];
+	if ($WPSuperCache) {
+		$FormValidationFieldJS 		= 'xWPSCx8498gHKW3';
+		$FormValidationKeyJS 		= 'xWPSCx8953fTLK6';
+		}
 	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 
 	echo '<script type=\'text/javascript\'>'."\n";
@@ -141,20 +146,13 @@ function spamfree_comment_form() {
 	}
 	
 function spamfree_check_comment_type($commentdata) {
+	if (get_option('wp_debug_mode')) {
+		wp_debug_section_2($commentdata,$wp_debug_var_2,$wp_debug_var_3);
+		}
 	$spamfree_options			= get_option('spamfree_options');
 	$BlockAllTrackbacks 		= $spamfree_options['block_all_trackbacks'];
 	$BlockAllPingbacks 			= $spamfree_options['block_all_pingbacks'];	
-	
-	$content_filter_status		= spamfree_content_filter($commentdata);
-	
-	if ($content_filter_status) {
-		add_filter('pre_comment_approved', 'spamfree_denied_post', 1);
-		}	
-	else if ( ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) || ( $BlockAllTrackbacks && $BlockAllPingbacks ) || ( $BlockAllTrackbacks && $commentdata['comment_type'] == 'trackback' ) || ( $BlockAllPingbacks && $commentdata['comment_type'] == 'pingback' ) ) {
-		// If Comment is not a trackback or pingback, or 
-		// Trackbacks and Pingbacks are blocked, or 
-		// Trackbacks are blocked and comment is Trackback, or 
-		// Pingbacks are blocked and comment is Pingback
+	if ( ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) || ( $BlockAllTrackbacks && $BlockAllPingbacks ) || ( $BlockAllTrackbacks && $commentdata['comment_type'] == 'trackback' ) || ( $BlockAllPingbacks && $commentdata['comment_type'] == 'pingback' ) ) {
 		add_filter('pre_comment_approved', 'spamfree_allowed_post', 1);
 		}
 	return $commentdata;
@@ -169,8 +167,13 @@ function spamfree_allowed_post($approved) {
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
 	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
+	$WPSuperCache				= $spamfree_options['wp_super_cache'];
 	if($WPCommentValidationJS==$CookieValidationKey&&$WPFormValidationPost==$FormValidationKeyJS) { // Comment allowed
 		// Clear Key Values and Update
+		spamfree_update_keys(1);
+		return $approved;
+		}
+	else if( $_POST['xWPSCx8498gHKW3'] == 'xWPSCx8953fTLK6' && $WPSuperCache ) { // WP-SuperCache - Comment allowed
 		spamfree_update_keys(1);
 		return $approved;
 		}
@@ -192,41 +195,6 @@ function spamfree_allowed_post($approved) {
 		return false;
 		}
 	// TEST TO PREVENT COMMENT SPAM FROM BOTS :: END
-	}
-	
-function spamfree_denied_post($approved) {
-	// REJECT SPAM :: BEGIN
-
-	// Update Count
-	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
-	// Akismet Accuracy Fix :: BEGIN
-	// Akismet's counter is currently taking credit for some spams killed by WP-SpamFree - the following ensures accurate reporting.
-	// The reason for this fix is that Akismet may have marked the same comment as spam, but WP-SpamFree actually kills it - with or without Akismet.
-	$ak_count_pre	= get_option('ak_count_pre');
-	$ak_count_post	= get_option('akismet_spam_count');
-	if ($ak_count_post > $ak_count_pre) {
-		update_option( 'akismet_spam_count', $ak_count_pre );
-		}
-	// Akismet Accuracy Fix :: END
-
-	wp_die( __('Comments have been temporarily disabled to prevent spam. Please try again later.') ); // Stop spammers without revealing why.
-	return false;
-	// REJECT SPAM :: END
-	}
-
-function spamfree_content_filter($commentdata) {
-	// CONTENT FILTERING :: BEGIN
-	$commentdata_comment_content	= $commentdata['comment_content'];
-	// Filter 1: Number of occurrences of 'http://' in comment_content
-	$filter_1_count = substr_count($commentdata_comment_content, 'http://');
-	
-	// Filter Test(s)
-	if ( $filter_1_count >= 5 ) {
-		$content_filter_status = true;
-		}
-		
-	return $content_filter_status;
-	// CONTENT FILTERING :: END
 	}
 
 function spamfree_stats() {
@@ -293,6 +261,8 @@ if (!class_exists('wpSpamFree')) {
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
 			
+			<div style='width:600px;border-style:solid;border-width:1px;border-color:#000000;padding:0px 15px 0px 15px;'>
+			<p><strong>Installation Status:</strong>
 			<?php
 			$installation_plugins_get_test_1	= 'wp-spamfree/wp-spamfree.php';
 			$installation_file_test_0 			= ABSPATH . 'wp-content/plugins/wp-spamfree/wp-spamfree.php';
@@ -303,28 +273,26 @@ if (!class_exists('wpSpamFree')) {
 			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&file_exists($installation_file_test_1)&&file_exists($installation_file_test_2)&&file_exists($installation_file_test_3)) {
 				$wp_installation_status = 1;
 				$wp_installation_status_color = 'green';
-				$wp_installation_status_bg_color = '#CCFFCC';
 				$wp_installation_status_msg_main = 'Installed Correctly';
 				$wp_installation_status_msg_text = strtolower($wp_installation_status_msg_main);
 				}
 			else {
 				$wp_installation_status = 0;
 				$wp_installation_status_color = 'red';
-				$wp_installation_status_bg_color = '#FFCCCC';
 				$wp_installation_status_msg_main = 'Not Installed Correctly';
 				$wp_installation_status_msg_text = strtolower($wp_installation_status_msg_main);
 				}
+			echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>";
 			?>
 			
-			<div style='width:600px;border-style:solid;border-width:1px;border-color:<?php echo $wp_installation_status_color; ?>;background-color:<?php echo $wp_installation_status_bg_color; ?>;padding:0px 15px 0px 15px;'>
-			<p><strong>Installation Status: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong></p>
+			</p>
 			</div>
 			<br />
 			
 			<?php
 			if ($spamCount) {
 				echo "
-				<div style='width:600px;border-style:solid;border-width:1px;border-color:#000033;background-color:#CCCCFF;padding:0px 15px 0px 15px;'>
+				<div style='width:600px;border-style:solid;border-width:1px;border-color:#000000;padding:0px 15px 0px 15px;'>
 				<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p></div>
 				";
 				}
@@ -340,7 +308,7 @@ if (!class_exists('wpSpamFree')) {
 						'cookie_delete_function_name' 		=> $spamfree_options['cookie_delete_function_name'],
 						'comment_validation_function_name' 	=> $spamfree_options['comment_validation_function_name'],
 						'wp_cache' 							=> $spamfree_options['wp_cache'],
-						'wp_super_cache' 					=> $spamfree_options['wp_super_cache'],
+						'wp_super_cache' 					=> $_REQUEST['wp_super_cache'],
 						'use_captcha_backup' 				=> $spamfree_options['use_captcha_backup'],
 						'block_all_trackbacks' 				=> $_REQUEST['block_all_trackbacks'],
 						'block_all_pingbacks' 				=> $_REQUEST['block_all_pingbacks'],
@@ -369,7 +337,13 @@ if (!class_exists('wpSpamFree')) {
 					<li>
 					<label for="block_all_pingbacks">
 						<input type="checkbox" id="block_all_pingbacks" name="block_all_pingbacks" <?php echo ($spamfree_options['block_all_pingbacks']==true?"checked=\"checked\"":"") ?> />
-						<strong>Disable pingbacks.</strong><br />(Use if pingback spam is excessive. Disadvantage is reduction of communication between blogs.)<br />&nbsp;
+						<strong>Disable pingbacks.</strong><br />(Use if pingback spam is excessive. Disadvantage is reduction of blogosphere connectivity.)<br />&nbsp;
+					</label>
+					</li>
+					<li>
+					<label for="wp_super_cache">
+						<input type="checkbox" id="wp_super_cache" name="wp_super_cache" <?php echo ($spamfree_options['wp_super_cache']==true?"checked=\"checked\"":"") ?> />
+						<strong>Enable WP Super Cache compatibility mode.</strong> Use if WP Super Cache is installed and enabled.<br />(Disadvantage is <em>slight</em> reduction in anti-spam security, although spam protection is still strong. Be sure to clear cached pages in WP Super Cache after selecting this option.)<br />&nbsp;
 					</label>
 					</li>
 				</ul>
@@ -393,9 +367,7 @@ if (!class_exists('wpSpamFree')) {
 				
 				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1. If it is installed correctly, then move on to the next step.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
 				
-				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.<br />&nbsp;</li>
-				
-				<li>If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.</li>
+				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours. If you are using WP Super Cache, it is highly recommended that you select the checkbox to ensure compatibility.</li>
 
 			</ol>	
 			<p>&nbsp;</p>
@@ -410,9 +382,8 @@ if (!class_exists('wpSpamFree')) {
 				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
-				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
-				<li>If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.<br />&nbsp;</li>
-				<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request, v<?php echo $wpSpamFreeVerAdmin; ?>">send a support email</a>.</li>
+				<li>Check the options you have selected to make sure they are not disabling a feature you want to use. If using WP Super Cache, make sure this option is checked to ensure compatibility, and be sure to clear your cached pages after selecting this option.<br />&nbsp;</li>
+				<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request">send an email</a>.</li>
 			</ol>
 			<p>&nbsp;</p>			
 
@@ -453,7 +424,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.7";
+			$plugin_db_version = "1.5.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
