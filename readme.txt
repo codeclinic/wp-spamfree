@@ -50,6 +50,8 @@ How does it feel to blog without being bombarded by automated comment spam? If y
 
 4. Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.
 
+5. If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.
+
 You're done! Sit back and see what it feels like to live without comment spam!
 
 = Upgrading from Version 1.0 =
@@ -81,7 +83,7 @@ If you're having trouble getting things to work after installing the plugin, her
 
 Version 1.5.7, released 03/27/08: 
 
-* Improved compatibility with WP Super Cache. Ironically, to do this I removed WP Super Cache compatibility mode. Several users reported having trouble with that feature, and after dialog with several users and further testing, we found it worked better without. (One of the joys of programming - sometimes you think you're fixing one problem and you end up creating a new one.) Seems to be working fine with WP Super Cache now, but if any of you have conflicts with WP super Cache and version 1.5.7, please submit a support request so we can look into it ASAP. (See Troubleshooting for more info.)
+* Improved compatibility with WP Super Cache. Ironically, to do this I removed WP Super Cache compatibility mode. Several users reported having trouble with that feature, and after dialog with several users and further testing, we found it worked better without. (One of the joys of programming - sometimes you think you're fixing one problem and you end up creating a new one. It's fixed now though.) Seems to be working fine with WP Super Cache now, but if any of you have conflicts with WP super Cache and version 1.5.7, please submit a support request so we can look into it ASAP. (See Troubleshooting for more info.)
 * Improved spam protection.
 
 Version 1.5.6, released 03/22/08: 
