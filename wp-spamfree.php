@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.7
+Version: 1.5.8
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -26,11 +26,15 @@ Author URI: http://www.hybrid6.com/webgeek/
 */
 
 
+/*
+Quick-Fixed to Work with WordPress 2.5
+*/
+
 // Begin the Plugin
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.7';
+	$wpSpamFreeVer='1.5.8';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -129,13 +133,16 @@ function spamfree_count() {
 	}
 
 function spamfree_comment_form() {
+	// WP 2.5 Broke - for future versions keep in mind comment_form hook (if they fix it) is theme dependant
 	$spamfree_options			= get_option('spamfree_options');
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 
 	echo '<script type=\'text/javascript\'>'."\n";
-	echo 'document.write("<input type=\'hidden\' id=\''.$FormValidationFieldJS.'\' name=\''.$FormValidationFieldJS.'\' value=\''.$FormValidationKeyJS.'\'>");'."\n";
+	echo '//<![CDATA['."\n";
+	echo 'document.write("<input type=\'hidden\' id=\''.$FormValidationFieldJS.'\' name=\''.$FormValidationFieldJS.'\' value=\''.$FormValidationKeyJS.'\' />");'."\n";
+	echo '//]]>'."\n";
 	echo '</script>'."\n";
 	echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>';
 	}
@@ -162,18 +169,26 @@ function spamfree_check_comment_type($commentdata) {
 
 function spamfree_allowed_post($approved) {
 	// TEST TO PREVENT COMMENT SPAM FROM BOTS :: BEGIN
+	//$BlogWPVersion				= bloginfo('version');
 	$spamfree_options			= get_option('spamfree_options');
 	$CookieValidationName  		= $spamfree_options['cookie_validation_name'];
 	$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
-	$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
-	if($WPCommentValidationJS==$CookieValidationKey&&$WPFormValidationPost==$FormValidationKeyJS) { // Comment allowed
+	//$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
+	if( $WPCommentValidationJS == $CookieValidationKey ) { // Comment allowed - Quick-Fix for 2.5
+	// if( $WPCommentValidationJS == $CookieValidationKey && $WPFormValidationPost == $FormValidationKeyJS ) { // Comment allowed
 		// Clear Key Values and Update
 		spamfree_update_keys(1);
 		return $approved;
 		}
+	/*	
+	else if( $BlogWPVersion >= '2.5' && $WPCommentValidationJS == $CookieValidationKey ) {
+		spamfree_update_keys(1);
+		return $approved;
+		}
+	*/	
 	else { // Comment spam killed
 	
 		// Update Count
@@ -274,7 +289,7 @@ if (!class_exists('wpSpamFree')) {
 			add_action('init', 'spamfree_init');
 			add_action('admin_menu', array(&$this,'add_admin_pages'));
 			add_action('wp_head', array(&$this, 'wp_head_intercept'));
-			add_action('comment_form', 'spamfree_comment_form');
+			//add_action('comment_form', 'spamfree_comment_form');
 			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
 			add_action('activity_box_end', 'spamfree_stats');
         	}
@@ -453,7 +468,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.7";
+			$plugin_db_version = "1.5.8";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
