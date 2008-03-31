@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.5.8
+Version: 1.5.9
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -26,15 +26,11 @@ Author URI: http://www.hybrid6.com/webgeek/
 */
 
 
-/*
-Quick-Fixed to Work with WordPress 2.5
-*/
-
 // Begin the Plugin
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.5.8';
+	$wpSpamFreeVer='1.5.9';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -133,7 +129,6 @@ function spamfree_count() {
 	}
 
 function spamfree_comment_form() {
-	// WP 2.5 Broke - for future versions keep in mind comment_form hook (if they fix it) is theme dependant
 	$spamfree_options			= get_option('spamfree_options');
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
@@ -211,7 +206,6 @@ function spamfree_allowed_post($approved) {
 	
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -230,13 +224,52 @@ function spamfree_denied_post($approved) {
 	}
 
 function spamfree_content_filter($commentdata) {
+	// Supplementary Defense - Blocking the Obvious to Improve Pingback/Trackback Defense
 	// CONTENT FILTERING :: BEGIN
 	$commentdata_comment_content	= $commentdata['comment_content'];
+	$commentdata_comment_content_lc	= strtolower($commentdata_comment_content);
+	$commentdata_comment_type		= $commentdata['comment_type'];
 	// Filter 1: Number of occurrences of 'http://' in comment_content
-	$filter_1_count = substr_count($commentdata_comment_content, 'http://');
+	$filter_1_count = substr_count($commentdata_comment_content_lc, 'http://');
+	// Filter 2: Number of occurrences of 'viagra' in comment_content
+	$filter_2_count = substr_count($commentdata_comment_content_lc, 'viagra');
+	// Filter 3: Number of occurrences of 'cialis' in comment_content
+	$filter_3_count = substr_count($commentdata_comment_content_lc, 'cialis');
+	// Filter 4: Number of occurrences of 'porn' in comment_content
+	$filter_4_count = substr_count($commentdata_comment_content_lc, 'porn');
+	// Filter 5: Number of occurrences of 'teen porn' in comment_content
+	$filter_5_count = substr_count($commentdata_comment_content_lc, 'teen porn');
+	// Filter 6: Number of occurrences of 'rape porn' in comment_content
+	$filter_6_count = substr_count($commentdata_comment_content_lc, 'rape porn');
+	// Filter 7: Number of occurrences of 'incest porn' in comment_content
+	$filter_7_count = substr_count($commentdata_comment_content_lc, 'incest porn');
+	// Filter 20: Pingback: Blank data in comment_content: [...]  [...]
+	$filter_20_count = substr_count($commentdata_comment_content_lc, '[...]  [...]');
 	
 	// Filter Test(s)
 	if ( $filter_1_count >= 5 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_2_count >= 2 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_3_count >= 2 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_4_count >= 5 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_5_count >= 1 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_6_count >= 1 ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_7_count >= 1 ) {
+		$content_filter_status = true;
+		}
+	else if ( 
+		( ( $commentdata_comment_type == 'pingback' ||  $commentdata_comment_type == 'trackback' ) && $filter_20_count >= 1 ) || $commentdata_comment_content == '[...]  [...]' ) {
 		$content_filter_status = true;
 		}
 		
@@ -464,11 +497,12 @@ if (!class_exists('wpSpamFree')) {
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: BEGIN -->'."\n";
 			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php"></script> '."\n";
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: END -->'."\n";
+			update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 			}
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.5.8";
+			$plugin_db_version = "1.5.9";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
@@ -511,6 +545,7 @@ if (!class_exists('wpSpamFree')) {
 					update_option("spamfree_count", 0);
 					}
 				update_option('spamfree_options', $spamfree_options_update);
+				update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 				// Turn on Comment Moderation
 				//update_option('comment_moderation', 1);
 				//update_option('moderation_notify', 1);
