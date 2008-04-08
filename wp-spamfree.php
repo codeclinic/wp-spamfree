@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: WP-SpamFree
-Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
+Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.6.2
+Version: 1.6.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.6.2';
+	$wpSpamFreeVer='1.6.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -205,7 +205,7 @@ function spamfree_allowed_post($approved) {
 	
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -342,6 +342,8 @@ function spamfree_content_filter($commentdata) {
 	
 	// Complex Filters
 	// Check for Optimized URL's and Keyword Phrases Ocurring in Author Name and Content
+	
+	$commentdata_comment_author_lc_spam_strong = '<strong>'.$commentdata_comment_author_lc.'</strong>'; // Trackbacks
 
 	$Domains = array('.aero','.arpa','.asia','.biz','.cat','.com','.coop','.edu','.gov','.info','.int','.jobs','.mil','.mobi','.museum','.name','.net','.org','.pro','.tel','.travel','.ac','.ad','.ae','.af','.ai','.al','.am','.an','.ao','.aq','.ar','.as','.at','.au','.aw','.ax','.az','.ba','.bb','.bd','.be','.bf','.bg','.bh','.bi','.bj','.bl','.bm','.bn','.bo','.br','.bs','.bt','.bv','.bw','.by','.bz','.ca','.cc','.cf','.cg','.ch','.ci','.ck','.cl','.cm','.cn','.co','.cr','.cu','.cv','.cx','.cy','.cz','.de','.dj','.dk','.dm','.do','.dz','.ec','.ee','.eg','.eh','.er','.es','.et','.eu','.fi','.fj','.fk','.fm','.fo','.fr','.ga','.gb','.gd','.ge','.gf','.gg','.gh','.gi','.gl','.gm','.gn','.gp','.gq','.gr','.gs','.gt','.gu','.gw','.gy','.hk','.hm','.hn','.hr','.ht','.hu','.id','.ie','.il','.im','.in','.io','.iq','.ir','.is','.it','.je','.jm','.jo','.jp','.ke','.kg','.kh','.ki','.km','.km','.kp','.kr','.kw','.ky','.kz','.la','.lb','.lc','.li','.lk','.lr','.ls','.lt','.lu','.lv','.ly','.ma','.mc','.mc','.md','.me','.mf','.mg','.mh','.mk','.ml','.mm','.mn','.mo','.mq','.mr','.ms','.mt','.mu','.mv','.mw','.mx','.my','.mz','.na','.nc','.ne','.nf','.ng','.ni','.nl','.no','.np','.nr','.nu','.nz','.om','.pa','.pe','.pf','.pg','.ph','.pk','.pl','.pm','.pn','.pr','.ps','.pt','.pw','.py','.qa','.re','.ro','.rs','.ru','.rw','.sa','.sb','.sc','.sd','.se','.sg','.sh','.si','.sj','.sk','.sl','.sm','.sn','.so','.sr','.st','.su','.sv','.sy','.sz','.tc','.td','.tf','.tg','.th','.tj','.tk','.tl','.tm','.tn','.to','.tp','.tr','.tt','.tv','.tw','.tz','.ua','.ug','.uk','.um','.us','.uy','.uz','.va','.vc','.ve','.vg','.vi','.vn','.vu','.wf','.ws','.ye','.yt','.yu','.za','.zm','.zw');
 	// from http://www.iana.org/domains/root/db/
@@ -356,6 +358,13 @@ function spamfree_content_filter($commentdata) {
 	$KeywordURLPhrasesCount = count($KeywordURLPhrases);
 	$KeywordCommentAuthorPhrase1 = str_replace(' ','',$commentdata_comment_author_lc);
 	$KeywordCommentAuthorPhrase2 = str_replace(' ','-',$commentdata_comment_author_lc);
+	$SplogTrackbackPhrase1 = 'an interesting post today.Here’s a quick excerpt';
+	$SplogTrackbackPhrase2 = 'an interesting post today. Here’s a quick excerpt';
+	$SplogTrackbackPhrase3 = 'an interesting post today.Here\'s a quick excerpt';
+	$SplogTrackbackPhrase4 = 'an interesting post today. Here\'s a quick excerpt';
+	$SplogTrackbackPhrase5 = 'Read the rest of this great post here';
+	$SplogTrackbackPhrase6 = 'here to see the original: ';
+	
 	$i = 0;
 	
 	// Execute Filter Test(s)
@@ -457,15 +466,28 @@ function spamfree_content_filter($commentdata) {
 		else if ( $filter_200_count >= $filter_200_trackback_limit ) {
 			$content_filter_status = true;
 			}
-		else if ( eregi( $KeywordCommentAuthorPhrase1, $commentdata_comment_author_url_lc ) || eregi( $KeywordCommentAuthorPhrase2, $commentdata_comment_author_url_lc ) || eregi( $KeywordCommentAuthorPhrase1, $commentdata_comment_content_lc ) || eregi( $KeywordCommentAuthorPhrase2, $commentdata_comment_content_lc ) ) {
-			// Check to see if Comment Author is a keyword phrase in the url - spammers do this to get links with desired keyword anchor text
+		else if ( $KeywordCommentAuthorPhrase1 == $commentdata_comment_author_url_lc || $KeywordCommentAuthorPhrase2 == $commentdata_comment_author_url_lc ) {
+			// Check to see if Comment Author is equal to keyword phrase in the url - spammers do this to get links with desired keyword anchor text.
+			// Normal blogs will have a separator with the blog name at the beginning or end.
+			$content_filter_status = true;
+			}
+		else if ( $commentdata_comment_author_url == $commentdata_comment_author_url_lc ) {
+			// Check to see if Comment Author is lowercase. Normal blog pings Authors are properly capitalized. No brainer.
+			$content_filter_status = true;
+			}
+		else if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) ) {
+			// Check to see if common patterns exist in comment content.
+			$content_filter_status = true;
+			}
+		else if ( eregi( $commentdata_comment_author_lc_spam_strong, $commentdata_comment_content_lc ) ) {
+			// Check to see if Comment Author is repeated in content, enclosed in <strong> tags.
 			$content_filter_status = true;
 			}
 		else { 
-			// Check to see if keyword phrases in url match Comment Author - spammers do this to get links with desired keyword anchor text
+			// Check to see if keyword phrases in url match Comment Author - spammers do this to get links with desired keyword anchor text.
 			$i = 0;
 			while ( $i <= $KeywordURLPhrasesCount ) {
-				if ( eregi( $KeywordURLPhrases[$i], $commentdata_comment_author_lc ) || eregi( $KeywordURLPhrases[$i], $commentdata_comment_content_lc ) ) {
+				if ( $KeywordURLPhrases[$i] == $commentdata_comment_author_lc || $KeywordURLPhrases[$i] == $commentdata_comment_content_lc ) {
 					$content_filter_status = true;
 					}
 				$i++;
@@ -699,13 +721,13 @@ if (!class_exists('wpSpamFree')) {
 			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php"></script> '."\n";
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: END -->'."\n";
 			echo "\n";
-			// Modified following line in 1.6.2
+			// Modified following line in 1.6.3
 			// update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 			}
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.6.2";
+			$plugin_db_version = "1.6.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
