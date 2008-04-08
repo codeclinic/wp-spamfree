@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.5
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -21,7 +21,7 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 6. Easy to install - truly plug and play. Just upload and activate. (Installation Status on the plugin admin page to let you know if plugin is installed correctly.)
 7. The beauty of this plugin is the method of blocking spam. It takes a different approach than most and stops spam at the door.  
 8. The code is has an extremely low bandwidth overhead and won't slow down your blog. (Very light database access.)
-9. Compatible with all cache plugins, including WP Cache, and WP Super Cache. Not all anti-spam plugins can say that.
+9. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
 10. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
 
 = Background =
@@ -50,8 +50,6 @@ How does it feel to blog without being bombarded by automated comment spam? If y
 
 4. Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.
 
-5. If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.
-
 You're done! Sit back and see what it feels like to live without comment spam!
 
 = Upgrading from Version 1.0 =
@@ -73,11 +71,9 @@ If you're having trouble getting things to work after installing the plugin, her
 
 4. Make sure JavaScript and cookies are enabled. (JavaScript is different from Java. Java is not required.)
 
-5. Check the options you have selected to make sure they are not disabling a feature you want to use. 
+5. Check the options you have selected to make sure they are not disabling a feature you want to use.
 
-6. If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.
-
-7. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
+6. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
 
