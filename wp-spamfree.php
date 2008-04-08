@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.6
+Version: 1.6.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.6';
+	$wpSpamFreeVer='1.6.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -309,7 +309,31 @@ function spamfree_content_filter($commentdata) {
 	// Filter 115: Number of occurrences of 'gay porn' in comment_content
 	$filter_115_count = substr_count($commentdata_comment_content_lc, 'gay porn');
 	$filter_115_limit = 2;
-	
+	// Filter 116: Number of occurrences of 'torture porn' in comment_content
+	$filter_116_count = substr_count($commentdata_comment_content_lc, 'torture porn');
+	$filter_116_limit = 1;
+	// Filter 117: Number of occurrences of 'masturbation' in comment_content
+	$filter_117_count = substr_count($commentdata_comment_content_lc, 'masturbation');
+	$filter_117_limit = 3;
+	// Filter 118: Number of occurrences of 'masterbation' in comment_content
+	$filter_118_count = substr_count($commentdata_comment_content_lc, 'masterbation');
+	$filter_118_limit = 2;
+	// Filter 119: Number of occurrences of 'masturbate' in comment_content
+	$filter_119_count = substr_count($commentdata_comment_content_lc, 'masturbate');
+	$filter_119_limit = 3;
+	// Filter 120: Number of occurrences of 'masterbate' in comment_content
+	$filter_120_count = substr_count($commentdata_comment_content_lc, 'masterbate');
+	$filter_120_limit = 2;
+	// Filter 121: Number of occurrences of 'masturbating' in comment_content
+	$filter_121_count = substr_count($commentdata_comment_content_lc, 'masturbating');
+	$filter_121_limit = 3;
+	// Filter 122: Number of occurrences of 'masterbating' in comment_content
+	$filter_122_count = substr_count($commentdata_comment_content_lc, 'masterbating');
+	$filter_122_limit = 2;
+	// Filter 123: Number of occurrences of 'anal sex' in comment_content
+	$filter_123_count = substr_count($commentdata_comment_content_lc, 'anal sex');
+	$filter_123_limit = 3;
+
 	// Pingback/Trackback Filters
 	// Filter 200: Pingback: Blank data in comment_content: [...]  [...]
 	$filter_200_count = substr_count($commentdata_comment_content_lc, '[...]  [...]');
@@ -399,6 +423,30 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		}
 	else if ( $filter_115_count >= $filter_115_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_116_count >= $filter_116_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_117_count >= $filter_117_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_118_count >= $filter_118_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_119_count >= $filter_119_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_120_count >= $filter_120_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_121_count >= $filter_121_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_122_count >= $filter_122_limit ) {
+		$content_filter_status = true;
+		}
+	else if ( $filter_123_count >= $filter_123_limit ) {
 		$content_filter_status = true;
 		}
 	// Test Pingbacks and Trackbacks
@@ -657,7 +705,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.6";
+			$plugin_db_version = "1.6.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
