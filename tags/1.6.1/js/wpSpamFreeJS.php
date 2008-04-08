@@ -7,8 +7,11 @@ $wpSpamFreeVer				= get_option('wp_spamfree_version');
 $spamfree_options			= get_option('spamfree_options');
 $CookieValidationName  		= $spamfree_options['cookie_validation_name'];
 $CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
+$WPSuperCache				= $spamfree_options['wp_super_cache'];
 
-update_option( 'ak_count_pre', get_option('akismet_spam_count') );
+if ($WPSuperCache) {
+	update_option( 'ak_count_pre', get_option('akismet_spam_count') );
+	}
 	
 header('Content-Type: application/x-javascript');
 echo "

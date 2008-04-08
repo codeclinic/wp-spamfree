@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree/
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.6.2
+Version: 1.6.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.6.2';
+	$wpSpamFreeVer='1.6.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -644,7 +644,9 @@ if (!class_exists('wpSpamFree')) {
 				
 				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1. If it is installed correctly, then move on to the next step.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
 				
-				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.</li>
+				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.<br />&nbsp;</li>
+				
+				<li>If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.</li>
 
 			</ol>	
 			<p>&nbsp;</p>
@@ -660,13 +662,14 @@ if (!class_exists('wpSpamFree')) {
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>Make sure <em>JavaScript</em> and <em>cookies</em> are enabled. (JavaScript is different from Java. Java is not required.)<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
+				<li>If using WP Super Cache, be sure to compression is disabled in the settings for that plugin.<br />&nbsp;</li>
 				<li>If have checked these, and still can't quite get it working, please either post a support request in the comments section of the <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank">WP-SpamFree release announcement</a> blog post, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request, v<?php echo $wpSpamFreeVerAdmin; ?>">send a support email</a>.</li>
 			</ol>
 			<p>&nbsp;</p>			
 
 			
 			
-  			<p>For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank">http://www.hybrid6.com/webgeek/plugins/wp-spamfree</a></p>
+  			<p>For updates and documentation, visit the homepage of the WP-SpamFree Plugin at: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/" target="_blank">http://www.hybrid6.com/webgeek/plugins/wp-spamfree/</a></p>
 	
 			<p>&nbsp;</p>
 	
@@ -676,7 +679,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<strong>Download Plugin / Documentation</strong><br />
 			Latest Version: <a href="http://www.hybrid6.com/webgeek/downloads/wp-spamfree.zip" target="_blank">Download Now</a><br />
-			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree">WP-SpamFree</a><br />
+			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/">WP-SpamFree</a><br />
 			Blog Post: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php">WP-SpamFree Release Announcement</a><br />
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank">WP-SpamFree</a>
 	
@@ -694,18 +697,15 @@ if (!class_exists('wpSpamFree')) {
 			if ($wpSpamFreeVer!='') {
 				$wpSpamFreeVerJS=' v'.$wpSpamFreeVer;
 				}
-			echo "\n";
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: BEGIN -->'."\n";
 			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php"></script> '."\n";
 			echo '<!-- WP-SpamFree'.$wpSpamFreeVerJS.' JS Code :: END -->'."\n";
-			echo "\n";
-			// Modified following line in 1.6.2
-			// update_option( 'ak_count_pre', get_option('akismet_spam_count') );
+			update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 			}
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.6.2";
+			$plugin_db_version = "1.6.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
