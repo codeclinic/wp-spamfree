@@ -18,11 +18,12 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 3. No CAPTCHA's, challenge questions or other inconvenience to site visitors - it works silently in the background.
 4. No false positives, which leads to fewer frustrated readers, and less work for you.
 5. You won't have to waste valuable time sifting through your Akismet queue anymore, because there won't be much there.
-6. Easy to install - truly plug and play. Just upload and activate. (Installation Status on the plugin admin page to let you know if plugin is installed correctly.)
-7. The beauty of this plugin is the method of blocking spam. It takes a different approach than most and stops spam at the door.  
-8. The code is has an extremely low bandwidth overhead and won't slow down your blog. (Very light database access.)
-9. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
-10. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
+6. Now with Trackback and Pingback spam protection.
+7. Easy to install - truly plug and play. Just upload and activate. (Installation Status on the plugin admin page to let you know if plugin is installed correctly.)
+8. The beauty of this plugin is the methods of blocking spam. It takes a different approach than most and stops spam at the door.  
+9. The code is has an extremely low bandwidth overhead and won't slow down your blog (very light database access), unlike some other anti-spam plugins.
+10. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
+11. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
@@ -30,11 +31,11 @@ Before I developed this plugin, our team and clients experienced the same frustr
 Comment spam stems from an older problem - automated spamming of email contact forms on web sites. I developed a fix for this a while ago that had a 100% success rate. Earlier this year, I applied it to our WordPress blogs. It was so effective, that I decided to turn it into a WordPress plugin to be freely distributed. Blogs we manage used to get an excessive number of spam comments show up on the Akismet Spam page each day - now the daily average is zero spam comments.
 
 = How It Works =
-Most of the spam hitting your blog originates from bots. Few bots can process JavaScript. Few bots can process cookies. Fewer still, can handle both. This plugin uses a combo of JavaScript and cookies, since most bots choke on them, to weed out the humans from bots, preventing 99% of automated spam from ever getting to your site. Almost 100% of web site visitors will have these turned on by default, so this type of solution works silently in the background, with no inconveniences. There may be a few users (approx 2%) that have JavaScript and/or cookies turned off by default, but they will be prompted to turn those back on to post their comment. Overall, the few might be inconvenienced because they have JS and cookies turned off will be far fewer than the 100% who would be annoyed by CAPTCHA's, challenge questions, and other validation methods.
+Most of the spam hitting your blog originates from bots. Few bots can process JavaScript. Few bots can process cookies. Fewer still, can handle both. In a nutshell, this plugin uses a combo of JavaScript and cookies, since most bots choke on them, to weed out the humans from spambots, preventing 99%+ of automated spam from ever getting to your site. Almost 100% of web site visitors will have these turned on by default, so this type of solution works silently in the background, with no inconveniences. There may be a few users (less than 2%) that have JavaScript and/or cookies turned off by default, but they will be prompted to turn those back on to post their comment. Overall, the few might be inconvenienced because they have JS and cookies turned off will be far fewer than the 100% who would be annoyed by CAPTCHA's, challenge questions, and other validation methods.
 
-As of Version 1.5, WP-SpamFree has multiple randomly generated keys across several methods that further decrease the likelihood of an automated spam comment getting through.
+As of Version 1.5, WP-SpamFree has multiple randomly generated keys across several methods, along with a few additional security features that further decrease the likelihood of an automated spam comment getting through.
 
-Some would argue that this is too simplistic an approach. Many programmers prefer using some type of low-level AI to fight bots by trying to figure out if a comment is spam. The problem with this is that no machine can ever accurately judge whether a comment is spam, so there are many false positives, and many non-spam comments get flagged as spam. Others would argue that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. It's simply a numbers game. Statistics tell us that an effective solution would involve using a technology that few bots can handle, therefore eliminating their ability to spam your site. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience, and a 99% reduction in spam would definitely make a difference for most bloggers and site visitors. :) The bottom line, is that this plugin just plain works, and is a powerful weapon against spam. Sometimes the best solutions are the simplest ones!
+Some would argue that this is too simplistic an approach. Many programmers prefer using some type of basic AI to fight bots by trying to figure out if a comment is spam. While that isn't a bad idea, it falls short because no machine can ever accurately judge whether a comment is spam - many spam comments get through that could easily have been stopped, and there are many false positives where non-spam comments get flagged as spam. Other may argue that some spammers have programmed their bots to read JavaScript, etc. In reality, the percentage of bots with these capabilities is still extremely low - less than 1%. It's simply a numbers game. Statistics tell us that an effective solution would involve using a technology that few bots can handle, therefore eliminating their ability to spam your site. The important thing in fighting spam is that we create a solution that can reduce spam noticeably and improve the user experience, and a 99% reduction in spam would definitely make a difference for most bloggers and site visitors. :) The bottom line, is that this plugin just plain works, and is a **powerful weapon against spam**.
 
 = Blogging Without Spam =
 How does it feel to blog without being bombarded by automated comment spam? If you're happy with WP-SpamFree, please let others know by giving it a rating!
@@ -56,7 +57,7 @@ You're done! Sit back and see what it feels like to live without comment spam!
 Simply undo any edits you made to your `header.php` and `wp-comments-post.php` files when installing Version 1.0. Then install the most recent version!
 
 = For Best Results =
-WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 95% of comment spam), not human comment spam, trackback spam or pingback spam. Akismet is able to recognize the latter three fairly well, so instead of re-inventing the wheel, we recommend using the two plugins in tandem. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, coupled with the Akismet plugin.
+WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 99% of comment spam), and recently we have added some features that help combat human comment spam, as well as trackback/pingback spam. Unfortunately, no plugin can perfectly detect human comment spam. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, and if you desire a backup, feel free to use Akismet, as the two plugins are compatible.
 
 == Other Notes ==
 
@@ -98,6 +99,7 @@ Version 1.6, released 04/06/08:
 Version 1.5.8, released 03/30/08: 
 
 * Modified to work with WordPress 2.5. WordPress 2.5 broke many plugins and themes. If you have any problems with 1.5.8, please submit a support request.
+* Now compatible with WP super Cache gzip compression.
 
 Version 1.5.7, released 03/27/08: 
 
