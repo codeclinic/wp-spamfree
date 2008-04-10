@@ -78,7 +78,7 @@ If you're having trouble getting things to work after installing the plugin, her
 
 = Changelog =
 
-Version 1.6.4, released 04/06/09: 
+Version 1.6.4, released 04/10/08: 
 
 * Improved comment spam protection.
 * Improved trackback/pingback spam protection.
