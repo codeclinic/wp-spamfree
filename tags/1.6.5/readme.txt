@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.5
-Stable tag: 1.6.6
+Stable tag: 1.6.5
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
