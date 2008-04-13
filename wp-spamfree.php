@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.6.6
+Version: 1.6.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.6.6';
+	$wpSpamFreeVer='1.6.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -471,7 +471,7 @@ function spamfree_content_filter($commentdata) {
 			// Normal blogs will have a separator with the blog name at the beginning or end.
 			$content_filter_status = true;
 			}
-		else if ( $commentdata_comment_author_url == $commentdata_comment_author_url_lc ) {
+		else if ( $commentdata_comment_author == $commentdata_comment_author_lc ) {
 			// Check to see if Comment Author is lowercase. Normal blog pings Authors are properly capitalized. No brainer.
 			$content_filter_status = true;
 			}
@@ -728,7 +728,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.6.6";
+			$plugin_db_version = "1.6.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
