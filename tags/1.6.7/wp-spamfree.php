@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.6.8
+Version: 1.6.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 function spamfree_init() {
 	session_start();
-	$wpSpamFreeVer='1.6.8';
+	$wpSpamFreeVer='1.6.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -148,20 +148,15 @@ function spamfree_check_comment_type($commentdata) {
 	
 	$content_filter_status		= spamfree_content_filter($commentdata);
 	
-	global $userdata, $user_login, $user_level, $user_ID, $user_email, $user_url, $user_identity;
-	get_currentuserinfo();
-	
-	if ( $user_level < 9 ) {
-		if ($content_filter_status) {
-			add_filter('pre_comment_approved', 'spamfree_denied_post', 1);
-			}	
-		else if ( ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) || ( $BlockAllTrackbacks && $BlockAllPingbacks ) || ( $BlockAllTrackbacks && $commentdata['comment_type'] == 'trackback' ) || ( $BlockAllPingbacks && $commentdata['comment_type'] == 'pingback' ) ) {
-			// If Comment is not a trackback or pingback, or 
-			// Trackbacks and Pingbacks are blocked, or 
-			// Trackbacks are blocked and comment is Trackback, or 
-			// Pingbacks are blocked and comment is Pingback
-			add_filter('pre_comment_approved', 'spamfree_allowed_post', 1);
-			}
+	if ($content_filter_status) {
+		add_filter('pre_comment_approved', 'spamfree_denied_post', 1);
+		}	
+	else if ( ( $commentdata['comment_type'] != 'trackback' && $commentdata['comment_type'] != 'pingback' ) || ( $BlockAllTrackbacks && $BlockAllPingbacks ) || ( $BlockAllTrackbacks && $commentdata['comment_type'] == 'trackback' ) || ( $BlockAllPingbacks && $commentdata['comment_type'] == 'pingback' ) ) {
+		// If Comment is not a trackback or pingback, or 
+		// Trackbacks and Pingbacks are blocked, or 
+		// Trackbacks are blocked and comment is Trackback, or 
+		// Pingbacks are blocked and comment is Pingback
+		add_filter('pre_comment_approved', 'spamfree_allowed_post', 1);
 		}
 	return $commentdata;
 	}
@@ -733,7 +728,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.6.8";
+			$plugin_db_version = "1.6.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
