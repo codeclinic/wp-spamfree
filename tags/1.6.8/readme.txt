@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.5
-Stable tag: 1.6.9
+Stable tag: 1.6.8
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -50,8 +50,6 @@ How does it feel to blog without being bombarded by automated comment spam? If y
 
 4. Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.
 
-5. Disable any other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine.)
-
 You're done! Sit back and see what it feels like to live without comment spam!
 
 = Upgrading from Version 1.0 =
@@ -75,15 +73,9 @@ If you're having trouble getting things to work after installing the plugin, her
 
 5. Check the options you have selected to make sure they are not disabling a feature you want to use.
 
-6. Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine.)
-
-7. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
+6. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-
-Version 1.6.9, released 04/16/08: 
-
-* Minor modification to improve compatibility with certain PHP installations.
 
 Version 1.6.8, released 04/13/08: 
 
