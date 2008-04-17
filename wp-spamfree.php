@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.7
+Version: 1.7.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.7';
+	$wpSpamFreeVer='1.7.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -520,9 +520,11 @@ function spamfree_content_filter($commentdata) {
 	$TempPhrase6 = strtolower(str_replace($ConversionSeparators,' ',$TempPhrase5));
 	$KeywordURLPhrases = explode('/',$TempPhrase6);
 	$KeywordURLPhrasesCount = count($KeywordURLPhrases);
-	$KeywordCommentAuthorPhrase1 = str_replace(' ','',$commentdata_comment_author_lc);
-	$KeywordCommentAuthorPhrase2 = str_replace(' ','-',$commentdata_comment_author_lc);
-	$KeywordCommentAuthorPhrase3 = str_replace(' ','_',$commentdata_comment_author_lc);
+	$KeywordCommentAuthorPhrasePunct = array('\:','\;','\+','\-','\!','\.','\,','\[','\]','\@','\#','\$','\%','\^','\&','\*','\(','\)','\/','\\','\|','\=','\_');
+	$KeywordCommentAuthorTempPhrase = str_replace($KeywordCommentAuthorPhrasePunct,'',$commentdata_comment_author_lc);
+	$KeywordCommentAuthorPhrase1 = str_replace(' ','',$KeywordCommentAuthorTempPhrase);
+	$KeywordCommentAuthorPhrase2 = str_replace(' ','-',$KeywordCommentAuthorTempPhrase);
+	$KeywordCommentAuthorPhrase3 = str_replace(' ','_',$KeywordCommentAuthorTempPhrase);
 	$KeywordCommentAuthorPhraseURLVariation = $FilterElementsPage;
 	$KeywordCommentAuthorPhraseURLVariation[] = '/';
 	$KeywordCommentAuthorPhraseURLVariationCount = count($KeywordCommentAuthorPhraseURLVariation);
@@ -876,15 +878,18 @@ function spamfree_content_filter($commentdata) {
 			$KeywordCommentAuthorPhrase1Version = '/'.$KeywordCommentAuthorPhrase1.$KeywordCommentAuthorPhraseURLVariation[$i];
 			$KeywordCommentAuthorPhrase2Version = '/'.$KeywordCommentAuthorPhrase2.$KeywordCommentAuthorPhraseURLVariation[$i];
 			$KeywordCommentAuthorPhrase3Version = '/'.$KeywordCommentAuthorPhrase3.$KeywordCommentAuthorPhraseURLVariation[$i];
-			if ( eregi( $KeywordCommentAuthorPhrase1Version, $commentdata_comment_author_url_lc ) ) {
+			$KeywordCommentAuthorPhrase1SubStrCount = substr_count($commentdata_comment_author_url_lc, $KeywordCommentAuthorPhrase1Version);
+			$KeywordCommentAuthorPhrase2SubStrCount = substr_count($commentdata_comment_author_url_lc, $KeywordCommentAuthorPhrase2Version);
+			$KeywordCommentAuthorPhrase3SubStrCount = substr_count($commentdata_comment_author_url_lc, $KeywordCommentAuthorPhrase3Version);
+			if ( $KeywordCommentAuthorPhrase1SubStrCount >= 1 ) {
 				$content_filter_status = true;
 				$spamfree_error_code .= ' T3003-1-'.$KeywordCommentAuthorPhrase1Version;
 				}
-			else if ( eregi( $KeywordCommentAuthorPhrase2Version, $commentdata_comment_author_url_lc ) ) {
+			else if ( $KeywordCommentAuthorPhrase2SubStrCount >= 1 ) {
 				$content_filter_status = true;
 				$spamfree_error_code .= ' T3003-2-'.$KeywordCommentAuthorPhrase2Version;
 				}
-			else if ( eregi( $KeywordCommentAuthorPhrase3Version, $commentdata_comment_author_url_lc ) ) {
+			else if ( $KeywordCommentAuthorPhrase3SubStrCount >= 1 ) {
 				$content_filter_status = true;
 				$spamfree_error_code .= ' T3003-3-'.$KeywordCommentAuthorPhrase3Version;
 				}
@@ -1165,7 +1170,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.7";
+			$plugin_db_version = "1.7.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
