@@ -850,7 +850,6 @@ function spamfree_content_filter($commentdata) {
 			// Check to see if Comment Author is lowercase. Normal blog pings Authors are properly capitalized. No brainer.
 			$content_filter_status = true;
 			$spamfree_error_code .= ' T1010';
-			// 1 False Positive when it was set to comment_author_url by accident. Let's see how it works with corrections for author.
 			}
 		if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) ) {
 			// Check to see if common patterns exist in comment content.
