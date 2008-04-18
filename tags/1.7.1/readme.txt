@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.5
-Stable tag: 1.7.2
+Stable tag: 1.7.1
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -78,15 +78,11 @@ If you're having trouble getting things to work after installing the plugin, her
 
 6. Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine.)
 
-7. Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php (where yourblog.com is your blog url) and check two things. First, see if the file comes up normally or if it comes up blank or with errors. That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. Second, check for a 403 Forbidden error. That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen.
+7. Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php (where yourblog.com is your blog url) and check two things. First, see if the file comes normally or if it comes up blank or with errors. That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. Second, check for a 403 Forbidden error. That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen.
 
 8. If have checked these, and still can't quite get it working, please post a support request in the comments section of the [WP-SpamFree release announcement blog post](http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php).
 
 = Changelog =
-
-Version 1.7.2, released 04/18/08: 
-
-* Improved trackback/pingback spam protection.
 
 Version 1.7.1, released 04/17/08: 
 
