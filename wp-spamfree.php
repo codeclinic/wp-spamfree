@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.7.2
+Version: 1.7.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,10 +25,11 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.7.2';
+	$wpSpamFreeVer='1.7.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -249,6 +250,10 @@ function spamfree_content_filter($commentdata) {
 	// Altered to Accommodate WP 2.5+
 	$commentdata_user_agent					= $_SERVER['HTTP_USER_AGENT'];
 	$commentdata_user_agent_lc				= strtolower($commentdata_user_agent);
+	$commentdata_remote_addr				= $_SERVER['REMOTE_ADDR'];
+	$commentdata_remote_addr_lc				= strtolower($commentdata_remote_addr);
+	$commentdata_remote_host				= $_SERVER['REMOTE_HOST'];
+	$commentdata_remote_host_lc				= strtolower($commentdata_remote_host);
 	$commentdata_referrer					= $_SERVER['HTTP_REFERER'];
 	$commentdata_referrer_lc				= strtolower($commentdata_referrer);
 	$commentdata_blog						= get_option('siteurl');
@@ -716,8 +721,10 @@ function spamfree_content_filter($commentdata) {
 	$SplogTrackbackPhrase2 = 'an interesting post today. Here’s a quick excerpt';
 	$SplogTrackbackPhrase3 = 'an interesting post today.Here\'s a quick excerpt';
 	$SplogTrackbackPhrase4 = 'an interesting post today. Here\'s a quick excerpt';
-	$SplogTrackbackPhrase5 = 'Read the rest of this great post here';
-	$SplogTrackbackPhrase6 = 'here to see the original: ';
+	$SplogTrackbackPhrase5 = 'an interesting post today onHere’s a quick excerpt';
+	$SplogTrackbackPhrase6 = 'an interesting post today onHere\'s a quick excerpt';
+	$SplogTrackbackPhrase7 = 'Read the rest of this great post here';
+	$SplogTrackbackPhrase8 = 'here to see the original: ';
 	
 	$blacklist_word_combo_limit = 7;
 	$blacklist_word_combo = 0;
@@ -1060,6 +1067,16 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1001';
 		}
+	// Test IPs
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 1002';
+		}
+	// Test Remote Hosts
+	if ( eregi( '.svservers.com', $commentdata_remote_host_lc ) ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 1003';
+		}
 	// Test Pingbacks and Trackbacks
 	if ( $commentdata_comment_type == 'pingback' || $commentdata_comment_type == 'trackback' ) {
 	
@@ -1088,7 +1105,11 @@ function spamfree_content_filter($commentdata) {
 			$content_filter_status = true;
 			$spamfree_error_code .= ' T1010';
 			}
-		if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) ) {
+		if ( $commentdata_comment_content == '[...] read more [...]' ) {
+			$content_filter_status = true;
+			$spamfree_error_code .= ' T1020';
+			}
+		if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase7, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase8, $commentdata_comment_content_lc ) ) {
 			// Check to see if common patterns exist in comment content.
 			$content_filter_status = true;
 			$spamfree_error_code .= ' T2002';
@@ -1314,7 +1335,11 @@ function spamfree_content_filter($commentdata) {
 	}
 
 function spamfree_stats() {
-	echo '<h3>WP-SpamFree</h3>';
+	global $wp_version;
+	$BlogWPVersion = $wp_version;
+	if ($BlogWPVersion < '2.5') {
+		echo '<h3>WP-SpamFree</h3>';
+		}
 	$spamfree_count = get_option('spamfree_count');
 	if ( !$spamfree_count ) {
 		echo '<p>No comment spam attempts have been detected yet.</p>';
@@ -1540,7 +1565,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.7.2";
+			$plugin_db_version = "1.7.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
