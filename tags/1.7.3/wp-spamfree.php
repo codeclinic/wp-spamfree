@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.7.4
+Version: 1.7.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,10 +25,11 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.7.4';
+	$wpSpamFreeVer='1.7.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -677,24 +678,12 @@ function spamfree_content_filter($commentdata) {
 	
 	// Filter 20001: Number of occurrences of 'groups.google.com' in comment_author_url
 	$filter_20001_count = substr_count($commentdata_comment_author_url_lc, 'groups.google.com');
-	$filter_20001C_count = substr_count($commentdata_comment_content_lc, 'groups.google.com');
 	$filter_20001_limit = 1;
 	$filter_20001_trackback_limit = 1;
 	// Filter 20002: Number of occurrences of 'groups.yahoo.com' in comment_author_url
 	$filter_20002_count = substr_count($commentdata_comment_author_url_lc, 'groups.yahoo.com');
-	$filter_20002C_count = substr_count($commentdata_comment_content_lc, 'groups.yahoo.com');
 	$filter_20002_limit = 1;
 	$filter_20002_trackback_limit = 1;
-	// Filter 20003: Number of occurrences of '.phpbbserver.com' in comment_author_url
-	$filter_20003_count = substr_count($commentdata_comment_author_url_lc, '.phpbbserver.com');
-	$filter_20003C_count = substr_count($commentdata_comment_content_lc, '.phpbbserver.com');
-	$filter_20003_limit = 1;
-	$filter_20003_trackback_limit = 1;
-	// Filter 20004: Number of occurrences of '.freehostia.com' in comment_author_url
-	$filter_20004_count = substr_count($commentdata_comment_author_url_lc, '.freehostia.com');
-	$filter_20004C_count = substr_count($commentdata_comment_content_lc, '.freehostia.com');
-	$filter_20004_limit = 1;
-	$filter_20004_trackback_limit = 1;
 	
 	$commentdata_comment_author_lc_spam_strong = '<strong>'.$commentdata_comment_author_lc.'</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot1 = '...</strong>'; // Trackbacks
@@ -1028,23 +1017,6 @@ function spamfree_content_filter($commentdata) {
 		}
 	if ( $filter_143_count ) { $blacklist_word_combo++; }
 	
-	if ( $filter_20001C_count >= $filter_20001_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20001C';
-		}
-	if ( $filter_20002C_count >= $filter_20002_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20002C';
-		}
-	if ( $filter_20003C_count >= $filter_20003_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20003C';
-		}
-	if ( $filter_20004C_count >= $filter_20004_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20004C';
-		}	
-
 	/*
 	// Execute Filter Test(s)
 
@@ -1083,10 +1055,6 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 9200';
-		}
 	// Test Referrers
 	if ( eregi( $commentdata_php_self_lc, $WPCommentsPostURL ) && $commentdata_referrer_lc == $WPCommentsPostURL ) {
 		// Often spammers send the referrer as the URL for the wp-comments-post.php page. Nimrods.
@@ -1100,7 +1068,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	// Test IPs
-	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '78.129.202.15' ) {
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1002';
 		}
@@ -1261,10 +1229,6 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 20003';
 		}
-	if ( eregi( '.freehostia.com', $commentdata_comment_author_url_lc ) ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20004';
-		}
 	if ( $filter_20001_count >= $filter_20001_limit ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 20001A';
@@ -1272,14 +1236,6 @@ function spamfree_content_filter($commentdata) {
 	if ( $filter_20002_count >= $filter_20002_limit ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 20002A';
-		}
-	if ( $filter_20003_count >= $filter_20003_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20003A';
-		}
-	if ( $filter_20004_count >= $filter_20004_limit ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 20004A';
 		}
 	// Comment Author Tests
 	if ( $filter_2_author_count >= 1 ) {
@@ -1609,7 +1565,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.7.4";
+			$plugin_db_version = "1.7.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
