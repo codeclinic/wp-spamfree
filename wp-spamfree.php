@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.7.5
+Version: 1.7.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.7.5';
+	$wpSpamFreeVer='1.7.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -451,8 +451,70 @@ function spamfree_content_filter($commentdata) {
 	$filter_17_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_17_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_17_author_count;
+	// Filter 18: Number of occurrences of 'penis enlargement' in comment_content
+	$filter_18_term = 'penis enlargement';
+	$filter_18_count = substr_count($commentdata_comment_content_lc, $filter_18_term);
+	$filter_18_limit = 2;
+	$filter_18_trackback_limit = 1;
+	$filter_18_author_count = substr_count($commentdata_comment_author_lc, $filter_18_term);
+	$filter_18_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_18_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_18_author_count;
+	// Filter 19: Number of occurrences of 'buy pills' in comment_content
+	$filter_19_term = 'buy pills';
+	$filter_19_count = substr_count($commentdata_comment_content_lc, $filter_19_term);
+	$filter_19_limit = 3;
+	$filter_19_trackback_limit = 2;
+	$filter_19_author_count = substr_count($commentdata_comment_author_lc, $filter_19_term);
+	$filter_19_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_19_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_19_author_count;
+	// Filter 20: Number of occurrences of 'diet pill' in comment_content
+	$filter_20_term = 'diet pill';
+	$filter_20_count = substr_count($commentdata_comment_content_lc, $filter_20_term);
+	$filter_20_limit = 3;
+	$filter_20_trackback_limit = 2;
+	$filter_20_author_count = substr_count($commentdata_comment_author_lc, $filter_20_term);
+	$filter_20_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_20_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_20_author_count;
+	// Filter 21: Number of occurrences of 'weight loss pill' in comment_content
+	$filter_21_term = 'weight loss pill';
+	$filter_21_count = substr_count($commentdata_comment_content_lc, $filter_21_term);
+	$filter_21_limit = 3;
+	$filter_21_trackback_limit = 2;
+	$filter_21_author_count = substr_count($commentdata_comment_author_lc, $filter_21_term);
+	$filter_21_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_21_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_21_author_count;
+	// Filter 22: Number of occurrences of 'pill' in comment_content
+	$filter_22_term = 'pill';
+	$filter_22_count = substr_count($commentdata_comment_content_lc, $filter_22_term);
+	$filter_22_limit = 10;
+	$filter_22_trackback_limit = 2;
+	$filter_22_author_count = substr_count($commentdata_comment_author_lc, $filter_22_term);
+	$filter_22_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_22_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_22_author_count;
+	// Filter 23: Number of occurrences of ' pill,' in comment_content
+	$filter_23_term = ' pill,';
+	$filter_23_count = substr_count($commentdata_comment_content_lc, $filter_23_term);
+	$filter_23_limit = 5;
+	$filter_23_trackback_limit = 2;
+	$filter_23_author_count = substr_count($commentdata_comment_author_lc, $filter_23_term);
+	$filter_23_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_23_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_23_author_count;
+	// Filter 24: Number of occurrences of ' pills,' in comment_content
+	$filter_24_term = ' pills,';
+	$filter_24_count = substr_count($commentdata_comment_content_lc, $filter_24_term);
+	$filter_24_limit = 5;
+	$filter_24_trackback_limit = 2;
+	$filter_24_author_count = substr_count($commentdata_comment_author_lc, $filter_24_term);
+	$filter_24_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_24_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_24_author_count;
 
-	
 	// Sex-Related Filter
 	// Filter 104: Number of occurrences of 'porn' in comment_content
 	$filter_104_count = substr_count($commentdata_comment_content_lc, 'porn');
@@ -915,6 +977,41 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 17';
 		}
 	if ( $filter_17_count ) { $blacklist_word_combo++; }
+	if ( $filter_18_count >= $filter_18_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 18';
+		}
+	if ( $filter_18_count ) { $blacklist_word_combo++; }
+	if ( $filter_19_count >= $filter_19_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 19';
+		}
+	if ( $filter_19_count ) { $blacklist_word_combo++; }
+	if ( $filter_20_count >= $filter_20_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20';
+		}
+	if ( $filter_20_count ) { $blacklist_word_combo++; }
+	if ( $filter_21_count >= $filter_21_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 21';
+		}
+	if ( $filter_21_count ) { $blacklist_word_combo++; }
+	if ( $filter_22_count >= $filter_22_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 22';
+		}
+	if ( $filter_22_count ) { $blacklist_word_combo++; }
+	if ( $filter_23_count >= $filter_23_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 23';
+		}
+	if ( $filter_23_count ) { $blacklist_word_combo++; }
+	if ( $filter_24_count >= $filter_24_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 24';
+		}
+	if ( $filter_24_count ) { $blacklist_word_combo++; }
 		
 	if ( $filter_104_count >= $filter_104_limit ) {
 		$content_filter_status = true;
@@ -1166,7 +1263,7 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 9200';
 		}
@@ -1183,7 +1280,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	// Test IPs
-	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '78.129.202.15' ) {
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '78.129.202.15' || $commentdata_remote_addr_lc == '89.113.78.6' ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1002';
 		}
@@ -1450,14 +1547,59 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 15AUTH';
 		}
-	if ( $$filter_15_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_15_count ) { $blacklist_word_combo++; }
+	if ( $filter_16_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 16AUTH';
+		}
+	if ( $$filter_16_count ) { $blacklist_word_combo++; }	
 	if ( $filter_17_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 17AUTH';
 		}
-	if ( $$filter_17_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_17_count ) { $blacklist_word_combo++; }
+	if ( $filter_18_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 18AUTH';
+		}
+	if ( $$filter_18_count ) { $blacklist_word_combo++; }
+	if ( $filter_19_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 19AUTH';
+		}
+	if ( $$filter_19_count ) { $blacklist_word_combo++; }
+	if ( $filter_20_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20AUTH';
+		}
+	if ( $$filter_20_count ) { $blacklist_word_combo++; }
+	if ( $filter_21_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 21AUTH';
+		}
+	if ( $$filter_21_count ) { $blacklist_word_combo++; }
+	if ( $filter_22_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 22AUTH';
+		}
+	if ( $$filter_22_count ) { $blacklist_word_combo++; }
+	if ( $filter_23_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 23AUTH';
+		}
+	if ( $$filter_23_count ) { $blacklist_word_combo++; }
+	if ( $filter_24_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 24AUTH';
+		}
+	if ( $$filter_24_count ) { $blacklist_word_combo++; }	
 
-
+	if ( eregi( 'buy', $commentdata_comment_author_lc ) && ( eregi( 'online', $commentdata_comment_author_lc ) || eregi( 'pill', $commentdata_comment_author_lc ) ) ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 200AUTH';
+		$blacklist_word_combo++;
+		}
+	
 	// Blacklist Word Combinations
 	if ( $blacklist_word_combo >= $blacklist_word_combo_limit ) {
 		$content_filter_status = true;
@@ -1476,7 +1618,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -1713,7 +1855,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.7.5";
+			$plugin_db_version = "1.7.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
