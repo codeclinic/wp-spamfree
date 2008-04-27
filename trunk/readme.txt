@@ -13,17 +13,17 @@ A powerful anti-spam plugin that virtually eliminates automated comment spam fro
 Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is an effective solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **WP-SpamFree virtually eliminates automated comment spam from bots, including trackback and pingback spam.**
 
 = Key Features =
-1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
+1. Virtually eliminates automated comment spam from bots. It works like a firewall to ensure that your commenters are in fact, human.
 2. A counter on your dashboard to keep track of all the spam it's blocking. The numbers will show how effective this plugin is.
 3. No CAPTCHA's, challenge questions or other inconvenience to site visitors - it works silently in the background.
 4. No false positives, which leads to fewer frustrated readers, and less work for you.
-5. You won't have to waste valuable time sifting through your Akismet queue anymore, because there won't be much there.
-6. Now with Trackback and Pingback spam protection.
+5. You won't have to waste valuable time sifting through your Akismet queue anymore, because there won't be much there, if anything.
+6. Now with powerful trackback and pingback spam protection.
 7. Easy to install - truly plug and play. Just upload and activate. (Installation Status on the plugin admin page to let you know if plugin is installed correctly.)
 8. The beauty of this plugin is the methods of blocking spam. It takes a different approach than most and stops spam at the door.  
 9. The code is has an extremely low bandwidth overhead and won't slow down your blog (very light database access), unlike some other anti-spam plugins.
 10. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
-11. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.
+11. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. (While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.)
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
