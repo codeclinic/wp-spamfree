@@ -10,7 +10,7 @@ A powerful anti-spam plugin that virtually eliminates automated comment spam fro
 == Description ==
 
 = A Powerful Weapon Against Comment Spam =
-Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is a solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **The WP-SpamFree plugin virtually eliminates automated comment spam from bots.**
+Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is an effective solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **WP-SpamFree virtually eliminates automated comment spam from bots, including trackback and pingback spam.**
 
 = Key Features =
 1. Virtually eliminates automated comment spam from bots. It ensures that your commenters are in fact, human.
