@@ -1684,7 +1684,7 @@ if (!class_exists('wpSpamFree')) {
 			<strong>Download Plugin / Documentation</strong><br />
 			Latest Version: <a href="http://www.hybrid6.com/webgeek/downloads/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
 			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >WP-SpamFree</a><br />
-			Blog Post: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank" rel="external" >WP-SpamFree Release Announcement</a><br />
+			Leave Comments: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank" rel="external" >WP-SpamFree Release Announcement Blog Post</a><br />
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
 			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>
 	
