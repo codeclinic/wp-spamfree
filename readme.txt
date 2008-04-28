@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript
 Tested up to: 2.5.1
-Stable tag: 1.7.6
+Stable tag: 1.7.7
 
 A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 
@@ -24,6 +24,9 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 9. The code is has an extremely low bandwidth overhead and won't slow down your blog (very light database access), unlike some other anti-spam plugins.
 10. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
 11. Options to completely disable trackbacks and/or pingbacks if they become an excessive nuisance. (While doing so can reduce the connectivity and community feel of the blogosphere, it has been much requested since the glitch in 1.3 that inadvertently blocked trackbacks and pingbacks. Many people actually liked this. So, the choice has been given back to you.)
+
+= New Feature =
+* Now you can display your spam stats on your blog. Simply insert the code into your theme and you can show off how much spam you're not getting anymore.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
@@ -63,6 +66,14 @@ Simply undo any edits you made to your `header.php` and `wp-comments-post.php` f
 = For Best Results =
 WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 99% of comment spam), and recently we have added some features that help combat human comment spam, as well as trackback/pingback spam. Unfortunately, no plugin can perfectly detect human comment spam. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, and if you desire a backup, feel free to use Akismet, as the two plugins are compatible.
 
+= Displaying Stats on Your Blog =
+Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed:
+`<?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?>`
+where '1' is the style. Replace the '1' with a number from 1-6 corresponding to one of the background styles you'd like to use. (See plugin admin page for more info.)
+
+To add stats to individual posts, you'll need to install the Exec-PHP plugin.
+
+
 == Other Notes ==
 
 = Troubleshooting =
@@ -86,8 +97,9 @@ If you're having trouble getting things to work after installing the plugin, her
 
 = Changelog =
 
-Version 1.7.6, released 04/27/08: 
+Version 1.7.7, released 04/27/08: 
 
+* Added ability to display spam stats on blog.
 * Improved trackback/pingback spam protection.
 
 Version 1.7.5, released 04/26/08: 
