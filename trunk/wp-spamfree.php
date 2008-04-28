@@ -1459,7 +1459,7 @@ function spamfree_content_filter($commentdata) {
 		while ( $i <= $RepeatedTermsTestCount ) {
 			$RepeatedTermsInContentCount = substr_count( $commentdata_comment_content_lc, $RepeatedTermsTest[$i] );
 			$RepeatedTermsInContentStrLength = strlen($RepeatedTermsTest[$i]);
-			if ( $RepeatedTermsInContentCount >= 5 && $RepeatedTermsInContentStrLength >= 4 ) {		
+			if ( $RepeatedTermsInContentCount >= 6 && $RepeatedTermsInContentStrLength >= 4 ) {		
 				$content_filter_status = true;
 				$spamfree_error_code .= ' T9000-'.$i;
 				}
