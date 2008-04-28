@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: A powerful anti-spam plugin that virtually eliminates automated comment spam from bots. Finally, you can enjoy a spam-free WordPress blog!
 Author: Scott Allen, aka WebGeek
-Version: 1.7.7
+Version: 1.7.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.7.7';
+	$wpSpamFreeVer='1.7.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -124,57 +124,6 @@ function spamfree_update_keys($reset_keys) {
 function spamfree_count() {
 	$spamfree_count = get_option('spamfree_count');	
 	return $spamfree_count;
-	}
-	
-
-function spamfree_counter($counter_option) {
-	// Counter
-	/* Implementation: <?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?> */
-	$spamfree_count = number_format( get_option('spamfree_count') );
-	$counter_div_height = array('0','66','66','66','106','61','67');
-	$counter_count_padding_top = array('0','11','11','11','79','14','17');
-	?>
-	
-	<style type="text/css">
-	
-	#spamfree_counter_wrap {color:#ffffff;text-decoration:none;width:140px;}
-	#spamfree_counter {background:url(<?php echo get_option('siteurl'); ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-<?php echo $counter_option; ?>.jpg) no-repeat top left;height:<?php echo $counter_div_height[$counter_option]; ?>px;width:140px;overflow:hidden;border:none;color:#ffffff;Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;padding-top:<?php echo $counter_count_padding_top[$counter_option]; ?>px;}
-	
-	</style>
-	
-	<div id="spamfree_counter_wrap" >
-		<div id="spamfree_counter" >
-		<?php 
-			if ( $counter_option >= 1 && $counter_option <= 3 ) {
-				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;" rel="external" target="_blank" >';
-				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font:Arial,Helvetica,sans-serif;">'.$spamfree_count.'</span><br />'; 
-				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font:Arial,Helvetica,sans-serif;">SPAM KILLED</span><br />'; 
-				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font:Arial,Helvetica,sans-serif;">BY WP-SPAMFREE</span>';
-				echo '</a></strong>'; 
-				}
-			else if ( $counter_option == 4 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;" rel="external" target="_blank" >';
-				echo '<span style="color:#000000;font-size:9px;line-height:100%;font:Arial,Helvetica,sans-serif;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
-				echo '</a></strong>'; 
-				}
-			else if ( $counter_option == 5 ) {
-				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;" rel="external" target="_blank" >';
-				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;">'.$spamfree_count.'</span><br />'; 
-				echo '</a></strong>'; 
-				}
-			else if ( $counter_option == 6 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;" rel="external" target="_blank" >';
-				echo '<span style="color:#000000;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;">'.$spamfree_count.'</span><br />'; 
-				echo '</a></strong>'; 
-				}
-
-
-
-		?>
-		</div>
-	</div>
-	
-	<?php
 	}
 
 function spamfree_comment_form() {
@@ -1669,7 +1618,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -1798,7 +1747,6 @@ if (!class_exists('wpSpamFree')) {
 				update_option('spamfree_options', $spamfree_options_update);
 				}
 				$spamfree_options = get_option('spamfree_options');
-				$SiteURL = get_option('siteurl');
 			?>
 			
 			<p>&nbsp;</p>
@@ -1850,36 +1798,7 @@ if (!class_exists('wpSpamFree')) {
 			<p>You're done! Sit back and see what it feels like to blog without comment spam!</p>
 					
 			<p>&nbsp;</p>
-
-
-			<p><strong>Displaying Stats on Your Blog</strong></p>
-
-			Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: <br />&nbsp;<br /><code>&lt;?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?&gt;</code><br />&nbsp;<br /> where '1' is the style. Replace the '1' with a number from 1-6 corresponding to one of the following background styles you'd like to use.
-			
-			<ol>
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-1.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /><br />&nbsp;</li>
-				
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-2.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /><br />&nbsp;</li>
-				
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-3.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 66px" border="0" width="140" height="66" /><br />&nbsp;</li>
-				
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-4.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 106px" border="0" width="140" height="106" /><br />&nbsp;</li>
-				
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-5.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 61px" border="0" width="140" height="61" /><br />&nbsp;</li>
-				
-			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-6.jpg' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 67px" border="0" width="140" height="67" /><br />&nbsp;</li>
-			</ol>
-						
-			To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.	
-			<p>&nbsp;</p>
-					
-
+	
 			<p><strong>Troubleshooting</strong></p>
 			If you're having trouble getting things to work after installing the plugin, here are a few things to check:
 			<ol>
@@ -1909,8 +1828,7 @@ if (!class_exists('wpSpamFree')) {
 			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >WP-SpamFree</a><br />
 			Leave Comments: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank" rel="external" >WP-SpamFree Release Announcement Blog Post</a><br />
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
-			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
-			End Blog Spam: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a>
+			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>
 	
 			<p>&nbsp;</p>
 
@@ -1937,7 +1855,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.7.7";
+			$plugin_db_version = "1.7.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
