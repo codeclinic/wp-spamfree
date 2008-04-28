@@ -150,24 +150,24 @@ function spamfree_counter($counter_option) {
 		<div id="spamfree_counter" >
 		<?php 
 			if ( $counter_option >= 1 && $counter_option <= 3 ) {
-				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;v"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" >';
+				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM KILLED</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">BY WP-SPAMFREE</span>';
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 4 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" >';
+				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#000000;font-size:9px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 5 ) {
-				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" >';
+				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 6 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" >';
+				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#000000;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
