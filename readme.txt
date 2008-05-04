@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form
 Tested up to: 2.5.1
-Stable tag: 1.7.9
+Stable tag: 1.8
 
 Powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
 
@@ -25,7 +25,7 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 6. You won't have to waste valuable time sifting through a spam queue anymore, because there won't be much there, if anything.
 7. Powerful trackback and pingback spam protection.
 8. Easy to install - truly plug and play. Just upload and activate. (Installation Status on the plugin admin page to let you know if plugin is installed correctly.)
-9. The beauty of this plugin is the methods of blocking spam. It takes a different approach than most and stops spam at the door.  
+9. The beauty of this plugin is the methods of blocking spam. It takes a different approach than most and stops spam at the door.
 10. The code has an extremely low bandwidth overhead and won't slow down your blog (very light database access), unlike some other anti-spam plugins.
 11. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
 12. Display your blocked spam stats on your blog.
@@ -76,6 +76,11 @@ To add stats to individual posts, you'll need to install the Exec-PHP plugin.
 = Adding a Comment Form to Your Blog =
 First create a page (not post) where you want to have your comment form. Then, insert the following tag and you're done: `<!--spamfree-contact-->`
 
+There is no need to configure the form, it allows you to simply drop it into the page you want to install it on.
+
+**What the Contact Form feature IS:** A simple drop-in contact form that won't get spammed. 
+**What the Contact Form feature is NOT:** A configurable and full-featured plugin like some other contact form plugins out there. 
+**Note:** Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you.
 
 == Other Notes ==
 
@@ -99,6 +104,10 @@ If you're having trouble getting things to work after installing the plugin, her
 8. If have checked these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
 
 = Changelog =
+
+Version 1.8, released 05/04/08: 
+
+* On the contact form feature, removed "Website" from the required fields.
 
 Version 1.7.9, released 05/04/08: 
 
