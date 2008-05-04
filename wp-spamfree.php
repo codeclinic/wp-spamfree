@@ -2044,9 +2044,9 @@ if (!class_exists('wpSpamFree')) {
 			To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.	
 			<p>&nbsp;</p>
 			
-			<p><strong>Displaying Stats on Your Blog</strong></p>
+			<p><strong>Adding a Comment Form Your Blog</strong></p>
 
-			Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: <br />&nbsp;<br /><code>&lt;?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?&gt;</code><br />&nbsp;<br /> where '1' is the style. Replace the '1' with a number from 1-6 that corresponds to one of the following sample styles you'd like to use.
+			First create a page (not post) where you want to have your comment form. Then, insert the following tag and you're done: &lt;--spamfree-contact--&gt;
 			<p>&nbsp;</p>	
 
 			<p><strong>Troubleshooting</strong></p>
