@@ -4,11 +4,11 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8
+Version: 1.7.9
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
-/*  Copyright 2007-2008    Scott Allen  (email : scott [at] hybrid6 [dot] com)
+/*  Copyright 2007-2008    Scott Allen  (email : scott@hybrid6.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8';
+	$wpSpamFreeVer='1.7.9';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -203,7 +203,7 @@ function spamfree_contact_form($content) {
 		$spamfree_contact_form_query_op = '?';
 		}
 	$spamfree_contact_form_content = '';
-	if ( is_page() && ( !is_home() && !is_feed() && !is_archive() && !is_search() && !is_404() ) ) {
+	if ( is_page() ) {
 		
 		if ( $_GET['form'] == 'response' ) {
 		
@@ -236,7 +236,7 @@ function spamfree_contact_form($content) {
 
 				// ERROR CHECKING
 							
-				if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message ) {
+				if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_website || !$wpsf_contact_subject || !$wpsf_contact_message ) {
 					$BlankField=1;
 					$contact_response_status_message_addendum .= '<br />&nbsp;<br />&bull; At least one required field was left blank.';
 					}
@@ -316,7 +316,7 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_name" name="wpsf_contact_name" value="" size="40" /> </label></p>'."\n";
 			$spamfree_contact_form_content .= '<p><label><strong>Email</strong> *<br />'."\n";
 			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_email" name="wpsf_contact_email" value="" size="40" /> </label></p>'."\n";
-			$spamfree_contact_form_content .= '<p><label><strong>Website</strong><br />'."\n";
+			$spamfree_contact_form_content .= '<p><label><strong>Website</strong> *<br />'."\n";
 			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_website" name="wpsf_contact_website" value="" size="40" /> </label></p>'."\n";
 
 			$spamfree_contact_form_content .= '<p><label><strong>Phone</strong><br />'."\n";
@@ -425,7 +425,7 @@ function spamfree_allowed_post($approved) {
 	
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -2005,7 +2005,9 @@ if (!class_exists('wpSpamFree')) {
 			<ol>
 			    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
 				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.<br />&nbsp;</li>
+				
 				<li>Check to make sure the plugin is installed properly. 99.9% of all support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1. If it is installed correctly, then move on to the next step.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
+				
 				<li>Select desired configuration options. Due to popular request, I've added the option to block trackbacks and pingbacks if the user feels they are excessive. I'd recommend not doing this, but the choice is yours.<br />&nbsp;</li>
 				<li>If you are using front-end anti-spam plugins (CAPTCHA's, challenge questions, etc), be sure they are disabled since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)</li>
 			</ol>	
@@ -2042,16 +2044,9 @@ if (!class_exists('wpSpamFree')) {
 			To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.	
 			<p>&nbsp;</p>
 			
-			<p><strong>Adding a Comment Form to Your Blog</strong></p>
+			<p><strong>Adding a Comment Form Your Blog</strong></p>
 
-			First create a page (not post) where you want to have your comment form. Then, insert the following tag and you're done: &lt;!--spamfree-contact--&gt;<br />&nbsp;<br />
-			
-			There is no need to configure the form, it allows you to simply drop it into the page you want to install it on.<br />&nbsp;<br />
-
-			<strong>What the Contact Form feature IS:</strong> A simple drop-in contact form that won't get spammed.<br />
-			<strong>What the Contact Form feature is NOT:</strong> A configurable and full-featured plugin like some other contact form plugins out there.<br />
-			<strong>Note:</strong> Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you.<br />
-			
+			First create a page (not post) where you want to have your comment form. Then, insert the following tag and you're done: &lt;--spamfree-contact--&gt;
 			<p>&nbsp;</p>	
 
 			<p><strong>Troubleshooting</strong></p>
@@ -2111,7 +2106,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8";
+			$plugin_db_version = "1.7.9";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
