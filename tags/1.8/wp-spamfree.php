@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.1
+Version: 1.8
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.1';
+	$wpSpamFreeVer='1.8';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -63,6 +63,20 @@ function spamfree_create_random_key() {
 	
 function spamfree_update_keys($reset_keys) {
 	$spamfree_options 								= get_option('spamfree_options');
+	/*
+	//Array Values :: BEGIN
+	$spamfree_options_cookie_validation_name 		= $spamfree_options['cookie_validation_name'];
+	$spamfree_options_cookie_validation_key 		= $spamfree_options['cookie_validation_key'];
+	$spamfree_options_form_validation_field_js 		= $spamfree_options['form_validation_field_js'];
+	$spamfree_options_form_validation_key_js 		= $spamfree_options['form_validation_key_js'];
+	$spamfree_options_wp_cache 						= $spamfree_options['wp_cache'];
+	$spamfree_options_wp_super_cache 				= $spamfree_options['wp_super_cache'];
+	$spamfree_options_use_captcha_backup 			= $spamfree_options['use_captcha_backup'];
+	$spamfree_options_block_all_trackbacks 			= $spamfree_options['block_all_trackbacks'];
+	$spamfree_options_block_all_pingbacks 			= $spamfree_options['block_all_pingbacks'];
+	$spamfree_options_use_trackback_verification	= $spamfree_options['use_trackback_verification'];
+	//Array Values :: End
+	*/
 
 	// Set Random Cookie Name
 	$CookieValidationName = $spamfree_options['cookie_validation_name'];
@@ -103,11 +117,6 @@ function spamfree_update_keys($reset_keys) {
 		'block_all_trackbacks' 			=> $spamfree_options['block_all_trackbacks'],
 		'block_all_pingbacks' 			=> $spamfree_options['block_all_pingbacks'],
 		'use_trackback_verification' 	=> $spamfree_options['use_trackback_verification'],
-		'form_include_website' 			=> $spamfree_options['form_include_website'],
-		'form_require_website' 			=> $spamfree_options['form_require_website'],
-		'form_include_phone' 			=> $spamfree_options['form_include_phone'],
-		'form_require_phone' 			=> $spamfree_options['form_require_phone'],
-		'form_message_width' 			=> $spamfree_options['form_message_width'],
 		);
 	update_option('spamfree_options', $spamfree_options_update);		
 	}
@@ -185,6 +194,7 @@ function spamfree_comment_form() {
 	}
 	
 function spamfree_contact_form($content) {
+	//$spamfree_contact_form_url = get_option('siteurl').$_SERVER['REQUEST_URI'];
 	$spamfree_contact_form_url = $_SERVER['REQUEST_URI'];
 	if ( $_SERVER['QUERY_STRING'] ) {
 		$spamfree_contact_form_query_op = '&';
@@ -194,32 +204,14 @@ function spamfree_contact_form($content) {
 		}
 	$spamfree_contact_form_content = '';
 	if ( is_page() && ( !is_home() && !is_feed() && !is_archive() && !is_search() && !is_404() ) ) {
-
-		$spamfree_options			= get_option('spamfree_options');
-		$CookieValidationName  		= $spamfree_options['cookie_validation_name'];
-		$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
-		$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
-		$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
-		$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
-		$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
 		
-		$FormIncludeWebsite			= $spamfree_options['form_include_website'];
-		$FormRequireWebsite			= $spamfree_options['form_require_website'];
-		$FormIncludePhone			= $spamfree_options['form_include_phone'];
-		$FormRequirePhone			= $spamfree_options['form_require_phone'];
-		$FormMessageWidth			= $spamfree_options['form_message_width'];
-		
-		if ( $FormMessageWidth < 40 ) {
-			$FormMessageWidth = 40;
-			}
-
 		if ( $_GET['form'] == 'response' ) {
 		
 			// PROCESSING CONTACT FORM :: BEGIN
 			$wpsf_contact_name 		= Trim(stripslashes(strip_tags($_POST['wpsf_contact_name'])));
 			$wpsf_contact_email 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_email'])));
 			$wpsf_contact_website 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_website'])));
-			$wpsf_contact_phone 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_phone'])));
+			$wpsf_contact_phone 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_phone '])));
 			$wpsf_contact_subject 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_subject'])));
 			$wpsf_contact_message 	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_message'])));
 			// PROCESSING CONTACT FORM :: END
@@ -232,26 +224,33 @@ function spamfree_contact_form($content) {
 			// FORM INFO :: END
 			
 			// TEST TO PREVENT CONTACT FORM SPAM FROM BOTS :: BEGIN
-			
+			$spamfree_options			= get_option('spamfree_options');
+			$CookieValidationName  		= $spamfree_options['cookie_validation_name'];
+			$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
+			$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
+			$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
+			$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
+			$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
+			// if( $WPCommentValidationJS == $CookieValidationKey ) { // Contact Form Message Allowed
 			if( $WPCommentValidationJS == $CookieValidationKey && $WPFormValidationPost == $FormValidationKeyJS ) { // Contact Form Message Allowed
 
 				// ERROR CHECKING
 							
-				if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message || ( $FormIncludeWebsite && $FormRequireWebsite && !$wpsf_contact_website ) || ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone ) ) {
+				if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message ) {
 					$BlankField=1;
-					$contact_response_status_message_addendum .= '&bull; At least one required field was left blank.<br />&nbsp;<br />';
+					$contact_response_status_message_addendum .= '<br />&nbsp;<br />&bull; At least one required field was left blank.';
 					}
 					
 				if (!eregi("^([-_\.a-z0-9])+@([-a-z0-9]+\.)+([a-z]{2}|com|net|org|edu|gov|mil|int|biz|pro|info|arpa|aero|coop|name|museum)$",$wpsf_contact_email)) {
 					$InvalidValue=1;
 					$BadEmail=1;
-					$contact_response_status_message_addendum .= '&bull; Please enter a valid email address.<br />&nbsp;<br />';
+					$contact_response_status_message_addendum .= '<br />&nbsp;<br />&bull; Please enter a valid email address.';
 					}
 					
 				$MessageLength = strlen( $wpsf_contact_message );
 				if ( $MessageLength < 25 ) {
 					$MessageShort=1;
-					$contact_response_status_message_addendum .= '&bull; Message too short. Please enter a complete message.<br />&nbsp;<br />';
+					$contact_response_status_message_addendum .= '<br />&nbsp;<br />&bull; Message too short. Please enter a complete message.';
 					}
 				
 				if ( !$BlankField && !$InvalidValue && !$MessageShort ) {  
@@ -262,12 +261,8 @@ function spamfree_contact_form($content) {
 				
 					$wpsf_contact_form_msg .= "Name: $wpsf_contact_name"."\n";
 					$wpsf_contact_form_msg .= "Email: $wpsf_contact_email"."\n";
-					if ( $FormIncludePhone ) {
-						$wpsf_contact_form_msg .= "Phone: $wpsf_contact_phone"."\n";
-						}
-					if ( $FormIncludeWebsite ) {
-						$wpsf_contact_form_msg .= "Website: $wpsf_contact_website"."\n";
-						}
+					$wpsf_contact_form_msg .= "Phone: $wpsf_contact_phone"."\n";
+					$wpsf_contact_form_msg .= "Website: $wpsf_contact_website"."\n";
 					$wpsf_contact_form_msg .= "\n";					
 					$wpsf_contact_form_msg .= "User-Agent (Browser/OS): ".$_SERVER['HTTP_USER_AGENT']."\n";
 					$wpsf_contact_form_msg .= "\n";
@@ -301,12 +296,19 @@ function spamfree_contact_form($content) {
 					$spamfree_contact_form_back_url = str_replace('?form=response','',$spamfree_contact_form_url );
 					}
 				$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>';
-				$spamfree_contact_form_content .= '<p><strong>Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields. Please make sure JavaScript and Cookies are enabled in your browser.<br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
+				$spamfree_contact_form_content .= '<p><strong>Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields. Please make sure JavaScript and Cookies are enabled in your browser.<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
 				}
+			//$spamfree_contact_form_content .= $WPCommentValidationJS.'<br />'.$CookieValidationKey.'<br />'.$WPFormValidationPost.'<br />'.$FormValidationKeyJS.'<br />'.$contact_response_status.'<br />'.$wpsf_contact_form_msg.'<br />'.$wpsf_contact_form_to.'<br />'.$wpsf_contact_form_subject.'<br />'.$wpsf_contact_form_msg.'<br />'.$wpsf_contact_form_msg_headers.'<br />';
 			$content_new = str_replace($content, $spamfree_contact_form_content, $content);
 			}
-		else {		
+		else {
+		
+			$spamfree_options			= get_option('spamfree_options');
+			$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
+			$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
+		
 			$spamfree_contact_form_content .= '<div id="wpsf" name="wpsf">';
+			//$spamfree_contact_form_content .= '<form action="'.$spamfree_contact_form_query_op.'form=response" method="post" style="text-align:left;" >'."\n";
 			$spamfree_contact_form_content .= '<form action="'.$spamfree_contact_form_url.$spamfree_contact_form_query_op.'form=response" method="post" style="text-align:left;" >'."\n";
 
 			$spamfree_contact_form_content .= '<p><label><strong>Name</strong> *<br />'."\n";
@@ -314,31 +316,17 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_name" name="wpsf_contact_name" value="" size="40" /> </label></p>'."\n";
 			$spamfree_contact_form_content .= '<p><label><strong>Email</strong> *<br />'."\n";
 			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_email" name="wpsf_contact_email" value="" size="40" /> </label></p>'."\n";
-			
-			if ( $FormIncludeWebsite ) {
-				$spamfree_contact_form_content .= '<p><label><strong>Website</strong> ';
-				if ( $FormRequireWebsite ) { 
-					$spamfree_contact_form_content .= '*'; 
-					}
-				$spamfree_contact_form_content .= '<br />'."\n";
-				$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_website" name="wpsf_contact_website" value="" size="40" /> </label></p>'."\n";
-				}
-				
-			if ( $FormIncludePhone ) {
-				$spamfree_contact_form_content .= '<p><label><strong>Phone</strong> ';
-				if ( $FormRequirePhone ) { 
-					$spamfree_contact_form_content .= '*'; 
-					}
-				$spamfree_contact_form_content .= '<br />'."\n";
-				$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_phone" name="wpsf_contact_phone" value="" size="40" /> '."\n";
-				}
+			$spamfree_contact_form_content .= '<p><label><strong>Website</strong><br />'."\n";
+			$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_website" name="wpsf_contact_website" value="" size="40" /> </label></p>'."\n";
+
+			$spamfree_contact_form_content .= '<p><label><strong>Phone</strong><br />'."\n";
+    		$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_phone" name="wpsf_contact_phone" value="" size="40" /> '."\n";
 
 			$spamfree_contact_form_content .= '</label></p>'."\n";
 			$spamfree_contact_form_content .= '<p><label><strong>Subject</strong> *<br />';
     		$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_subject" name="wpsf_contact_subject" value="" size="40" /> </label></p>'."\n";
 			$spamfree_contact_form_content .= '<p><label><strong>Your Message</strong> *<br />'."\n";
-			
-			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="'.$FormMessageWidth.'" rows="10"></textarea> </label></p>'."\n";
+			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="40" rows="10"></textarea> </label></p>'."\n";
 
 			$spamfree_contact_form_content .= '<p><input type="submit" value="Send" /></p>'."\n";
 			$spamfree_contact_form_content .= '<script type=\'text/javascript\'>'."\n";
@@ -1971,11 +1959,6 @@ if (!class_exists('wpSpamFree')) {
 						'block_all_trackbacks' 				=> $_REQUEST['block_all_trackbacks'],
 						'block_all_pingbacks' 				=> $_REQUEST['block_all_pingbacks'],
 						'use_trackback_verification' 		=> $spamfree_options['use_trackback_verification'],
-						'form_include_website' 				=> $_REQUEST['form_include_website'],
-						'form_require_website' 				=> $_REQUEST['form_require_website'],
-						'form_include_phone' 				=> $_REQUEST['form_include_phone'],
-						'form_require_phone' 				=> $_REQUEST['form_require_phone'],
-						'form_message_width' 				=> $_REQUEST['form_message_width'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
 				}
@@ -1985,7 +1968,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p>&nbsp;</p>
 			
-			<p><strong>Spam Options</strong></p>
+			<p><strong>Options</strong></p>
 
 			<form name="wpsf" method="post">
 			<input type="hidden" name="submitted" value="1" />
@@ -2002,57 +1985,6 @@ if (!class_exists('wpSpamFree')) {
 					<label for="block_all_pingbacks">
 						<input type="checkbox" id="block_all_pingbacks" name="block_all_pingbacks" <?php echo ($spamfree_options['block_all_pingbacks']==true?"checked=\"checked\"":"") ?> />
 						<strong>Disable pingbacks.</strong><br />(Use if pingback spam is excessive. Disadvantage is reduction of communication between blogs.)<br />&nbsp;
-					</label>
-					</li>
-				</ul>
-			</fieldset>
-			<p class="submit">
-			<input type="submit" name="Submit" value="Update Options &raquo;" style="float:left;" />
-			</p>
-			</form>
-
-			<p>&nbsp;</p>
-
-			<p>&nbsp;</p>
-
-			<p>&nbsp;</p>
-			
-			<p><strong>Contact Form Options</strong></p>
-
-			<form name="wpsf" method="post">
-			<input type="hidden" name="submitted" value="1" />
-
-			<fieldset class="options">
-				<ul>
-					<li>
-					<label for="form_include_website">
-						<input type="checkbox" id="form_include_website" name="form_include_website" <?php echo ($spamfree_options['form_include_website']==true?"checked=\"checked\"":"") ?> />
-						<strong>Include "Website" Field.</strong><br />&nbsp;
-					</label>
-					</li>
-					<li>
-					<label for="form_require_website">
-						<input type="checkbox" id="form_require_website" name="form_require_website" <?php echo ($spamfree_options['form_require_website']==true?"checked=\"checked\"":"") ?> />
-						<strong>Require "Website" Field.</strong><br />&nbsp;
-					</label>
-					</li>
-					<li>
-					<label for="form_include_phone">
-						<input type="checkbox" id="form_include_phone" name="form_include_phone" <?php echo ($spamfree_options['form_include_phone']==true?"checked=\"checked\"":"") ?> />
-						<strong>Include "Phone" Field.</strong><br />&nbsp;
-					</label>
-					</li>
-					<li>
-					<label for="form_require_phone">
-						<input type="checkbox" id="form_require_phone" name="form_require_phone" <?php echo ($spamfree_options['form_require_phone']==true?"checked=\"checked\"":"") ?> />
-						<strong>Require "Phone" Field.</strong><br />&nbsp;
-					</label>
-					</li>
-					<li>
-					<label for="form_message_width">
-						<?php $FormMessageWidth = $spamfree_options['form_message_width']; ?>
-						<input type="text" size="4" id="form_message_width" name="form_message_width" value="<?php if ( $FormMessageWidth && $FormMessageWidth >= 40 ) { echo $FormMessageWidth; } else { echo '40';} ?>" />
-						<strong>"Your Message" Field width. (Minimum 40)</strong><br />&nbsp;
 					</label>
 					</li>
 				</ul>
@@ -2112,9 +2044,9 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><strong>Adding a Comment Form to Your Blog</strong></p>
 
-			First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: &lt;!--spamfree-contact--&gt;<br />&nbsp;<br />
+			First create a page (not post) where you want to have your comment form. Then, insert the following tag and you're done: &lt;!--spamfree-contact--&gt;<br />&nbsp;<br />
 			
-			There is no need to configure the form, it allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields and whether they should be required. You can also set the width of the Message box.<br />&nbsp;<br />
+			There is no need to configure the form, it allows you to simply drop it into the page you want to install it on.<br />&nbsp;<br />
 
 			<strong>What the Contact Form feature IS:</strong> A simple drop-in contact form that won't get spammed.<br />
 			<strong>What the Contact Form feature is NOT:</strong> A configurable and full-featured plugin like some other contact form plugins out there.<br />
@@ -2179,7 +2111,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.1";
+			$plugin_db_version = "1.8";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
@@ -2216,11 +2148,6 @@ if (!class_exists('wpSpamFree')) {
 					'block_all_trackbacks' 			=> 0,
 					'block_all_pingbacks' 			=> 0,
 					'use_trackback_verification' 	=> 0,
-					'form_include_website' 			=> 1,
-					'form_require_website' 			=> 0,
-					'form_include_phone' 			=> 1,
-					'form_require_phone' 			=> 0,
-					'form_message_width' 			=> 40,
 					);
 				$spamfree_count = get_option('spamfree_count');
 				if (!$spamfree_count) {
