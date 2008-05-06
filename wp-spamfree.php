@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.1
+Version: 1.8.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.1';
+	$wpSpamFreeVer='1.8.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -108,6 +108,8 @@ function spamfree_update_keys($reset_keys) {
 		'form_include_phone' 			=> $spamfree_options['form_include_phone'],
 		'form_require_phone' 			=> $spamfree_options['form_require_phone'],
 		'form_message_width' 			=> $spamfree_options['form_message_width'],
+		'form_message_height' 			=> $spamfree_options['form_message_height'],
+		'form_message_min_length'		=> $spamfree_options['form_message_min_length'],
 		);
 	update_option('spamfree_options', $spamfree_options_update);		
 	}
@@ -208,9 +210,25 @@ function spamfree_contact_form($content) {
 		$FormIncludePhone			= $spamfree_options['form_include_phone'];
 		$FormRequirePhone			= $spamfree_options['form_require_phone'];
 		$FormMessageWidth			= $spamfree_options['form_message_width'];
+		$FormMessageHeight			= $spamfree_options['form_message_height'];
+		$FormMessageMinLength		= $spamfree_options['form_message_min_length'];
 		
 		if ( $FormMessageWidth < 40 ) {
 			$FormMessageWidth = 40;
+			}
+			
+		if ( $FormMessageHeight < 5 ) {
+			$FormMessageHeight = 5;
+			}
+		else if ( !$FormMessageHeight ) {
+			$FormMessageHeight = 10;
+			}
+			
+		if ( $FormMessageMinLength < 15 ) {
+			$FormMessageMinLength = 15;
+			}
+		else if ( !$FormMessageMinLength ) {
+			$FormMessageMinLength = 25;
 			}
 
 		if ( $_GET['form'] == 'response' ) {
@@ -249,7 +267,7 @@ function spamfree_contact_form($content) {
 					}
 					
 				$MessageLength = strlen( $wpsf_contact_message );
-				if ( $MessageLength < 25 ) {
+				if ( $MessageLength < $FormMessageMinLength ) {
 					$MessageShort=1;
 					$contact_response_status_message_addendum .= '&bull; Message too short. Please enter a complete message.<br />&nbsp;<br />';
 					}
@@ -294,10 +312,10 @@ function spamfree_contact_form($content) {
 				$spamfree_contact_form_content .= '<p>Your message was sent successfully. Thank you.<p>&nbsp;</p>'."\n";
 				}
 			else {
-				if ( eregi ( '&form=response', $spamfree_contact_form_url ) ) {
+				if ( eregi ( '\&form\=response', $spamfree_contact_form_url ) ) {
 					$spamfree_contact_form_back_url = str_replace('&form=response','',$spamfree_contact_form_url );
 					}
-				else if ( eregi ( '?form=response', $spamfree_contact_form_url ) ) {
+				else if ( eregi ( '\?form\=response', $spamfree_contact_form_url ) ) {
 					$spamfree_contact_form_back_url = str_replace('?form=response','',$spamfree_contact_form_url );
 					}
 				$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>';
@@ -338,7 +356,7 @@ function spamfree_contact_form($content) {
     		$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_subject" name="wpsf_contact_subject" value="" size="40" /> </label></p>'."\n";
 			$spamfree_contact_form_content .= '<p><label><strong>Your Message</strong> *<br />'."\n";
 			
-			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="'.$FormMessageWidth.'" rows="10"></textarea> </label></p>'."\n";
+			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="'.$FormMessageWidth.'" rows="'.$FormMessageHeight.'"></textarea> </label></p>'."\n";
 
 			$spamfree_contact_form_content .= '<p><input type="submit" value="Send" /></p>'."\n";
 			$spamfree_contact_form_content .= '<script type=\'text/javascript\'>'."\n";
@@ -437,7 +455,7 @@ function spamfree_allowed_post($approved) {
 	
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -1113,6 +1131,9 @@ function spamfree_content_filter($commentdata) {
 	$SplogTrackbackPhrase6 = 'an interesting post today onHere\'s a quick excerpt';
 	$SplogTrackbackPhrase7 = 'Read the rest of this great post here';
 	$SplogTrackbackPhrase8 = 'here to see the original: ';
+	$SplogTrackbackPhrase9a = 'an interesting post today on';
+	$SplogTrackbackPhrase9b = 'Here\'s a quick excerpt';
+	$SplogTrackbackPhrase9c = 'Here’s a quick excerpt';
 	
 	$blacklist_word_combo_limit = 7;
 	$blacklist_word_combo = 0;
@@ -1548,7 +1569,7 @@ function spamfree_content_filter($commentdata) {
 			$content_filter_status = true;
 			$spamfree_error_code .= ' T1020';
 			}
-		if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase7, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase8, $commentdata_comment_content_lc ) ) {
+		if ( eregi( $SplogTrackbackPhrase1, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase2, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase3, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase4, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase5, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase6, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase7, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase8, $commentdata_comment_content_lc ) || ( eregi( $SplogTrackbackPhrase9a, $commentdata_comment_content_lc ) && ( eregi( $SplogTrackbackPhrase9b, $commentdata_comment_content_lc ) || eregi( $SplogTrackbackPhrase9c, $commentdata_comment_content_lc ) ) ) ) {
 			// Check to see if common patterns exist in comment content.
 			$content_filter_status = true;
 			$spamfree_error_code .= ' T2002';
@@ -1976,6 +1997,8 @@ if (!class_exists('wpSpamFree')) {
 						'form_include_phone' 				=> $_REQUEST['form_include_phone'],
 						'form_require_phone' 				=> $_REQUEST['form_require_phone'],
 						'form_message_width' 				=> $_REQUEST['form_message_width'],
+						'form_message_height' 				=> $_REQUEST['form_message_height'],
+						'form_message_min_length' 			=> $_REQUEST['form_message_min_length'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
 				}
@@ -2055,6 +2078,20 @@ if (!class_exists('wpSpamFree')) {
 						<strong>"Your Message" Field width. (Minimum 40)</strong><br />&nbsp;
 					</label>
 					</li>
+					<li>
+					<label for="form_message_height">
+						<?php $FormMessageHeight = $spamfree_options['form_message_height']; ?>
+						<input type="text" size="4" id="form_message_height" name="form_message_height" value="<?php if ( $FormMessageHeight && $FormMessageHeight >= 5 ) { echo $FormMessageHeight; } else if ( !$FormMessageHeight ) { echo '10'; } else { echo '5';} ?>" />
+						<strong>"Your Message" Field height. (Minimum 5, Default 10)</strong><br />&nbsp;
+					</label>
+					</li>
+					<li>
+					<label for="form_message_min_length">
+						<?php $FormMessageMinLength = $spamfree_options['form_message_min_length']; ?>
+						<input type="text" size="4" id="form_message_min_length" name="form_message_min_length" value="<?php if ( $FormMessageMinLength && $FormMessageMinLength >= 15 ) { echo $FormMessageMinLength; } else if ( !$FormMessageWidth ) { echo '25'; } else { echo '15';} ?>" />
+						<strong>Minimum message length (# of characters). (Minimum 15, Default 25)</strong><br />&nbsp;
+					</label>
+					</li>
 				</ul>
 			</fieldset>
 			<p class="submit">
@@ -2114,7 +2151,7 @@ if (!class_exists('wpSpamFree')) {
 
 			First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: &lt;!--spamfree-contact--&gt;<br />&nbsp;<br />
 			
-			There is no need to configure the form, it allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields and whether they should be required. You can also set the width of the Message box.<br />&nbsp;<br />
+			There is no need to configure the form, it allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields and whether they should be required. You can also set the width and height of the Message box, as well as the minimum message length.<br />&nbsp;<br />
 
 			<strong>What the Contact Form feature IS:</strong> A simple drop-in contact form that won't get spammed.<br />
 			<strong>What the Contact Form feature is NOT:</strong> A configurable and full-featured plugin like some other contact form plugins out there.<br />
@@ -2179,7 +2216,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.1";
+			$plugin_db_version = "1.8.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
@@ -2221,6 +2258,8 @@ if (!class_exists('wpSpamFree')) {
 					'form_include_phone' 			=> 1,
 					'form_require_phone' 			=> 0,
 					'form_message_width' 			=> 40,
+					'form_message_height' 			=> 10,
+					'form_message_min_length'		=> 25,
 					);
 				$spamfree_count = get_option('spamfree_count');
 				if (!$spamfree_count) {

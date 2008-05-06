@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form
 Tested up to: 2.5.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 
 Powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
 
@@ -76,7 +76,7 @@ To add stats to individual posts, you'll need to install the Exec-PHP plugin.
 = Adding a Comment Form to Your Blog =
 First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: `<!--spamfree-contact-->`
 
-There is no need to configure the form, it allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields and whether they should be required. You can also set the width of the Message box.
+There is no need to configure the form, it allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields and whether they should be required. You can also set the width and height of the Message box, as well as the minimum message length.
 
 **What the Contact Form feature IS:** A simple drop-in contact form that won't get spammed. 
 **What the Contact Form feature is NOT:** A configurable and full-featured plugin like some other contact form plugins out there. 
