@@ -2047,7 +2047,7 @@ if (!class_exists('wpSpamFree')) {
 			if ($spamCount) {
 				echo "
 				<div style='width:600px;border-style:solid;border-width:1px;border-color:#000033;background-color:#CCCCFF;padding:0px 15px 0px 15px;'>
-				<p>Since we started counting, WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p></div>
+				<p>WP-SpamFree has blocked <strong>".number_format($spamCount)."</strong> spam comments!</p></div>
 				";
 				}
 			$spamfree_options = get_option('spamfree_options');
