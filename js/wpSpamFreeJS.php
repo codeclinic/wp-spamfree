@@ -49,7 +49,8 @@ function DeleteCookie( name, path, domain ) {
 // Cookie Handler :: END  
 
 function commentValidation() { 
-	SetCookie('".$CookieValidationName."','".$CookieValidationKey."','','/'); 
+	SetCookie('".$CookieValidationName."','".$CookieValidationKey."','','/');
+	SetCookie('SJECT','CKON','','/');
 }  
 
 commentValidation();  
