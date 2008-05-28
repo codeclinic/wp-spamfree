@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.5
+Version: 1.8.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.5';
+	$wpSpamFreeVer='1.8.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -386,7 +386,7 @@ function spamfree_contact_form($content) {
 			$content_new = str_replace($content, $spamfree_contact_form_content, $content);
 			}
 		else {		
-			$spamfree_contact_form_content .= '<div id="wpsf">';
+			$spamfree_contact_form_content .= '<div id="wpsf" name="wpsf">';
 			$spamfree_contact_form_content .= '<form action="'.$spamfree_contact_form_url.$spamfree_contact_form_query_op.'form=response" method="post" style="text-align:left;" >'."\n";
 
 			$spamfree_contact_form_content .= '<p><label><strong>Name</strong> *<br />'."\n";
@@ -1321,7 +1321,7 @@ function spamfree_content_filter($commentdata) {
 	$filter_20005C_count = substr_count($commentdata_comment_content_lc, 'groups.google.us');
 	$filter_20005_limit = 1;
 	$filter_20005_trackback_limit = 1;
-	
+
 	$commentdata_comment_author_lc_spam_strong = '<strong>'.$commentdata_comment_author_lc.'</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot1 = '...</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot2 = '...</b>'; // Trackbacks
@@ -2336,7 +2336,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><a name="wpsf_spam_options"><strong>Spam Options</strong></a></p>
 
-			<form name="wpsf_spam_options" method="post">
+			<form name="wpsf" method="post">
 			<input type="hidden" name="submitted" value="1" />
 
 			<fieldset class="options">
@@ -2370,7 +2370,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><a name="wpsf_contact_form_options"><strong>Contact Form Options</strong></a></p>
 
-			<form name="wpsf_contact_options" method="post">
+			<form name="wpsf" method="post">
 			<input type="hidden" name="submitted" value="1" />
 
 			<fieldset class="options">
@@ -2677,7 +2677,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.5";
+			$plugin_db_version = "1.8.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
