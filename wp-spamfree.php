@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.5
+Version: 1.8.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.5';
+	$wpSpamFreeVer='1.8.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -139,7 +139,7 @@ function spamfree_counter($counter_option) {
 	$counter_option_min = 1;
 	if ( !$counter_option || $counter_option > $counter_option_max || $counter_option < $counter_option_min ) {
 		$spamfree_count = number_format( get_option('spamfree_count') );
-		echo '<a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="text-decoration:none;" rel="external" target="_blank" title="WP-SpamFree Anti-Spam Plugin for WordPress" >'.$spamfree_count.' spam killed by WP-SpamFree</a>';
+		echo '<a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="text-decoration:none;" rel="external" title="WP-SpamFree Anti-Spam Plugin for WordPress" >'.$spamfree_count.' spam killed by WP-SpamFree</a>';
 		return;
 		}
 	// Display Counter
@@ -160,24 +160,24 @@ function spamfree_counter($counter_option) {
 		<div id="spamfree_counter" >
 		<?php 
 			if ( $counter_option >= 1 && $counter_option <= 3 ) {
-				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
+				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM KILLED</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">BY WP-SPAMFREE</span>';
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 4 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
+				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#000000;font-size:9px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 5 ) {
-				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
+				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 6 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" target="_blank" title="Spam Killed by WP-SpamFree" >';
+				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
 				echo '<span style="color:#000000;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
@@ -197,7 +197,7 @@ function spamfree_comment_form() {
 function spamfree_contact_form($content) {
 	$spamfree_contact_form_url = $_SERVER['REQUEST_URI'];
 	if ( $_SERVER['QUERY_STRING'] ) {
-		$spamfree_contact_form_query_op = '&';
+		$spamfree_contact_form_query_op = '&amp;';
 		}
 	else {
 		$spamfree_contact_form_query_op = '?';
@@ -351,13 +351,7 @@ function spamfree_contact_form($content) {
 					
 					// SEND MESSAGE
 					mail( $wpsf_contact_form_to, $wpsf_contact_form_subject, $wpsf_contact_form_msg, $wpsf_contact_form_msg_headers );
-					
-					/*
-					if ( $wpsf_contact_cc ) {
-						mail( $wpsf_contact_form_cc_to, $wpsf_contact_form_cc_subject, $wpsf_contact_form_msg_cc, $wpsf_contact_form_msg_headers );
-						}
-					*/
-					
+										
 					$contact_response_status = 'thank-you';
 					
 					}
@@ -386,8 +380,7 @@ function spamfree_contact_form($content) {
 			$content_new = str_replace($content, $spamfree_contact_form_content, $content);
 			}
 		else {		
-			$spamfree_contact_form_content .= '<div id="wpsf">';
-			$spamfree_contact_form_content .= '<form action="'.$spamfree_contact_form_url.$spamfree_contact_form_query_op.'form=response" method="post" style="text-align:left;" >'."\n";
+			$spamfree_contact_form_content .= '<form name="wpsf_contact_form" action="'.$spamfree_contact_form_url.$spamfree_contact_form_query_op.'form=response" method="post" style="text-align:left;" >'."\n";
 
 			$spamfree_contact_form_content .= '<p><label><strong>Name</strong> *<br />'."\n";
 
@@ -420,7 +413,7 @@ function spamfree_contact_form($content) {
 					}
 				$spamfree_contact_form_content .= '<br />'."\n";
 				$spamfree_contact_form_content .= '<select id="wpsf_contact_drop_down_menu" name="wpsf_contact_drop_down_menu" > '."\n";
-				$spamfree_contact_form_content .= '<option value="" selected>Please Select</option> '."\n";
+				$spamfree_contact_form_content .= '<option value="" selected="selected">Please Select</option> '."\n";
 				$spamfree_contact_form_content .= '<option value="">--------------------------</option> '."\n";
 				if ( $FormDropDownMenuItem1 ) {
 					$spamfree_contact_form_content .= '<option value="'.$FormDropDownMenuItem1.'">'.$FormDropDownMenuItem1.'</option> '."\n";
@@ -462,18 +455,14 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<p><label><strong>Message</strong> *<br />'."\n";
 			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="'.$FormMessageWidth.'" rows="'.$FormMessageHeight.'"></textarea> </label></p>'."\n";
 			
-			/*
-			$spamfree_contact_form_content .= '<p><input id="wpsf_contact_cc" name="wpsf_contact_cc" type="checkbox" value="Yes" /> Send me a copy of this message. </label></p>'."\n";
-			*/
+			$spamfree_contact_form_content .= '<noscript><p><strong>Currently you have JavaScript disabled. In order to use this contact form, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>'."\n";
+
 			$spamfree_contact_form_content .= '<p><input type="submit" value="Send Message" /></p>'."\n";
 
-			$spamfree_contact_form_content .= '</form>'."\n";
-			$spamfree_contact_form_content .= '</div>'."\n";
 			$spamfree_contact_form_content .= '<p>* Required Field</p>'."\n";
 			$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
+			$spamfree_contact_form_content .= '</form>'."\n";
 		
-			$spamfree_contact_form_content .= '<noscript><p><strong>Currently you have JavaScript disabled. In order to use this contact form, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript><p>&nbsp;</p>'."\n";
-			
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
 			}
 
@@ -586,7 +575,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -2677,7 +2666,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.5";
+			$plugin_db_version = "1.8.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
