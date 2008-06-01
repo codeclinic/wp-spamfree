@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.8
+Version: 1.8.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.8';
+	$wpSpamFreeVer='1.8.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -190,7 +190,6 @@ function spamfree_counter($counter_option) {
 	}
 
 function spamfree_comment_form() {
-
 	echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>';
 	}
 	
@@ -2809,11 +2808,10 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.8";
+			$plugin_db_version = "1.8.7";
 			$installed_ver = get_option('wp_spamfree_version');
-			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
-			if ( ( $installed_ver === false || $installed_ver != $plugin_db_version ) && !$spamfree_options ) {
+			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
 			
 				//add a database version number for future upgrade purposes
 				update_option('wp_spamfree_version', $plugin_db_version);
@@ -2869,13 +2867,12 @@ if (!class_exists('wpSpamFree')) {
 					'form_message_min_length'				=> 25,
 					'form_message_recipient'				=> get_option('admin_email'),
 					);
-					
 				$spamfree_count = get_option('spamfree_count');
 				if (!$spamfree_count) {
-					update_option('spamfree_count', 0);
+					update_option("spamfree_count", 0);
 					}
 				update_option('spamfree_options', $spamfree_options_update);
-				update_option('ak_count_pre', get_option('akismet_spam_count'));
+				update_option( 'ak_count_pre', get_option('akismet_spam_count') );
 				// Turn on Comment Moderation
 				//update_option('comment_moderation', 1);
 				//update_option('moderation_notify', 1);
