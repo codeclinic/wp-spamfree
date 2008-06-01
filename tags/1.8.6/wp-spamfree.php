@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.7
+Version: 1.8.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.7';
+	$wpSpamFreeVer='1.8.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -190,6 +190,7 @@ function spamfree_counter($counter_option) {
 	}
 
 function spamfree_comment_form() {
+
 	echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>';
 	}
 	
@@ -574,7 +575,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -1187,99 +1188,7 @@ function spamfree_content_filter($commentdata) {
 	$filter_200_count = substr_count($commentdata_comment_content_lc, '[...]  [...]');
 	$filter_200_limit = 1;
 	$filter_200_trackback_limit = 1;
-
-	// SEO/WebDev/Offshore-Related Filter - Authors Only - Non-Trackback
-	// Filter 300: Number of occurrences of 'web development' in comment_content
-	$filter_300_term = 'web development';
-	$filter_300_count = substr_count($commentdata_comment_content_lc, $filter_300_term);
-	$filter_300_limit = 8;
-	$filter_300_trackback_limit = 8;
-	$filter_300_author_count = substr_count($commentdata_comment_author_lc, $filter_300_term);
-	$filter_300_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_300_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_300_author_count;
-	// Filter 301: Number of occurrences of 'website development' in comment_content
-	$filter_301_term = 'website development';
-	$filter_301_count = substr_count($commentdata_comment_content_lc, $filter_301_term);
-	$filter_301_limit = 8;
-	$filter_301_trackback_limit = 8;
-	$filter_301_author_count = substr_count($commentdata_comment_author_lc, $filter_301_term);
-	$filter_301_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_301_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_301_author_count;
-	// Filter 302: Number of occurrences of 'web site development' in comment_content
-	$filter_302_term = 'web site development';
-	$filter_302_count = substr_count($commentdata_comment_content_lc, $filter_302_term);
-	$filter_302_limit = 8;
-	$filter_302_trackback_limit = 8;
-	$filter_302_author_count = substr_count($commentdata_comment_author_lc, $filter_302_term);
-	$filter_302_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_302_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_302_author_count;
-	// Filter 303: Number of occurrences of 'web design' in comment_content
-	$filter_303_term = 'web design';
-	$filter_303_count = substr_count($commentdata_comment_content_lc, $filter_303_term);
-	$filter_303_limit = 8;
-	$filter_303_trackback_limit = 8;
-	$filter_303_author_count = substr_count($commentdata_comment_author_lc, $filter_303_term);
-	$filter_303_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_303_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_303_author_count;
-	// Filter 304: Number of occurrences of 'website design' in comment_content
-	$filter_304_term = 'website design';
-	$filter_304_count = substr_count($commentdata_comment_content_lc, $filter_304_term);
-	$filter_304_limit = 8;
-	$filter_304_trackback_limit = 8;
-	$filter_304_author_count = substr_count($commentdata_comment_author_lc, $filter_304_term);
-	$filter_304_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_304_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_304_author_count;
-	// Filter 305: Number of occurrences of 'web site design' in comment_content
-	$filter_305_term = 'web site design';
-	$filter_305_count = substr_count($commentdata_comment_content_lc, $filter_305_term);
-	$filter_305_limit = 8;
-	$filter_305_trackback_limit = 8;
-	$filter_305_author_count = substr_count($commentdata_comment_author_lc, $filter_305_term);
-	$filter_305_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_305_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_305_author_count;
-	// Filter 306: Number of occurrences of 'search engine optimization' in comment_content
-	$filter_306_term = 'search engine optimization';
-	$filter_306_count = substr_count($commentdata_comment_content_lc, $filter_306_term);
-	$filter_306_limit = 8;
-	$filter_306_trackback_limit = 8;
-	$filter_306_author_count = substr_count($commentdata_comment_author_lc, $filter_306_term);
-	$filter_306_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_306_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_306_author_count;
-	// Filter 307: Number of occurrences of 'link building' in comment_content
-	$filter_307_term = 'link building';
-	$filter_307_count = substr_count($commentdata_comment_content_lc, $filter_307_term);
-	$filter_307_limit = 8;
-	$filter_307_trackback_limit = 8;
-	$filter_307_author_count = substr_count($commentdata_comment_author_lc, $filter_307_term);
-	$filter_307_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_307_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_307_author_count;
-	// Filter 308: Number of occurrences of 'india offshore' in comment_content
-	$filter_308_term = 'india offshore';
-	$filter_308_count = substr_count($commentdata_comment_content_lc, $filter_308_term);
-	$filter_308_limit = 8;
-	$filter_308_trackback_limit = 8;
-	$filter_308_author_count = substr_count($commentdata_comment_author_lc, $filter_308_term);
-	$filter_308_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_308_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_308_author_count;
-	// Filter 309: Number of occurrences of 'offshore india' in comment_content
-	$filter_309_term = 'offshore india';
-	$filter_309_count = substr_count($commentdata_comment_content_lc, $filter_309_term);
-	$filter_309_limit = 8;
-	$filter_309_trackback_limit = 8;
-	$filter_309_author_count = substr_count($commentdata_comment_author_lc, $filter_309_term);
-	$filter_309_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_309_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_309_author_count;
-
+	
 	/*
 	// Medical-Related Filters
 	$filter_set_2 = array(
@@ -1915,7 +1824,7 @@ function spamfree_content_filter($commentdata) {
 		if ( $filter_200_count ) { $blacklist_word_combo++; }
 		if ( $commentdata_comment_type == 'trackback' && eregi( 'WordPress', $commentdata_user_agent_lc ) ) {
 			$content_filter_status = true;
-			$spamfree_error_code .= ' T3000';
+			$spamfree_error_code .= ' T300';
 			}
 		if ( eregi( 'Incutio XML-RPC -- WordPress/', $commentdata_user_agent_lc ) ) {
 			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
@@ -2111,161 +2020,117 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 3AUTH';
 		}
-	if ( $filter_3_count ) { $blacklist_word_combo++; }
+	if ( $$filter_3_count ) { $blacklist_word_combo++; }
 	if ( $filter_4_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 4AUTH';
 		}
-	if ( $filter_4_count ) { $blacklist_word_combo++; }
+	if ( $$filter_4_count ) { $blacklist_word_combo++; }
 	if ( $filter_5_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 5AUTH';
 		}
-	if ( $filter_5_count ) { $blacklist_word_combo++; }
+	if ( $$filter_5_count ) { $blacklist_word_combo++; }
 	if ( $filter_6_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 6AUTH';
 		}
-	if ( $filter_6_count ) { $blacklist_word_combo++; }
+	if ( $$filter_6_count ) { $blacklist_word_combo++; }
 	if ( $filter_7_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 7AUTH';
 		}
-	if ( $filter_7_count ) { $blacklist_word_combo++; }
+	if ( $$filter_7_count ) { $blacklist_word_combo++; }
 	if ( $filter_8_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 8AUTH';
 		}
-	if ( $filter_8_count ) { $blacklist_word_combo++; }
+	if ( $$filter_8_count ) { $blacklist_word_combo++; }
 	if ( $filter_9_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 9AUTH';
 		}
-	if ( $filter_9_count ) { $blacklist_word_combo++; }
+	if ( $$filter_9_count ) { $blacklist_word_combo++; }
 	if ( $filter_10_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 10AUTH';
 		}
-	if ( $filter_10_count ) { $blacklist_word_combo++; }
+	if ( $$filter_10_count ) { $blacklist_word_combo++; }
 	if ( $filter_11_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 11AUTH';
 		}
-	if ( $filter_11_count ) { $blacklist_word_combo++; }
+	if ( $$filter_11_count ) { $blacklist_word_combo++; }
 	if ( $filter_12_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 12AUTH';
 		}
-	if ( $filter_12_count ) { $blacklist_word_combo++; }
+	if ( $$filter_12_count ) { $blacklist_word_combo++; }
 	if ( $filter_13_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 13AUTH';
 		}
-	if ( $filter_13_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_13_count ) { $blacklist_word_combo++; }	
 	if ( $filter_14_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 14AUTH';
 		}
-	if ( $filter_14_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_14_count ) { $blacklist_word_combo++; }	
 	if ( $filter_15_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 15AUTH';
 		}
-	if ( $filter_15_count ) { $blacklist_word_combo++; }
+	if ( $$filter_15_count ) { $blacklist_word_combo++; }
 	if ( $filter_16_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 16AUTH';
 		}
-	if ( $filter_16_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_16_count ) { $blacklist_word_combo++; }	
 	if ( $filter_17_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 17AUTH';
 		}
-	if ( $filter_17_count ) { $blacklist_word_combo++; }
+	if ( $$filter_17_count ) { $blacklist_word_combo++; }
 	if ( $filter_18_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 18AUTH';
 		}
-	if ( $filter_18_count ) { $blacklist_word_combo++; }
+	if ( $$filter_18_count ) { $blacklist_word_combo++; }
 	if ( $filter_19_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 19AUTH';
 		}
-	if ( $filter_19_count ) { $blacklist_word_combo++; }
+	if ( $$filter_19_count ) { $blacklist_word_combo++; }
 	if ( $filter_20_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 20AUTH';
 		}
-	if ( $filter_20_count ) { $blacklist_word_combo++; }
+	if ( $$filter_20_count ) { $blacklist_word_combo++; }
 	if ( $filter_21_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 21AUTH';
 		}
-	if ( $filter_21_count ) { $blacklist_word_combo++; }
+	if ( $$filter_21_count ) { $blacklist_word_combo++; }
 	if ( $filter_22_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 22AUTH';
 		}
-	if ( $filter_22_count ) { $blacklist_word_combo++; }
+	if ( $$filter_22_count ) { $blacklist_word_combo++; }
 	if ( $filter_23_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 23AUTH';
 		}
-	if ( $filter_23_count ) { $blacklist_word_combo++; }
+	if ( $$filter_23_count ) { $blacklist_word_combo++; }
 	if ( $filter_24_author_count >= 1 ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 24AUTH';
 		}
-	if ( $filter_24_count ) { $blacklist_word_combo++; }	
+	if ( $$filter_24_count ) { $blacklist_word_combo++; }	
 
 	if ( eregi( 'buy', $commentdata_comment_author_lc ) && ( eregi( 'online', $commentdata_comment_author_lc ) || eregi( 'pill', $commentdata_comment_author_lc ) ) ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 200AUTH';
 		$blacklist_word_combo++;
-		}
-	
-	// Comment Author Tests - Non-Trackback - SEO/WebDev/Offshore
-	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
-		if ( $filter_300_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 300AUTH';
-			}
-		if ( $filter_301_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 301AUTH';
-			}
-		if ( $filter_302_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 302AUTH';
-			}
-		if ( $filter_303_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 303AUTH';
-			}
-		if ( $filter_304_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 304AUTH';
-			}
-		if ( $filter_305_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 305AUTH';
-			}
-		if ( $filter_306_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 306AUTH';
-			}
-		if ( $filter_307_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 307AUTH';
-			}
-		if ( $filter_308_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 308AUTH';
-			}
-		if ( $filter_309_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 309AUTH';
-			}
 		}
 	
 	// Blacklist Word Combinations
@@ -2348,8 +2213,6 @@ if (!class_exists('wpSpamFree')) {
 		
 		function add_admin_pages(){
 			add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
-			add_submenu_page("options-general.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
-			add_submenu_page("index.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 			}
 		
 		function output_existing_menu_sub_admin_page(){
@@ -2803,7 +2666,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.7";
+			$plugin_db_version = "1.8.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			//only run installation if not installed or if previous version installed
 			if ($installed_ver === false || $installed_ver != $plugin_db_version) {
