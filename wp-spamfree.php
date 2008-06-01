@@ -587,7 +587,12 @@ function spamfree_denied_post($approved) {
 		}
 	// Akismet Accuracy Fix :: END
 
-	wp_die( __('Comments have been temporarily disabled to prevent spam. Please try again later.') ); // Stop spammers without revealing why.
+	$spamfree_filter_error_message_standard = 'Comments have been temporarily disabled to prevent spam. Please try again later.'; // Stop spammers without revealing why.
+	
+	$spamfree_filter_error_message_detailed = '<strong>Your comment appears to be spam. Spam attempts will not be tolerated on this blog.</strong><br /><br />'."\n";
+	$spamfree_filter_error_message_detailed .= 'Please go back and enter a meaningful comment. Contribute something to the conversation.'."\n";
+
+	wp_die( __($spamfree_filter_error_message_detailed) );
 	return false;
 	// REJECT SPAM :: END
 	}
