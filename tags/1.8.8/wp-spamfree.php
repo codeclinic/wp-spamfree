@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.9
+Version: 1.8.8
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.9';
+	$wpSpamFreeVer='1.8.8';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -2355,7 +2355,7 @@ if (!class_exists('wpSpamFree')) {
 		function add_admin_pages(){
 			add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 			add_submenu_page("options-general.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
-			//add_submenu_page("index.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
+			add_submenu_page("index.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 			}
 		
 		function output_existing_menu_sub_admin_page(){
@@ -2809,7 +2809,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.9";
+			$plugin_db_version = "1.8.8";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
