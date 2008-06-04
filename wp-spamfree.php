@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.8.9
+Version: 1.9
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.8.9';
+	$wpSpamFreeVer='1.9';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -289,10 +289,53 @@ function spamfree_contact_form($content) {
 			
 			// TEST TO PREVENT CONTACT FORM SPAM FROM BOTS :: BEGIN
 			
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$ReverseDNS = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+			$wpsf_contact_message_lc = strtolower( $wpsf_contact_message );
+			
 			if ( $WPCommentValidationJS == $CookieValidationKey ) { // Contact Form Message Allowed
 
 				// ERROR CHECKING
-							
+				
+				
+				$contact_form_spam_1_count = substr_count( $wpsf_contact_message_lc, 'link'); //10
+				$contact_form_spam_1_limit = 7;
+				$contact_form_spam_2_count = substr_count( $wpsf_contact_message_lc, 'link building'); //4
+				$contact_form_spam_2_limit = 3;
+				$contact_form_spam_3_count = substr_count( $wpsf_contact_message_lc, 'link exchange');
+				$contact_form_spam_3_limit = 2;
+				$contact_form_spam_4_count = substr_count( $wpsf_contact_message_lc, 'link request'); // Subject
+				$contact_form_spam_4_limit = 1;
+				$contact_form_spam_5_count = substr_count( $wpsf_contact_message_lc, 'link building service');
+				$contact_form_spam_5_limit = 2;
+				$contact_form_spam_6_count = substr_count( $wpsf_contact_message_lc, 'link building experts india'); // 2
+				$contact_form_spam_6_limit = 0;
+				$contact_form_spam_7_count = substr_count( $wpsf_contact_message_lc, 'india'); //2
+				$contact_form_spam_7_limit = 1;
+				
+				
+				$wpsf_contact_subject_lc = strtolower( $wpsf_contact_subject );
+				$contact_form_spam_subj_1_count = substr_count( $wpsf_contact_subject_lc, 'link request'); // Subject
+				$contact_form_spam_subj_1_limit = 0;
+				$contact_form_spam_subj_2_count = substr_count( $wpsf_contact_subject_lc, 'link exchange'); // Subject
+				$contact_form_spam_subj_2_limit = 0;
+				
+				$contact_form_spam_term_total = $contact_form_spam_1_count + $contact_form_spam_2_count + $contact_form_spam_3_count + $contact_form_spam_4_count + $contact_form_spam_5_count + $contact_form_spam_6_count + $contact_form_spam_7_count + $contact_form_spam_subj_1_count + $contact_form_spam_subj_2_count;
+				$contact_form_spam_term_total = 15;
+				
+				if ( eregi( "\.in$", $ReverseDNS ) ) {
+					$contact_form_spam_loc_in = 1;
+					}
+				if ( ( $contact_form_spam_term_total > $contact_form_spam_term_total_limit || $contact_form_spam_1_count > $contact_form_spam_1_limit || $contact_form_spam_2_count > $contact_form_spam_2_limit || $contact_form_spam_5_count > $contact_form_spam_5_limit || $contact_form_spam_6_count > $contact_form_spam_6_limit ) && ( $contact_form_spam_loc_in || $contact_form_spam_2_count > $contact_form_spam_2_limit ) ) {
+					$MessageSpam=1;
+					$contact_response_status_message_addendum .= '&bull; Message appears to be spam. Please note that link requests and link exchange requests will be automatically deleted, and are not an acceptable use of this contact form.<br />&nbsp;<br />';
+					}
+					
+				if ( $contact_form_spam_subj_1_count > $contact_form_spam_subj_1_limit || $contact_form_spam_subj_2_count > $contact_form_spam_subj_2_limit ) {
+					$MessageSpam=1;
+					$contact_response_status_message_addendum .= '&bull; Message appears to be spam. Please note that link requests and link exchange requests will be automatically deleted, and are not an acceptable use of this contact form.<br />&nbsp;<br />';
+					}
+					
 				if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message || ( $FormIncludeWebsite && $FormRequireWebsite && !$wpsf_contact_website ) || ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone ) || ( $FormIncludeDropDownMenu && $FormRequireDropDownMenu && !$wpsf_contact_drop_down_menu ) ) {
 					$BlankField=1;
 					$contact_response_status_message_addendum .= '&bull; At least one required field was left blank.<br />&nbsp;<br />';
@@ -303,14 +346,21 @@ function spamfree_contact_form($content) {
 					$BadEmail=1;
 					$contact_response_status_message_addendum .= '&bull; Please enter a valid email address.<br />&nbsp;<br />';
 					}
+				
+				$wpsf_contact_phone_zero = str_replace( '0', '', $wpsf_contact_phone );
+				if ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone_zero ) {
+					$InvalidValue=1;
+					$BadPhone=1;
+					$contact_response_status_message_addendum .= '&bull; Please enter a valid phone number.<br />&nbsp;<br />';
+					}
 					
 				$MessageLength = strlen( $wpsf_contact_message );
 				if ( $MessageLength < $FormMessageMinLength ) {
 					$MessageShort=1;
 					$contact_response_status_message_addendum .= '&bull; Message too short. Please enter a complete message.<br />&nbsp;<br />';
-					}
+					}		
 				
-				if ( !$BlankField && !$InvalidValue && !$MessageShort ) {  
+				if ( !$BlankField && !$InvalidValue && !$MessageShort && !$MessageSpam ) {  
 				
 					$wpsf_contact_form_msg_1 .= "Message: "."\n";
 					$wpsf_contact_form_msg_1 .= $wpsf_contact_message."\n";
@@ -374,8 +424,10 @@ function spamfree_contact_form($content) {
 				else if ( eregi ( '\?form\=response', $spamfree_contact_form_url ) ) {
 					$spamfree_contact_form_back_url = str_replace('?form=response','',$spamfree_contact_form_url );
 					}
-				$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>';
-				$spamfree_contact_form_content .= '<p><strong>Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields. Please make sure JavaScript and Cookies are enabled in your browser.<br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
+				if ( !$RejectionStatus ) {
+					$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>'."\n";
+					$spamfree_contact_form_content .= '<p><strong>ERROR: Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields. Please make sure JavaScript and Cookies are enabled in your browser.<br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
+					}
 				}
 			$content_new = str_replace($content, $spamfree_contact_form_content, $content);
 			}
@@ -462,6 +514,15 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<p>* Required Field</p>'."\n";
 			$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 			$spamfree_contact_form_content .= '</form>'."\n";
+			
+			$spamfree_contact_form_ip_bans = array(
+													'59.162.251.58',
+													);
+			if ( in_array( $_SERVER['REMOTE_ADDR'], $spamfree_contact_form_ip_bans ) ) {
+				$spamfree_contact_form_content = '<strong>Your IP address has been identified with a known spammer. Contact form has been disabled to prevent spam.</strong>';
+				}
+			
+			
 		
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
 			}
@@ -671,6 +732,10 @@ function spamfree_content_filter($commentdata) {
 	$commentdata_php_self					= $_SERVER['PHP_SELF'];
 	$commentdata_php_self_lc				= strtolower($commentdata_php_self);
 	
+	if ( !$commentdata_remote_host_lc ) {
+		$commentdata_remote_host_lc = 'blank';
+		}
+
 	// Simple Filters
 	
 	$blacklist_word_combo_total_limit = 10;
@@ -925,6 +990,35 @@ function spamfree_content_filter($commentdata) {
 	$filter_24_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_24_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_24_author_count;
+	// Filter 25: Number of occurrences of 'propecia' in comment_content
+	$filter_25_term = 'propecia';
+	$filter_25_count = substr_count($commentdata_comment_content_lc, $filter_25_term);
+	$filter_25_limit = 2;
+	$filter_25_trackback_limit = 1;
+	$filter_25_author_count = substr_count($commentdata_comment_author_lc, $filter_25_term);
+	$filter_25_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_25_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_25_author_count;
+	// Filter 26: Number of occurrences of 'propec1a' in comment_content
+	$filter_26_term = 'propec1a';
+	$filter_26_count = substr_count($commentdata_comment_content_lc, $filter_26_term);
+	$filter_26_limit = 1;
+	$filter_26_trackback_limit = 1;
+	$filter_26_author_count = substr_count($commentdata_comment_author_lc, $filter_26_term);
+	$filter_26_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_26_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_26_author_count;
+	
+	// Non-Medical Author Tests
+	// Filter 210: Number of occurrences of 'drassyassut' in comment_content
+	$filter_210_term = 'drassyassut'; //DrassyassuT
+	$filter_210_count = substr_count($commentdata_comment_content_lc, $filter_210_term);
+	$filter_210_limit = 1;
+	$filter_210_trackback_limit = 1;
+	$filter_210_author_count = substr_count($commentdata_comment_author_lc, $filter_210_term);
+	$filter_210_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_210_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_210_author_count;
 
 	// Sex-Related Filter
 	// Filter 104: Number of occurrences of 'porn' in comment_content
@@ -1187,6 +1281,16 @@ function spamfree_content_filter($commentdata) {
 	$filter_155_limit = 7;
 	$filter_155_trackback_limit = 5;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_155_count;
+	// Filter 156: Number of occurrences of 'adult movie' in comment_content
+	$filter_156_count = substr_count($commentdata_comment_content_lc, 'adult movie');
+	$filter_156_limit = 4;
+	$filter_156_trackback_limit = 2;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_156_count;
+	// Filter 157: Number of occurrences of 'adult video' in comment_content
+	$filter_157_count = substr_count($commentdata_comment_content_lc, 'adult video');
+	$filter_157_limit = 4;
+	$filter_157_trackback_limit = 2;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_157_count;
 	
 	// Pingback/Trackback Filters
 	// Filter 200: Pingback: Blank data in comment_content: [...]  [...]
@@ -1407,6 +1511,21 @@ function spamfree_content_filter($commentdata) {
 	$filter_20005C_count = substr_count($commentdata_comment_content_lc, 'groups.google.us');
 	$filter_20005_limit = 1;
 	$filter_20005_trackback_limit = 1;
+	// Filter 20006: Number of occurrences of 'groups.google.us' in comment_author_url
+	$filter_20006_count = substr_count($commentdata_comment_author_url_lc, 'www.google.com/notebook/public/');
+	$filter_20006C_count = substr_count($commentdata_comment_content_lc, 'www.google.com/notebook/public/');
+	$filter_20006_limit = 1;
+	$filter_20006_trackback_limit = 1;
+	// Filter 20007: Number of occurrences of 'groups.google.us' in comment_author_url
+	$filter_20007_count = substr_count($commentdata_comment_author_url_lc, '.free-site-host.com');
+	$filter_20007C_count = substr_count($commentdata_comment_content_lc, '.free-site-host.com');
+	$filter_20007_limit = 1;
+	$filter_20007_trackback_limit = 1;
+	// Filter 20008: Number of occurrences of 'youporn736.vox.com' in comment_author_url
+	$filter_20008_count = substr_count($commentdata_comment_author_url_lc, 'youporn736.vox.com');
+	$filter_20008C_count = substr_count($commentdata_comment_content_lc, 'youporn736.vox.com');
+	$filter_20008_limit = 1;
+	$filter_20008_trackback_limit = 1;
 	
 	$commentdata_comment_author_lc_spam_strong = '<strong>'.$commentdata_comment_author_lc.'</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot1 = '...</strong>'; // Trackbacks
@@ -1579,6 +1698,16 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 24';
 		}
 	if ( $filter_24_count ) { $blacklist_word_combo++; }
+	if ( $filter_25_count >= $filter_25_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 25';
+		}
+	if ( $filter_25_count ) { $blacklist_word_combo++; }
+	if ( $filter_26_count >= $filter_26_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 26';
+		}
+	if ( $filter_26_count ) { $blacklist_word_combo++; }
 		
 	if ( $filter_104_count >= $filter_104_limit ) {
 		$content_filter_status = true;
@@ -1898,9 +2027,10 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	// Test IPs
-	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '78.129.202.15' || $commentdata_remote_addr_lc == '89.113.78.6' ) {
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) ) {
+		// 78.129.202.2, 78.129.202.15
 		$content_filter_status = true;
-		$spamfree_error_code .= ' 1002';
+		$spamfree_error_code .= ' 1002-'.$commentdata_remote_addr_lc;
 		}
 	// Test Remote Hosts
 	if ( eregi( '.svservers.com', $commentdata_remote_host_lc ) ) {
@@ -2107,6 +2237,43 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 20005C';
 		}
+	if ( eregi( 'www.google.com/notebook/public/', $commentdata_comment_author_url_lc ) ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20006';
+		}
+	if ( $filter_20006_count >= $filter_20006_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20006A';
+		}
+	if ( $filter_20006C_count >= $filter_20006_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20006C';
+		}
+	if ( eregi( '.free-site-host.com', $commentdata_comment_author_url_lc ) ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20007';
+		}
+	if ( $filter_20007_count >= $filter_20007_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20007A';
+		}
+	if ( $filter_20007C_count >= $filter_20007_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20007C';
+		}
+	if ( eregi( 'youporn736.vox.com', $commentdata_comment_author_url_lc ) ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20008';
+		}
+	if ( $filter_20008_count >= $filter_20008_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20008A';
+		}
+	if ( $filter_20008C_count >= $filter_20008_limit ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 20008C';
+		}
+
 	// Comment Author Tests
 	if ( $filter_2_author_count >= 1 ) {
 		$content_filter_status = true;
@@ -2222,13 +2389,30 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 24AUTH';
 		}
-	if ( $filter_24_count ) { $blacklist_word_combo++; }	
+	if ( $filter_24_count ) { $blacklist_word_combo++; }
+	if ( $filter_25_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 25AUTH';
+		}
+	if ( $filter_25_count ) { $blacklist_word_combo++; }
+	if ( $filter_26_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 26AUTH';
+		}
+	if ( $filter_26_count ) { $blacklist_word_combo++; }	
 
 	if ( eregi( 'buy', $commentdata_comment_author_lc ) && ( eregi( 'online', $commentdata_comment_author_lc ) || eregi( 'pill', $commentdata_comment_author_lc ) ) ) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 200AUTH';
 		$blacklist_word_combo++;
 		}
+
+	// Non-Medical Author Tests
+	if ( $filter_210_author_count >= 1 ) {
+		$content_filter_status = true;
+		$spamfree_error_code .= ' 210AUTH';
+		}
+	if ( $filter_210_count ) { $blacklist_word_combo++; }
 	
 	// Comment Author Tests - Non-Trackback - SEO/WebDev/Offshore
 	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
@@ -2809,7 +2993,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.8.9";
+			$plugin_db_version = "1.9";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
