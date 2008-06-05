@@ -2,6 +2,7 @@
 Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form
+Requires at least: 2.0.2
 Tested up to: 2.5.1
 Stable tag: 1.9.0
 
