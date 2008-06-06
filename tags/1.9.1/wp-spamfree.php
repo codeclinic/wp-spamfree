@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.2
+Version: 1.9.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.2';
+	$wpSpamFreeVer='1.9.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1476,42 +1476,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_310_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_310_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_310_author_count;
-	// Filter 311: Number of occurrences of 'search engine marketing' in comment_content
-	$filter_311_term = 'search engine marketing';
-	$filter_311_count = substr_count($commentdata_comment_content_lc, $filter_311_term);
-	$filter_311_limit = 8;
-	$filter_311_trackback_limit = 8;
-	$filter_311_author_count = substr_count($commentdata_comment_author_lc, $filter_311_term);
-	$filter_311_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_311_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_311_author_count;
-	// Filter 312: Number of occurrences of 'internet marketing' in comment_content
-	$filter_312_term = 'internet marketing';
-	$filter_312_count = substr_count($commentdata_comment_content_lc, $filter_312_term);
-	$filter_312_limit = 8;
-	$filter_312_trackback_limit = 8;
-	$filter_312_author_count = substr_count($commentdata_comment_author_lc, $filter_312_term);
-	$filter_312_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_312_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_312_author_count;
-	// Filter 313: Number of occurrences of 'social media optimization' in comment_content
-	$filter_313_term = 'social media optimization';
-	$filter_313_count = substr_count($commentdata_comment_content_lc, $filter_313_term);
-	$filter_313_limit = 8;
-	$filter_313_trackback_limit = 8;
-	$filter_313_author_count = substr_count($commentdata_comment_author_lc, $filter_313_term);
-	$filter_313_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_313_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_313_author_count;
-	// Filter 314: Number of occurrences of 'social media marketing' in comment_content
-	$filter_314_term = 'social media marketing';
-	$filter_314_count = substr_count($commentdata_comment_content_lc, $filter_314_term);
-	$filter_314_limit = 8;
-	$filter_314_trackback_limit = 8;
-	$filter_314_author_count = substr_count($commentdata_comment_author_lc, $filter_314_term);
-	$filter_314_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_author_count;
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2797,23 +2761,6 @@ function spamfree_content_filter($commentdata) {
 			$content_filter_status = true;
 			$spamfree_error_code .= ' 310AUTH';
 			}
-		if ( $filter_311_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 311AUTH';
-			}
-		if ( $filter_312_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 312AUTH';
-			}
-		if ( $filter_313_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 313AUTH';
-			}
-		if ( $filter_314_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 314AUTH';
-			}
-
 		}
 	
 	// Blacklist Word Combinations
@@ -3351,7 +3298,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.2";
+			$plugin_db_version = "1.9.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
