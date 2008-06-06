@@ -4,7 +4,7 @@ Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form
 Requires at least: 2.0.2
 Tested up to: 2.5.1
-Stable tag: 1.9.0
+Stable tag: trunk
 
 Powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
 
