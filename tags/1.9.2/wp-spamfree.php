@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.3
+Version: 1.9.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.3';
+	$wpSpamFreeVer='1.9.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -740,42 +740,6 @@ function spamfree_content_filter($commentdata) {
 	if ( !$commentdata_remote_host_lc ) {
 		$commentdata_remote_host_lc = 'blank';
 		}
-		
-	$BlogServerIP = $_SERVER['SERVER_ADDR'];
-	$BlogServerName = $_SERVER['SERVER_NAME'];
-
-	// IP / PROXY INFO :: BEGIN
-	$ipBlock=explode('.',$commentdata_remote_addr);
-	$ipProxyVIA=$_SERVER['HTTP_VIA'];
-	$MaskedIP=$_SERVER['HTTP_X_FORWARDED_FOR']; // Stated Original IP - Can be faked
-	$MaskedIPBlock=explode('.',$MaskedIP);
-	if (eregi("^([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])",$MaskedIP)&&$MaskedIP!=""&&$MaskedIP!="unknown"&&!eregi("^192.168.",$MaskedIP)) {
-		$MaskedIPValid=true;
-		$MaskedIPCore=rtrim($MaskedIP," unknown;,");
-		}
-	$ReverseDNS = gethostbyaddr($commentdata_remote_addr);
-	$ReverseDNSIP = gethostbyname($ReverseDNS);
-	
-	if ( $ReverseDNSIP != $commentdata_remote_addr || $commentdata_remote_addr == $ReverseDNS ) {
-		$ReverseDNSAuthenticity = '[Possibly Forged]';
-		} 
-	else {
-		$ReverseDNSAuthenticity = '[Verified]';
-		}
-	// Detect Use of Proxy
-	if ($_SERVER['HTTP_VIA']||$_SERVER['HTTP_X_FORWARDED_FOR']) {
-		$ipProxy='PROXY DETECTED';
-		$ipProxyShort='PROXY';
-		$ipProxyData=$commentdata_remote_addr.' | MASKED IP: '.$MaskedIP;
-		$ProxyStatus='TRUE';
-		}
-	else {
-		$ipProxy='No Proxy';
-		$ipProxyShort=$ipProxy;
-		$ipProxyData=$commentdata_remote_addr;
-		$ProxyStatus='FALSE';
-		}
-	// IP / PROXY INFO :: END
 
 	// Simple Filters
 	
@@ -1414,7 +1378,7 @@ function spamfree_content_filter($commentdata) {
 
 	// SEO/WebDev/Offshore-Related Filter - Authors Only - Non-Trackback
 	// Filter 300: Number of occurrences of 'web development' in comment_content
-	$filter_300_term = 'web development'; //'web development'
+	$filter_300_term = 'web development';
 	$filter_300_count = substr_count($commentdata_comment_content_lc, $filter_300_term);
 	$filter_300_limit = 8;
 	$filter_300_trackback_limit = 8;
@@ -1548,114 +1512,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_314_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_author_count;
-	// Filter 315: Number of occurrences of 'web developer' in comment_content
-	$filter_315_term = 'web developer'; //'web development'
-	$filter_315_count = substr_count($commentdata_comment_content_lc, $filter_315_term);
-	$filter_315_limit = 8;
-	$filter_315_trackback_limit = 8;
-	$filter_315_author_count = substr_count($commentdata_comment_author_lc, $filter_315_term);
-	$filter_315_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_315_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_315_author_count;
-	// Filter 316: Number of occurrences of 'website developer' in comment_content
-	$filter_316_term = 'website developer';
-	$filter_316_count = substr_count($commentdata_comment_content_lc, $filter_316_term);
-	$filter_316_limit = 8;
-	$filter_316_trackback_limit = 8;
-	$filter_316_author_count = substr_count($commentdata_comment_author_lc, $filter_316_term);
-	$filter_316_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_316_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_316_author_count;
-	// Filter 317: Number of occurrences of 'web site developer' in comment_content
-	$filter_317_term = 'web site developer';
-	$filter_317_count = substr_count($commentdata_comment_content_lc, $filter_317_term);
-	$filter_317_limit = 8;
-	$filter_317_trackback_limit = 8;
-	$filter_317_author_count = substr_count($commentdata_comment_author_lc, $filter_317_term);
-	$filter_317_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_317_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_317_author_count;
-	// Filter 318: Number of occurrences of 'javascript' in comment_content
-	$filter_318_term = 'javascript';
-	$filter_318_count = substr_count($commentdata_comment_content_lc, $filter_318_term);
-	$filter_318_limit = 8;
-	$filter_318_trackback_limit = 8;
-	$filter_318_author_count = substr_count($commentdata_comment_author_lc, $filter_318_term);
-	$filter_318_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_318_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_318_author_count;
-	// Filter 319: Number of occurrences of 'search engine optimizer' in comment_content
-	$filter_319_term = 'search engine optimizer';
-	$filter_319_count = substr_count($commentdata_comment_content_lc, $filter_319_term);
-	$filter_319_limit = 8;
-	$filter_319_trackback_limit = 8;
-	$filter_319_author_count = substr_count($commentdata_comment_author_lc, $filter_319_term);
-	$filter_319_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_319_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_319_author_count;
-	// Filter 320: Number of occurrences of 'link builder' in comment_content
-	$filter_320_term = 'link builder';
-	$filter_320_count = substr_count($commentdata_comment_content_lc, $filter_320_term);
-	$filter_320_limit = 8;
-	$filter_320_trackback_limit = 8;
-	$filter_320_author_count = substr_count($commentdata_comment_author_lc, $filter_320_term);
-	$filter_320_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_320_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_320_author_count;
-	// Filter 321: Number of occurrences of 'search engine marketer' in comment_content
-	$filter_321_term = 'search engine marketer';
-	$filter_321_count = substr_count($commentdata_comment_content_lc, $filter_321_term);
-	$filter_321_limit = 8;
-	$filter_321_trackback_limit = 8;
-	$filter_321_author_count = substr_count($commentdata_comment_author_lc, $filter_321_term);
-	$filter_321_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_321_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_321_author_count;
-	// Filter 322: Number of occurrences of 'internet marketer' in comment_content
-	$filter_322_term = 'internet marketer';
-	$filter_322_count = substr_count($commentdata_comment_content_lc, $filter_322_term);
-	$filter_322_limit = 8;
-	$filter_322_trackback_limit = 8;
-	$filter_322_author_count = substr_count($commentdata_comment_author_lc, $filter_322_term);
-	$filter_322_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_322_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_322_author_count;
-	// Filter 323: Number of occurrences of 'social media optimizer' in comment_content
-	$filter_323_term = 'social media optimizer';
-	$filter_323_count = substr_count($commentdata_comment_content_lc, $filter_323_term);
-	$filter_323_limit = 8;
-	$filter_323_trackback_limit = 8;
-	$filter_323_author_count = substr_count($commentdata_comment_author_lc, $filter_323_term);
-	$filter_323_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_323_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_323_author_count;
-	// Filter 324: Number of occurrences of 'social media marketer' in comment_content
-	$filter_324_term = 'social media marketer';
-	$filter_324_count = substr_count($commentdata_comment_content_lc, $filter_324_term);
-	$filter_324_limit = 8;
-	$filter_324_trackback_limit = 8;
-	$filter_324_author_count = substr_count($commentdata_comment_author_lc, $filter_324_term);
-	$filter_324_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_324_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_324_author_count;
-	// Filter 325: Number of occurrences of 'social media consultant' in comment_content
-	$filter_325_term = 'social media consultant';
-	$filter_325_count = substr_count($commentdata_comment_content_lc, $filter_325_term);
-	$filter_325_limit = 8;
-	$filter_325_trackback_limit = 8;
-	$filter_325_author_count = substr_count($commentdata_comment_author_lc, $filter_325_term);
-	$filter_325_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_325_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_325_author_count;
-	// Filter 326: Number of occurrences of 'social media consulting' in comment_content
-	$filter_326_term = 'social media consulting';
-	$filter_326_count = substr_count($commentdata_comment_content_lc, $filter_326_term);
-	$filter_326_limit = 8;
-	$filter_326_trackback_limit = 8;
-	$filter_326_author_count = substr_count($commentdata_comment_author_lc, $filter_326_term);
-	$filter_326_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_326_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_326_author_count;
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2468,26 +2324,15 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	// Test IPs
-	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || $commentdata_remote_addr_lc == '92.241.176.200' ) {
-		// 78.129.202.2, 78.129.202.15, 
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) ) {
+		// 78.129.202.2, 78.129.202.15
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1002-'.$commentdata_remote_addr_lc;
 		}
 	// Test Remote Hosts
-	if ( eregi( '.svservers.com', $commentdata_remote_host_lc ) || eregi( '.pool.ukrtel.net', $commentdata_remote_host_lc ) ) {
+	if ( eregi( '.svservers.com', $commentdata_remote_host_lc ) ) {
 		$content_filter_status = true;
-		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
-		}
-	// Test Reverse IP's
-	// If faked to Match blog Server IP
-	if ( $ReverseDNSIP == $BlogServerIP ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 1004';
-		}
-	// If faked to be single dot
-	if ( $ReverseDNSIP == '.' ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 1005';
+		$spamfree_error_code .= ' 1003';
 		}
 	// Test Pingbacks and Trackbacks
 	if ( $commentdata_comment_type == 'pingback' || $commentdata_comment_type == 'trackback' ) {
@@ -2968,54 +2813,6 @@ function spamfree_content_filter($commentdata) {
 			$content_filter_status = true;
 			$spamfree_error_code .= ' 314AUTH';
 			}
-		if ( $filter_315_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 315AUTH';
-			}
-		if ( $filter_316_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 316AUTH';
-			}
-		if ( $filter_317_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 317AUTH';
-			}
-		if ( $filter_318_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 318AUTH';
-			}
-		if ( $filter_319_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 319AUTH';
-			}
-		if ( $filter_320_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 320AUTH';
-			}
-		if ( $filter_321_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 321AUTH';
-			}
-		if ( $filter_322_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 322AUTH';
-			}
-		if ( $filter_323_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 323AUTH';
-			}
-		if ( $filter_324_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 324AUTH';
-			}
-		if ( $filter_325_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 325AUTH';
-			}
-		if ( $filter_326_author_count >= 1 ) {
-			$content_filter_status = true;
-			$spamfree_error_code .= ' 326AUTH';
-			}
 
 		}
 	
@@ -3118,7 +2915,7 @@ if (!class_exists('wpSpamFree')) {
 			$installation_file_test_0 			= ABSPATH . 'wp-content/plugins/wp-spamfree/wp-spamfree.php';
 			$installation_file_test_1 			= ABSPATH . 'wp-config.php';
 			$installation_file_test_2 			= ABSPATH . 'wp-includes/wp-db.php';
-			$installation_file_test_3 			= ABSPATH . 'wp-content/plugins/wp-spamfree/js/wpspamfreejs.php';
+			$installation_file_test_3 			= ABSPATH . 'wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php';
 			clearstatcache();
 			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&file_exists($installation_file_test_1)&&file_exists($installation_file_test_2)&&file_exists($installation_file_test_3)) {
 				$wp_installation_status = 1;
@@ -3492,7 +3289,7 @@ if (!class_exists('wpSpamFree')) {
 				<li>Check your WordPress Version. If you are using a release earlier than 2.3, you may want to upgrade for a whole slew of reasons, including features and security.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
 				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
-				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpspamfreejs.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
+				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
         <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins.<br />&nbsp;</li>
         <li>Check for conflicts with other WordPress plugins installed on your blog. This isn't common but does happen from time to time. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
@@ -3547,14 +3344,14 @@ if (!class_exists('wpSpamFree')) {
 				}
 			echo "\n";
 			echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS BEGIN -->'."\n";
-			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpspamfreejs.php"></script> '."\n";
+			echo '<script type="text/javascript" src="'.get_option('siteurl').'/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php"></script> '."\n";
 			echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS END -->'."\n";
 			echo "\n";
 			}
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.3";
+			$plugin_db_version = "1.9.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
