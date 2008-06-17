@@ -776,7 +776,7 @@ function spamfree_content_filter($commentdata) {
 	
 	// Filter 1: Number of occurrences of 'http://' in comment_content
 	$filter_1_count = substr_count($commentdata_comment_content_lc, 'http://');
-	$filter_1_limit = 5;
+	$filter_1_limit = 4;
 	$filter_1_trackback_limit = 1;
 	
 	// Medical-Related Filters
