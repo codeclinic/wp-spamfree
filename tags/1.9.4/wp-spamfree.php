@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.5
+Version: 1.9.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.5';
+	$wpSpamFreeVer='1.9.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -2451,9 +2451,9 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' ) {
 		$content_filter_status = true;
-		$spamfree_error_code .= ' 9200-'.$commentdata_comment_author_email_lc;
+		$spamfree_error_code .= ' 9200';
 		}
 	// Test Referrers
 	if ( eregi( $commentdata_php_self_lc, $WPCommentsPostURL ) && $commentdata_referrer_lc == $WPCommentsPostURL ) {
@@ -2468,7 +2468,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	// Test IPs
-	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) ) {
+	if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || $commentdata_remote_addr_lc == '92.241.176.200' ) {
 		// 78.129.202.2, 78.129.202.15, 
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1002-'.$commentdata_remote_addr_lc;
@@ -2478,26 +2478,16 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
 		}
-	if ( $commentdata_remote_host_lc == 'blank' && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
-		// Experimental - However, have never seen a human comment where this occurs.
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 1004';
-		}
-	// Test Reverse DNS Hosts
-	if ( eregi( '.svservers.com', $ReverseDNS ) || eregi( '.pool.ukrtel.net', $ReverseDNS ) ) {
-		$content_filter_status = true;
-		$spamfree_error_code .= ' 1023-'.$ReverseDNS;
-		}
-	// Test Reverse DNS IP's
+	// Test Reverse IP's
 	// If faked to Match blog Server IP
 	if ( $ReverseDNSIP == $BlogServerIP ) {
 		$content_filter_status = true;
-		$spamfree_error_code .= ' 1031';
+		$spamfree_error_code .= ' 1004';
 		}
 	// If faked to be single dot
 	if ( $ReverseDNSIP == '.' ) {
 		$content_filter_status = true;
-		$spamfree_error_code .= ' 1032';
+		$spamfree_error_code .= ' 1005';
 		}
 	// Test Pingbacks and Trackbacks
 	if ( $commentdata_comment_type == 'pingback' || $commentdata_comment_type == 'trackback' ) {
@@ -3047,7 +3037,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -3564,7 +3554,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.5";
+			$plugin_db_version = "1.9.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
