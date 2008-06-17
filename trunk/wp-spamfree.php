@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6
+Version: 1.9.6.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6';
+	$wpSpamFreeVer='1.9.6.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -647,8 +647,8 @@ function spamfree_denied_post($approved) {
 
 	$spamfree_filter_error_message_standard = 'Comments have been temporarily disabled to prevent spam. Please try again later.'; // Stop spammers without revealing why.
 	
-	$spamfree_filter_error_message_detailed = '<strong>Your comment appears to be spam. Spam attempts will not be tolerated on this blog.</strong><br /><br />'."\n";
-	$spamfree_filter_error_message_detailed .= 'Please go back and enter a meaningful comment. Contribute something to the conversation.'."\n";
+	$spamfree_filter_error_message_detailed = '<strong>Your comment appears to be spam. Please be aware that spam attempts will not be tolerated on this blog.</strong><br /><br />'."\n";
+	$spamfree_filter_error_message_detailed .= 'Please go back and enter a meaningful comment. (Add something to the conversation.)'."\n";
 
 	wp_die( __($spamfree_filter_error_message_detailed) );
 	return false;
@@ -2470,11 +2470,14 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
 		}
+	/*
+	// Following is causing errors on some systems. 06/17/08
 	if ( $commentdata_remote_host_lc == 'blank' && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 		// Experimental - However, have never seen a human comment where this occurs.
 		$content_filter_status = true;
 		$spamfree_error_code .= ' 1004';
 		}
+	*/
 	// Test Reverse DNS Hosts
 	if ( eregi( '.svservers.com', $ReverseDNS ) || eregi( '.pool.ukrtel.net', $ReverseDNS ) ) {
 		$content_filter_status = true;
@@ -3556,7 +3559,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6";
+			$plugin_db_version = "1.9.6.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
