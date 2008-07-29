@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.3
+Version: 1.9.6.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.3';
+	$wpSpamFreeVer='1.9.6.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -549,7 +549,7 @@ function spamfree_contact_form($content) {
 													);
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
-			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
+			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( '.svservers.com', $commentdata_remote_host_lc ) || eregi( '.pool.ukrtel.net', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( '.svservers.com', $ReverseDNS ) || eregi( '.pool.ukrtel.net', $ReverseDNS ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
 				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}
 			
@@ -625,8 +625,7 @@ function spamfree_allowed_post($approved) {
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
 	//$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
-	//if( $WPCommentValidationJS == $CookieValidationKey ) { // Comment allowed
-	if( $_COOKIE[$spamfree_options['cookie_validation_name']] == $spamfree_options['cookie_validation_key'] ) { // Comment allowed
+	if( $WPCommentValidationJS == $CookieValidationKey ) { // Comment allowed
 		// Clear Key Values and Update
 		spamfree_update_keys(1);
 		return $approved;
@@ -771,10 +770,8 @@ function spamfree_content_short($commentdata) {
 	
 function spamfree_content_filter($commentdata) {
 	// Supplementary Defense - Blocking the Obvious to Improve Pingback/Trackback Defense
-	// FYI, Certain lopps are unrolled because of a weird compatibility issue with certain servers. Works fine on most, but for some unforeseen reason, a few have issues. When I get more time to test, will try to figure it out. for now these have to stay unrolled. Won't require any more server resources, just more lines of code. Overall, still a tiny program for a server to run.
-	
 	// CONTENT FILTERING :: BEGIN
-	$CurrentWordPressVersion = '2.6';
+	$CurrentWordPressVersion = '2.5.1';
 	
 	$commentdata_comment_author						= $commentdata['comment_author'];
 	$commentdata_comment_author_lc					= strtolower($commentdata_comment_author);
@@ -1811,15 +1808,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_329_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_329_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_329_author_count;
-	// Filter 330: Number of occurrences of 'search engine ranking' in comment_content
-	$filter_330_term = 'search engine ranking';
-	$filter_330_count = substr_count($commentdata_comment_content_lc, $filter_330_term);
-	$filter_330_limit = 8;
-	$filter_330_trackback_limit = 8;
-	$filter_330_author_count = substr_count($commentdata_comment_author_lc, $filter_330_term);
-	$filter_330_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_author_count;
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2770,7 +2758,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1002-'.$commentdata_remote_addr_lc;
 		}
 	// Test Remote Hosts
-	if ( eregi( 'keywordspy.com', $commentdata_remote_host_lc ) ) {
+	if ( eregi( '.svservers.com', $commentdata_remote_host_lc ) || eregi( '.pool.ukrtel.net', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
 		}
@@ -2783,7 +2771,7 @@ function spamfree_content_filter($commentdata) {
 		}
 	*/
 	// Test Reverse DNS Hosts
-	if ( eregi( 'keywordspy.com', $ReverseDNS ) ) {
+	if ( eregi( '.svservers.com', $ReverseDNS ) || eregi( '.pool.ukrtel.net', $ReverseDNS ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' 1023-'.$ReverseDNS;
 		}
@@ -3492,11 +3480,7 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 329AUTH';
 			}
-		if ( $filter_330_author_count >= 1 ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 330AUTH';
-			}
-
+			
 		}
 	
 	// Blacklist Word Combinations
@@ -3517,7 +3501,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -4034,7 +4018,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.3";
+			$plugin_db_version = "1.9.6.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
