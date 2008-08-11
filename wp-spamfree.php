@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.3
+Version: 1.9.6.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.3';
+	$wpSpamFreeVer='1.9.6.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -523,6 +523,7 @@ function spamfree_contact_form($content) {
 													'59.162.251.58',
 													'61.24.158.174',
 													'64.20.49.178',
+													'69.89.31.219',
 													'72.249.100.188',
 													'77.92.88.13',
 													'77.92.88.27',
@@ -536,6 +537,7 @@ function spamfree_contact_form($content) {
 													'89.113.78.6',
 													'92.241.176.200',
 													'92.48.122.2',
+													'92.48.122.3',
 													'92.48.65.27',
 													'92.241.168.216',
 													'122.160.70.94',
@@ -544,8 +546,10 @@ function spamfree_contact_form($content) {
 													'123.237.144.92',
 													'123.237.147.71',
 													'193.37.152.242',
+													'202.143.112.106',
 													'203.190.134.107',
 													'206.123.92.245',
+													'208.43.196.98',
 													'220.224.230.71',
 													);
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
@@ -674,7 +678,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -1218,8 +1222,8 @@ function spamfree_content_filter($commentdata) {
 	$filter_37_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_37_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_37_author_count;
-	// Filter 38: Number of occurrences of 'accomplia' in comment_content
-	$filter_38_term = 'accomplia';
+	// Filter 38: Number of occurrences of 'acomplia' in comment_content
+	$filter_38_term = 'acomplia';
 	$filter_38_count = substr_count($commentdata_comment_content_lc, $filter_38_term);
 	$filter_38_limit = 3;
 	$filter_38_trackback_limit = 2;
@@ -1821,6 +1825,15 @@ function spamfree_content_filter($commentdata) {
 	$filter_330_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_author_count;
+	// Filter 331: Number of occurrences of 'modulesoft' in comment_content
+	$filter_331_term = 'modulesoft';
+	$filter_331_count = substr_count($commentdata_comment_content_lc, $filter_331_term);
+	$filter_331_limit = 8;
+	$filter_331_trackback_limit = 8;
+	$filter_331_author_count = substr_count($commentdata_comment_author_lc, $filter_331_term);
+	$filter_331_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_author_count;
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2711,7 +2724,7 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
 		}
@@ -2729,10 +2742,12 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	$commentdata_user_agent_lc_word_count = count( explode( " ", $commentdata_user_agent_lc ) );
-	if ( $commentdata_user_agent_lc_word_count < 3  ) {
-		// Another test for altered UA's.
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' 1001.1-'.$commentdata_user_agent_lc;
+	if ( $commentdata_user_agent_lc_word_count < 3 ) {
+		if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' || ( !eregi( 'movabletype', $commentdata_user_agent_lc ) && ( $commentdata_comment_type == 'trackback' || $commentdata_comment_type == 'pingback' ) ) ) {
+			// Another test for altered UA's.
+			$content_filter_status = '2';
+			$spamfree_error_code .= ' 1001.1-'.$commentdata_user_agent_lc;
+			}
 		}
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
@@ -2740,6 +2755,7 @@ function spamfree_content_filter($commentdata) {
 								'59.162.251.58',
 								'61.24.158.174',
 								'64.20.49.178',
+								'69.89.31.219',
 								'72.249.100.188',
 								'77.92.88.13',
 								'77.92.88.27',
@@ -2753,6 +2769,7 @@ function spamfree_content_filter($commentdata) {
 								'89.113.78.6',
 								'92.241.176.200',
 								'92.48.122.2',
+								'92.48.122.3',
 								'92.48.65.27',
 								'92.241.168.216',
 								'122.160.70.94',
@@ -2761,8 +2778,10 @@ function spamfree_content_filter($commentdata) {
 								'123.237.144.92',
 								'123.237.147.71',
 								'193.37.152.242',
+								'202.143.112.106',
 								'203.190.134.107',
 								'206.123.92.245',
+								'208.43.196.98',
 								'220.224.230.71',
 								);
 	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
@@ -2828,6 +2847,11 @@ function spamfree_content_filter($commentdata) {
 			// Check to see if Comment Author is lowercase. Normal blog pings Authors are properly capitalized. No brainer.
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' T1010';
+			}
+		if ( $ipProxy == 'PROXY DETECTED' ) {
+			// Check to see if Trackback/Pingback is using proxy. Red flag.
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' T1011';
 			}
 		if ( $commentdata_comment_content == '[...] read more [...]' ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
@@ -3498,6 +3522,10 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 330AUTH';
 			}
+		if ( $filter_331_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 331AUTH';
+			}
 
 		}
 	
@@ -3519,7 +3547,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -4036,7 +4064,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.3";
+			$plugin_db_version = "1.9.6.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
