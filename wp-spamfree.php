@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.4
+Version: 1.9.6.5
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.4';
+	$wpSpamFreeVer='1.9.6.5';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -546,6 +546,9 @@ function spamfree_contact_form($content) {
 													'123.237.144.92',
 													'123.237.147.71',
 													'193.37.152.242',
+													'193.46.236.151',
+													'193.46.236.152',
+													'193.46.236.234',
 													'202.143.112.106',
 													'203.190.134.107',
 													'206.123.92.245',
@@ -678,7 +681,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-	
+
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -2778,6 +2781,9 @@ function spamfree_content_filter($commentdata) {
 								'123.237.144.92',
 								'123.237.147.71',
 								'193.37.152.242',
+								'193.46.236.151',
+								'193.46.236.152',
+								'193.46.236.234',
 								'202.143.112.106',
 								'203.190.134.107',
 								'206.123.92.245',
@@ -3547,7 +3553,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-	
+		
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -4064,7 +4070,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.4";
+			$plugin_db_version = "1.9.6.5";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
