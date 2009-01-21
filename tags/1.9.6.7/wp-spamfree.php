@@ -4,11 +4,11 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.8
+Version: 1.9.6.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
-/*  Copyright 2007-2009    Scott Allen  (email : wp.spamfree [at] hybrid6 [dot] com)
+/*  Copyright 2007-2008    Scott Allen  (email : scott [at] hybrid6 [dot] com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,10 +25,11 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.8';
+	$wpSpamFreeVer='1.9.6.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -520,11 +521,22 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '</form>'."\n";
 			
 			$spamfree_contact_form_ip_bans = array(
+													'59.162.251.58',
+													'61.24.158.174',
+													'64.20.49.178',
+													'69.89.31.219',
+													'72.249.100.188',
+													'74.12.44.78',
 													'77.92.88.13',
 													'77.92.88.27',
+													'78.62.9.58',
 													'78.129.202.15',
 													'78.129.202.2',
 													'78.157.143.202',
+													'79.143.176.12',
+													'83.7.196.73',
+													'86.34.201.86',
+													'89.113.78.6',
 													'92.241.176.200',
 													'92.48.122.2',
 													'92.48.122.3',
@@ -539,6 +551,11 @@ function spamfree_contact_form($content) {
 													'193.46.236.151',
 													'193.46.236.152',
 													'193.46.236.234',
+													'202.143.112.106',
+													'203.190.134.107',
+													'206.123.92.245',
+													'208.43.196.98',
+													'220.224.230.71',
 													);
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
@@ -605,7 +622,7 @@ function spamfree_check_comment_type($commentdata) {
 			}
 		// ONLY IF NOT ADMINS :: END
 		}
-		
+
 	return $commentdata;
 	}
 
@@ -1822,36 +1839,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_331_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_author_count;
-	// Filter 332: Number of occurrences of 'zoekmachine optimalisatie' in comment_content
-	$filter_332_term = 'zoekmachine optimalisatie';
-	$filter_332_count = substr_count($commentdata_comment_content_lc, $filter_332_term);
-	$filter_332_limit = 8;
-	$filter_332_trackback_limit = 8;
-	$filter_332_author_count = substr_count($commentdata_comment_author_lc, $filter_332_term);
-	$filter_332_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_332_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_332_author_count;
-	// Filter 333: Number of occurrences of 'data entry india' in comment_content
-	$filter_333_term = 'data entry india';
-	$filter_333_count = substr_count($commentdata_comment_content_lc, $filter_333_term);
-	$filter_333_limit = 8;
-	$filter_333_trackback_limit = 8;
-	$filter_333_author_count = substr_count($commentdata_comment_author_lc, $filter_333_term);
-	$filter_333_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_333_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_333_author_count;
-	// Filter 334: Number of occurrences of 'webdesigner' in comment_content
-	$filter_334_term = 'webdesigner';
-	$filter_334_count = substr_count($commentdata_comment_content_lc, $filter_334_term);
-	$filter_334_limit = 8;
-	$filter_334_trackback_limit = 8;
-	$filter_334_author_count = substr_count($commentdata_comment_author_lc, $filter_334_term);
-	$filter_334_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_author_count;
-
-
-
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -1904,16 +1891,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_509_limit = 4;
 	$filter_509_trackback_limit = 2;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_509_count;
-	// Filter 510: Number of occurrences of 'data entry' in comment_content
-	$filter_510_count = substr_count($commentdata_comment_content_lc, 'data entry');
-	$filter_510_limit = 5;
-	$filter_510_trackback_limit = 2;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_510_count;
-	// Filter 511: Number of occurrences of 'asdf' in comment_content
-	$filter_511_count = substr_count($commentdata_comment_content_lc, 'asdf');
-	$filter_511_limit = 6;
-	$filter_511_trackback_limit = 2;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_511_count;
 
 	/*
 	// Medical-Related Filters
@@ -2111,151 +2088,7 @@ function spamfree_content_filter($commentdata) {
 	$filter_20020C_count = substr_count($commentdata_comment_content_lc, '.lifecity.info');
 	$filter_20020_limit = 1;
 	$filter_20020_trackback_limit = 1;
-	// NEW20000 CODES SETUP
-	// Filter 20021: Number of occurrences of 'widecircles.com' in comment_author_url / comment_content
-	$filter_20021_domain = 'widecircles.com'; // MASSIVE SPAMMERS
-	$filter_20021_domain_http = 'http://'.$filter_20021_domain;
-	$filter_20021_domain_dot = '.'.$filter_20021_domain;
-	$filter_20021_count = substr_count($commentdata_comment_author_url_lc, $filter_20021_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20021_domain_dot);
-	$filter_20021C_count = substr_count($commentdata_comment_content_lc, $filter_20021_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20021_domain_dot);
-	$filter_20021_limit = 1;
-	$filter_20021_trackback_limit = 1;
-	// Filter 20022: Number of occurrences of 'netcallidus.com' in comment_author_url / comment_content
-	$filter_20022_domain = 'netcallidus.com'; // SPAMMERS
-	$filter_20022_domain_http = 'http://'.$filter_20022_domain;
-	$filter_20022_domain_dot = '.'.$filter_20022_domain;
-	$filter_20022_count = substr_count($commentdata_comment_author_url_lc, $filter_20022_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20022_domain_dot);
-	$filter_20022C_count = substr_count($commentdata_comment_content_lc, $filter_20022_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20022_domain_dot);
-	$filter_20022_limit = 1;
-	$filter_20022_trackback_limit = 1;
-	// Filter 20023: Number of occurrences of 'webseomasters.com' in comment_author_url / comment_content
-	$filter_20023_domain = 'webseomasters.com'; // SPAMMERS
-	$filter_20023_domain_http = 'http://'.$filter_20023_domain;
-	$filter_20023_domain_dot = '.'.$filter_20023_domain;
-	$filter_20023_count = substr_count($commentdata_comment_author_url_lc, $filter_20023_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20023_domain_dot);
-	$filter_20023C_count = substr_count($commentdata_comment_content_lc, $filter_20023_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20023_domain_dot);
-	$filter_20023_limit = 1;
-	$filter_20023_trackback_limit = 1;
-	// Filter 20024: Number of occurrences of 'mastersofseo.com' in comment_author_url / comment_content
-	$filter_20024_domain = 'mastersofseo.com'; // SPAMMERS
-	$filter_20024_domain_http = 'http://'.$filter_20024_domain;
-	$filter_20024_domain_dot = '.'.$filter_20024_domain;
-	$filter_20024_count = substr_count($commentdata_comment_author_url_lc, $filter_20024_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20024_domain_dot);
-	$filter_20024C_count = substr_count($commentdata_comment_content_lc, $filter_20024_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20024_domain_dot);
-	$filter_20024_limit = 1;
-	$filter_20024_trackback_limit = 1;
-	// Filter 20025: Number of occurrences of 'mysmartseo.com' in comment_author_url / comment_content
-	$filter_20025_domain = 'mysmartseo.com'; // SPAMMERS
-	$filter_20025_domain_http = 'http://'.$filter_20025_domain;
-	$filter_20025_domain_dot = '.'.$filter_20025_domain;
-	$filter_20025_count = substr_count($commentdata_comment_author_url_lc, $filter_20025_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20025_domain_dot);
-	$filter_20025C_count = substr_count($commentdata_comment_content_lc, $filter_20025_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20025_domain_dot);
-	$filter_20025_limit = 1;
-	$filter_20025_trackback_limit = 1;
-	// Filter 20026: Number of occurrences of 'sitemapwriter.com' in comment_author_url / comment_content
-	$filter_20026_domain = 'sitemapwriter.com'; // SPAMMERS
-	$filter_20026_domain_http = 'http://'.$filter_20026_domain;
-	$filter_20026_domain_dot = '.'.$filter_20026_domain;
-	$filter_20026_count = substr_count($commentdata_comment_author_url_lc, $filter_20026_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20026_domain_dot);
-	$filter_20026C_count = substr_count($commentdata_comment_content_lc, $filter_20026_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20026_domain_dot);
-	$filter_20026_limit = 1;
-	$filter_20026_trackback_limit = 1;
-	// Filter 20027: Number of occurrences of 'shredderwarehouse.com' in comment_author_url / comment_content
-	$filter_20027_domain = 'shredderwarehouse.com'; // SPAMMERS
-	$filter_20027_domain_http = 'http://'.$filter_20027_domain;
-	$filter_20027_domain_dot = '.'.$filter_20027_domain;
-	$filter_20027_count = substr_count($commentdata_comment_author_url_lc, $filter_20027_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20027_domain_dot);
-	$filter_20027C_count = substr_count($commentdata_comment_content_lc, $filter_20027_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20027_domain_dot);
-	$filter_20027_limit = 1;
-	$filter_20027_trackback_limit = 1;
-	// Filter 20028: Number of occurrences of 'mmoinn.com' in comment_author_url / comment_content
-	$filter_20028_domain = 'mmoinn.com'; // SPAMMERS
-	$filter_20028_domain_http = 'http://'.$filter_20028_domain;
-	$filter_20028_domain_dot = '.'.$filter_20028_domain;
-	$filter_20028_count = substr_count($commentdata_comment_author_url_lc, $filter_20028_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20028_domain_dot);
-	$filter_20028C_count = substr_count($commentdata_comment_content_lc, $filter_20028_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20028_domain_dot);
-	$filter_20028_limit = 1;
-	$filter_20028_trackback_limit = 1;
-	// Filter 20029: Number of occurrences of 'animatedfavicon.com' in comment_author_url / comment_content
-	$filter_20029_domain = 'animatedfavicon.com'; // SPAMMERS
-	$filter_20029_domain_http = 'http://'.$filter_20029_domain;
-	$filter_20029_domain_dot = '.'.$filter_20029_domain;
-	$filter_20029_count = substr_count($commentdata_comment_author_url_lc, $filter_20029_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20029_domain_dot);
-	$filter_20029C_count = substr_count($commentdata_comment_content_lc, $filter_20029_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20029_domain_dot);
-	$filter_20029_limit = 1;
-	$filter_20029_trackback_limit = 1;
-	// Filter 20030: Number of occurrences of 'cignusweb.com' in comment_author_url / comment_content
-	$filter_20030_domain = 'cignusweb.com'; // SPAMMERS
-	$filter_20030_domain_http = 'http://'.$filter_20030_domain;
-	$filter_20030_domain_dot = '.'.$filter_20030_domain;
-	$filter_20030_count = substr_count($commentdata_comment_author_url_lc, $filter_20030_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20030_domain_dot);
-	$filter_20030C_count = substr_count($commentdata_comment_content_lc, $filter_20030_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20030_domain_dot);
-	$filter_20030_limit = 1;
-	$filter_20030_trackback_limit = 1;
-	// Filter 20031: Number of occurrences of 'rsschannelwriter.com' in comment_author_url / comment_content
-	$filter_20031_domain = 'rsschannelwriter.com'; // SPAMMERS
-	$filter_20031_domain_http = 'http://'.$filter_20031_domain;
-	$filter_20031_domain_dot = '.'.$filter_20031_domain;
-	$filter_20031_count = substr_count($commentdata_comment_author_url_lc, $filter_20031_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20031_domain_dot);
-	$filter_20031C_count = substr_count($commentdata_comment_content_lc, $filter_20031_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20031_domain_dot);
-	$filter_20031_limit = 1;
-	$filter_20031_trackback_limit = 1;
-	// Filter 20032: Number of occurrences of 'clickaudit.com' in comment_author_url / comment_content
-	$filter_20032_domain = 'clickaudit.com'; // SPAMMERS
-	$filter_20032_domain_http = 'http://'.$filter_20032_domain;
-	$filter_20032_domain_dot = '.'.$filter_20032_domain;
-	$filter_20032_count = substr_count($commentdata_comment_author_url_lc, $filter_20032_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20032_domain_dot);
-	$filter_20032C_count = substr_count($commentdata_comment_content_lc, $filter_20032_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20032_domain_dot);
-	$filter_20032_limit = 1;
-	$filter_20032_trackback_limit = 1;
-	// Filter 20033: Number of occurrences of 'choice-direct.com' in comment_author_url / comment_content
-	$filter_20033_domain = 'choice-direct.com'; // SPAMMERS
-	$filter_20033_domain_http = 'http://'.$filter_20033_domain;
-	$filter_20033_domain_dot = '.'.$filter_20033_domain;
-	$filter_20033_count = substr_count($commentdata_comment_author_url_lc, $filter_20033_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20033_domain_dot);
-	$filter_20033C_count = substr_count($commentdata_comment_content_lc, $filter_20033_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20033_domain_dot);
-	$filter_20033_limit = 1;
-	$filter_20033_trackback_limit = 1;
-	// Filter 20034: Number of occurrences of 'experl.com' in comment_author_url / comment_content
-	$filter_20034_domain = 'experl.com'; // SPAMMERS
-	$filter_20034_domain_http = 'http://'.$filter_20034_domain;
-	$filter_20034_domain_dot = '.'.$filter_20034_domain;
-	$filter_20034_count = substr_count($commentdata_comment_author_url_lc, $filter_20034_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20034_domain_dot);
-	$filter_20034C_count = substr_count($commentdata_comment_content_lc, $filter_20034_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20034_domain_dot);
-	$filter_20034_limit = 1;
-	$filter_20034_trackback_limit = 1;
-	// Filter 20035: Number of occurrences of 'registry-error-cleaner.com' in comment_author_url / comment_content
-	$filter_20035_domain = 'registry-error-cleaner.com'; // SPAMMERS
-	$filter_20035_domain_http = 'http://'.$filter_20035_domain;
-	$filter_20035_domain_dot = '.'.$filter_20035_domain;
-	$filter_20035_count = substr_count($commentdata_comment_author_url_lc, $filter_20035_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20035_domain_dot);
-	$filter_20035C_count = substr_count($commentdata_comment_content_lc, $filter_20035_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20035_domain_dot);
-	$filter_20035_limit = 1;
-	$filter_20035_trackback_limit = 1;
-	// Filter 20036: Number of occurrences of 'sunitawedsamit.com' in comment_author_url / comment_content
-	$filter_20036_domain = 'sunitawedsamit.com'; // SPAMMERS
-	$filter_20036_domain_http = 'http://'.$filter_20036_domain;
-	$filter_20036_domain_dot = '.'.$filter_20036_domain;
-	$filter_20036_count = substr_count($commentdata_comment_author_url_lc, $filter_20036_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20036_domain_dot);
-	$filter_20036C_count = substr_count($commentdata_comment_content_lc, $filter_20036_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20036_domain_dot);
-	$filter_20036_limit = 1;
-	$filter_20036_trackback_limit = 1;
-	// Filter 20037: Number of occurrences of 'agriimplements.com' in comment_author_url / comment_content
-	$filter_20037_domain = 'agriimplements.com'; // SPAMMERS
-	$filter_20037_domain_http = 'http://'.$filter_20037_domain;
-	$filter_20037_domain_dot = '.'.$filter_20037_domain;
-	$filter_20037_count = substr_count($commentdata_comment_author_url_lc, $filter_20037_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20037_domain_dot);
-	$filter_20037C_count = substr_count($commentdata_comment_content_lc, $filter_20037_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20037_domain_dot);
-	$filter_20037_limit = 1;
-	$filter_20037_trackback_limit = 1;
-
-
-
-
-
-
-
-
+	
 	$commentdata_comment_author_lc_spam_strong = '<strong>'.$commentdata_comment_author_lc.'</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot1 = '...</strong>'; // Trackbacks
 	$commentdata_comment_author_lc_spam_strong_dot2 = '...</b>'; // Trackbacks
@@ -2835,16 +2668,6 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 509';
 		}
 	if ( $filter_509_count ) { $blacklist_word_combo++; }
-	if ( $filter_510_count >= $filter_510_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 510';
-		}
-	if ( $filter_510_count ) { $blacklist_word_combo++; }
-	if ( $filter_511_count >= $filter_511_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 511';
-		}
-	if ( $filter_511_count ) { $blacklist_word_combo++; }
 
 	/*
 	// Execute Filter Test(s)
@@ -2906,7 +2729,7 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
 		}
@@ -2934,11 +2757,22 @@ function spamfree_content_filter($commentdata) {
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
 	$spamfree_ip_bans = array(
+								'59.162.251.58',
+								'61.24.158.174',
+								'64.20.49.178',
+								'69.89.31.219',
+								'72.249.100.188',
+								'74.12.44.78',
 								'77.92.88.13',
 								'77.92.88.27',
+								'78.62.9.58',
 								'78.129.202.15',
 								'78.129.202.2',
 								'78.157.143.202',
+								'79.143.176.12',
+								'83.7.196.73',
+								'86.34.201.86',
+								'89.113.78.6',
 								'92.241.176.200',
 								'92.48.122.2',
 								'92.48.122.3',
@@ -2953,6 +2787,11 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.151',
 								'193.46.236.152',
 								'193.46.236.234',
+								'202.143.112.106',
+								'203.190.134.107',
+								'206.123.92.245',
+								'208.43.196.98',
+								'220.224.230.71',
 								);
 	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
 
@@ -3384,143 +3223,6 @@ function spamfree_content_filter($commentdata) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 20020C';
 		}
-	// NEW20000 CODES SETUP
-	if ( $filter_20021_count >= $filter_20021_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20021A';
-		}
-	if ( $filter_20021C_count >= $filter_20021_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20021C';
-		}	
-	if ( $filter_20022_count >= $filter_20022_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20022A';
-		}
-	if ( $filter_20022C_count >= $filter_20022_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20022C';
-		}	
-	if ( $filter_20023_count >= $filter_20023_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20023A';
-		}
-	if ( $filter_20023C_count >= $filter_20023_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20023C';
-		}	
-	if ( $filter_20024_count >= $filter_20024_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20024A';
-		}
-	if ( $filter_20024C_count >= $filter_20024_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20024C';
-		}	
-	if ( $filter_20025_count >= $filter_20025_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20025A';
-		}
-	if ( $filter_20025C_count >= $filter_20025_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20025C';
-		}	
-	if ( $filter_20026_count >= $filter_20026_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20026A';
-		}
-	if ( $filter_20026C_count >= $filter_20026_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20026C';
-		}	
-	if ( $filter_20027_count >= $filter_20027_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20027A';
-		}
-	if ( $filter_20027C_count >= $filter_20027_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20027C';
-		}	
-	if ( $filter_20028_count >= $filter_20028_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20028A';
-		}
-	if ( $filter_20028C_count >= $filter_20028_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20028C';
-		}	
-	if ( $filter_20029_count >= $filter_20029_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20029A';
-		}
-	if ( $filter_20029C_count >= $filter_20029_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20029C';
-		}	
-	if ( $filter_20030_count >= $filter_20030_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20030A';
-		}
-	if ( $filter_20030C_count >= $filter_20030_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20030C';
-		}	
-	if ( $filter_20031_count >= $filter_20031_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20031A';
-		}
-	if ( $filter_20031C_count >= $filter_20031_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20031C';
-		}	
-	if ( $filter_20032_count >= $filter_20032_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20032A';
-		}
-	if ( $filter_20032C_count >= $filter_20032_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20032C';
-		}	
-	if ( $filter_20033_count >= $filter_20033_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20033A';
-		}
-	if ( $filter_20033C_count >= $filter_20033_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20033C';
-		}	
-	if ( $filter_20034_count >= $filter_20034_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20034A';
-		}
-	if ( $filter_20034C_count >= $filter_20034_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20034C';
-		}	
-	if ( $filter_20035_count >= $filter_20035_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20035A';
-		}
-	if ( $filter_20035C_count >= $filter_20035_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20035C';
-		}	
-	if ( $filter_20036_count >= $filter_20036_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20036A';
-		}
-	if ( $filter_20036C_count >= $filter_20036_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20036C';
-		}	
-	if ( $filter_20037_count >= $filter_20037_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20037A';
-		}
-	if ( $filter_20037C_count >= $filter_20037_limit ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 20037C';
-		}	
 
 
 	// Comment Author Tests
@@ -3832,18 +3534,6 @@ function spamfree_content_filter($commentdata) {
 		if ( $filter_331_author_count >= 1 ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 331AUTH';
-			}
-		if ( $filter_332_author_count >= 1 ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 332AUTH';
-			}
-		if ( $filter_333_author_count >= 1 ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 333AUTH';
-			}
-		if ( $filter_334_author_count >= 1 ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 334AUTH';
 			}
 
 		}
@@ -4327,9 +4017,9 @@ if (!class_exists('wpSpamFree')) {
 				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
 				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpsf-js.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
         <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins.<br />&nbsp;</li>
-        <li>Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
+        <li>Check for conflicts with other WordPress plugins installed on your blog. This isn't common but does happen from time to time. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
-				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>, or <a href="mailto:wp.spamfree@hybrid6.com?subject=WP-SpamFree Support Request [<?php echo $wpSpamFreeVerAdmin; ?>]">send a support email</a>.</li>
+				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>, or <a href="mailto:scott@hybrid6.com?subject=WP-SpamFree Support Request [<?php echo $wpSpamFreeVerAdmin; ?>]">send a support email</a>.</li>
 			</ol>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
@@ -4387,7 +4077,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.8";
+			$plugin_db_version = "1.9.6.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
