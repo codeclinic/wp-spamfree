@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.9
+Version: 1.9.6.8
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,11 +25,10 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.9';
+	$wpSpamFreeVer='1.9.6.8';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -606,7 +605,7 @@ function spamfree_check_comment_type($commentdata) {
 			}
 		// ONLY IF NOT ADMINS :: END
 		}
-
+		
 	return $commentdata;
 	}
 
@@ -768,7 +767,7 @@ function spamfree_content_filter($commentdata) {
 	// FYI, Certain lopps are unrolled because of a weird compatibility issue with certain servers. Works fine on most, but for some unforeseen reason, a few have issues. When I get more time to test, will try to figure it out. for now these have to stay unrolled. Won't require any more server resources, just more lines of code. Overall, still a tiny program for a server to run.
 	
 	// CONTENT FILTERING :: BEGIN
-	$CurrentWordPressVersion = '2.8';
+	$CurrentWordPressVersion = '2.6';
 	
 	$commentdata_comment_author						= $commentdata['comment_author'];
 	$commentdata_comment_author_lc					= strtolower($commentdata_comment_author);
@@ -4388,7 +4387,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.9";
+			$plugin_db_version = "1.9.6.8";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
