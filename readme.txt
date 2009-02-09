@@ -76,8 +76,8 @@ Want to show off your spam stats on your blog and tell others about WP-SpamFree?
 
 To add stats to individual posts, you'll need to install the Exec-PHP plugin.
 
-= Adding a Comment Form to Your Blog =
-First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: `<!--spamfree-contact-->`
+= Adding a Contact Form to Your Blog =
+First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab) and you're done: `<!--spamfree-contact-->`
 
 There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.
 

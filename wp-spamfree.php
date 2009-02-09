@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.7.0
+Version: 1.9.7.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,7 +28,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.7.0';
+	$wpSpamFreeVer='1.9.7.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -4036,7 +4036,7 @@ if (!class_exists('wpSpamFree')) {
 				<li><a href="#wpsf_contact_form_options">Contact Form Options</a></li>
 				<li><a href="#wpsf_installation_instructions">Installation Instructions</a></li>
 				<li><a href="#wpsf_displaying_stats">Displaying Spam Stats on Your Blog</a></li>
-				<li><a href="#wpsf_adding_comment_form">Adding a Comment Form to Your Blog</a></li>
+				<li><a href="#wpsf_adding_contact_form">Adding a Contact Form to Your Blog</a></li>
 				<li><a href="#wpsf_known_conflicts">Known Plugin Conflicts</a></li>
 				<li><a href="#wpsf_troubleshooting">Troubleshooting Guide / Support</a></li>
 				<li><a href="#wpsf_let_others_know">Let Others Know About WP-SpamFree</a></li>
@@ -4291,9 +4291,9 @@ if (!class_exists('wpSpamFree')) {
 
 			<p>&nbsp;</p>
 			
-			<p><a name="wpsf_adding_comment_form"><strong>Adding a Comment Form to Your Blog</strong></a></p>
+			<p><a name="wpsf_adding_contact_form"><strong>Adding a Contact Form to Your Blog</strong></a></p>
 
-			<p>First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
+			<p>First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
 			
 			There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.<br />&nbsp;<br />
 
@@ -4392,7 +4392,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.7.0";
+			$plugin_db_version = "1.9.7.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
