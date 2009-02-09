@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.6.9
+Version: 1.9.7.0
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,11 +25,10 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.6.9';
+	$wpSpamFreeVer='1.9.7.0';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -651,7 +650,7 @@ function spamfree_allowed_post($approved) {
 		
 		$spamfree_jsck_error_message_detailed = '<strong>Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.</strong><br /><br />'."\n";
 		$spamfree_jsck_error_message_detailed .= 'Status:'."\n";
-		$spamfree_jsck_error_message_detailed .= '<ul>'."\n";
+		$spamfree_jsck_error_message_detailed .= '<ul style="list-style-type:disc;padding-left:30px;">'."\n";
 		$spamfree_jsck_error_message_detailed .= '<li><script type="text/javascript">document.write(\'JavaScript is enabled.\');</script><noscript>JavaScript is disabled.</noscript></li>'."\n";
 		$spamfree_jsck_error_message_detailed .= '<li>'.$spamfree_jsck_error_ck_status.'</li>'."\n";		
 		$spamfree_jsck_error_message_detailed .= '</ul>'."\n";
@@ -4030,8 +4029,9 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p>&nbsp;</p>
 			
-			<a name="wpsf_top"><strong>Quick Navigation - Contents</strong></a>
-			<ol>
+			<p><a name="wpsf_top"><strong>Quick Navigation - Contents</strong></a></p>
+			
+			<ol style="list-style-type:decimal;padding-left:30px;">
 				<li><a href="#wpsf_spam_options">Spam Options</a></li>
 				<li><a href="#wpsf_contact_form_options">Contact Form Options</a></li>
 				<li><a href="#wpsf_installation_instructions">Installation Instructions</a></li>
@@ -4051,7 +4051,7 @@ if (!class_exists('wpSpamFree')) {
 			<input type="hidden" name="submitted" value="1" />
 
 			<fieldset class="options">
-				<ul>
+				<ul style="list-style-type:none;padding-left:30px;">
 					<li>
 					<label for="block_all_trackbacks">
 						<input type="checkbox" id="block_all_trackbacks" name="block_all_trackbacks" <?php echo ($spamfree_options['block_all_trackbacks']==true?"checked=\"checked\"":"") ?> />
@@ -4085,7 +4085,7 @@ if (!class_exists('wpSpamFree')) {
 			<input type="hidden" name="submitted" value="1" />
 
 			<fieldset class="options">
-				<ul>
+				<ul style="list-style-type:none;padding-left:30px;">
 					<li>
 					<label for="form_include_website">
 						<input type="checkbox" id="form_include_website" name="form_include_website" <?php echo ($spamfree_options['form_include_website']==true?"checked=\"checked\"":"") ?> />
@@ -4247,7 +4247,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><a name="wpsf_installation_instructions"><strong>Installation Instructions</strong></a></p>
 
-			<ol>
+			<ol style="list-style-type:decimal;padding-left:30px;">
 			    <li>After downloading, unzip file and upload the enclosed 'wp-spamfree' directory to your WordPress plugins directory: '/wp-content/plugins/'.<br />&nbsp;</li>
 				<li>As always, <strong>activate</strong> the plugin on your WordPress plugins page.<br />&nbsp;</li>
 				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1. If it is installed correctly, then move on to the next step.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
@@ -4263,9 +4263,9 @@ if (!class_exists('wpSpamFree')) {
 
 			<p><a name="wpsf_displaying_stats"><strong>Displaying Spam Stats on Your Blog</strong></a></p>
 
-			Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: <br />&nbsp;<br /><code>&lt;?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?&gt;</code><br />&nbsp;<br /> where '1' is the style. Replace the '1' with a number from 1-6 that corresponds to one of the following sample styles you'd like to use. To simply display text stats on your site (no graphic), replace the '1' with '0'.</code>
+			<p>Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: <br />&nbsp;<br /><code>&lt;?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?&gt;</code><br />&nbsp;<br /> where '1' is the style. Replace the '1' with a number from 1-6 that corresponds to one of the following sample styles you'd like to use. To simply display text stats on your site (no graphic), replace the '1' with '0'.</code></p>
 			
-			<ol>
+			<ol style="list-style-type:decimal;padding-left:30px;">
 			    <li>&nbsp;<br />&nbsp;
 				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-1-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 				
@@ -4285,30 +4285,34 @@ if (!class_exists('wpSpamFree')) {
 				<img src='<?php echo $SiteURL; ?>/wp-content/plugins/wp-spamfree/counter/spamfree-counter-bg-6-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 67px" border="0" width="140" height="67" /></li>
 			</ol>
 						
-			To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.	
+			<p>To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.</p>
+				
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
 			<p>&nbsp;</p>
 			
 			<p><a name="wpsf_adding_comment_form"><strong>Adding a Comment Form to Your Blog</strong></a></p>
 
-			First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
+			<p>First create a page (not post) where you want to have your comment form. Then, insert the following tag (using the HTML editing tab) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
 			
 			There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.<br />&nbsp;<br />
 
 			<strong>What the Contact Form feature IS:</strong> A simple drop-in contact form that won't get spammed.<br />
 			<strong>What the Contact Form feature is NOT:</strong> A configurable and full-featured plugin like some other contact form plugins out there.<br />
-			<strong>Note:</strong> Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you.<br />
+			<strong>Note:</strong> Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you.</p>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
 			<p>&nbsp;</p>	
 
 			<p><a name="wpsf_known_conflicts"><strong>Known Plugin Conflicts</strong></a></p>
-			Plugins that are known to be incompatible with WP-SpamFree:
-			<ol>
+			
+			<p>Plugins that are known to be incompatible with WP-SpamFree:</p>
+			
+			<ol style="list-style-type:decimal;padding-left:30px;">
 				<li><strong>AskApache Password Protect</strong><br />&nbsp;<br />Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
 				<li><strong>WP-OpenID</strong><br />&nbsp;</li>
+				<li><strong>Wordpress Thread Comment</strong><br />&nbsp;</li>
 				<li><strong>Some front-end anti-spam plugins, including CAPTCHA's, challenge questions, etc.</strong><br />&nbsp;<br />There's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)</li>
 			</ol>
 			
@@ -4317,8 +4321,8 @@ if (!class_exists('wpSpamFree')) {
 			<p>&nbsp;</p>	
 
 			<p><a name="wpsf_troubleshooting"><strong>Troubleshooting Guide / Support</strong></a></p>
-			If you're having trouble getting things to work after installing the plugin, here are a few things to check:
-			<ol>
+			<p>If you're having trouble getting things to work after installing the plugin, here are a few things to check:</p>
+			<ol style="list-style-type:decimal;padding-left:30px;">
 				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
 				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br />Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
@@ -4327,10 +4331,10 @@ if (!class_exists('wpSpamFree')) {
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
 				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
 				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpsf-js.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
-        <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins.<br />&nbsp;</li>
+        <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.)<br />&nbsp;</li>
         <li>Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
-				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>, or <a href="mailto:wp.spamfree@hybrid6.com?subject=WP-SpamFree Support Request [<?php echo $wpSpamFreeVerAdmin; ?>]">send a support email</a>.</li>
+				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
 			</ol>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
@@ -4339,9 +4343,9 @@ if (!class_exists('wpSpamFree')) {
 			
   			<p><a name="wpsf_let_others_know"><strong>Let Others Know About WP-SpamFree</strong></a></p>
 	
-			<strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, there's a few things you can do to let others know:
+			<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, there's a few things you can do to let others know:</p>
 			
-			<ul>
+			<ul style="list-style-type:disc;padding-left:30px;">
 				<li><a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank" >Post a comment.</a></li>
 				<li><a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" >Rate WP-SpamFree</a> on WordPress.org.</li>
 				<li><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" >Place a graphic link</a>  on your site letting others know how they can help end blog spam. ( &lt/BLOGSPAM&gt; )</li>
@@ -4351,15 +4355,15 @@ if (!class_exists('wpSpamFree')) {
 
 			<p>&nbsp;</p>			
 			
-			<a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="http://www.hybrid6.com/webgeek/images/wp-spamfree/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" border="0" style="border-style:none;text-decoration:none;" /></a><br />&nbsp;<br />
+			<p><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="http://www.hybrid6.com/webgeek/images/wp-spamfree/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" border="0" style="border-style:none;text-decoration:none;" /></a></p>
 			
-			<a name="wpsf_download_plugin_documentation"><strong>Download Plugin / Documentation</strong></a><br />
+			<p><a name="wpsf_download_plugin_documentation"><strong>Download Plugin / Documentation</strong></a><br />
 			Latest Version: <a href="http://www.hybrid6.com/webgeek/downloads/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
 			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >WP-SpamFree</a><br />
 			Leave Comments: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank" rel="external" >WP-SpamFree Release Announcement Blog Post</a><br />
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
 			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
-			End Blog Spam: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a>
+			End Blog Spam: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a></p>
 	
 			<p>&nbsp;</p>
 
@@ -4388,7 +4392,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.6.9";
+			$plugin_db_version = "1.9.7.0";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
