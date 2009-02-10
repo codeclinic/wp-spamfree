@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.7.2
+Version: 1.9.7.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,11 +25,10 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.7.2';
+	$wpSpamFreeVer='1.9.7.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -667,7 +666,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-	
+
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -905,8 +904,8 @@ function spamfree_content_filter($commentdata) {
 	$filter_3_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_3_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_3_author_count;
-	// Filter 4: Number of occurrences of ' cialis' in comment_content
-	$filter_4_term = ' cialis';
+	// Filter 4: Number of occurrences of 'cialis' in comment_content
+	$filter_4_term = 'cialis';
 	$filter_4_count = substr_count($commentdata_comment_content_lc, $filter_4_term);
 	$filter_4_limit = 2;
 	$filter_4_trackback_limit = 1;
@@ -953,7 +952,7 @@ function spamfree_content_filter($commentdata) {
 	// Filter 9: Number of occurrences of 'erection' in comment_content
 	$filter_9_term = 'erection';
 	$filter_9_count = substr_count($commentdata_comment_content_lc, $filter_9_term);
-	$filter_9_limit = 3;
+	$filter_9_limit = 2;
 	$filter_9_trackback_limit = 1;
 	$filter_9_author_count = substr_count($commentdata_comment_author_lc, $filter_9_term);
 	$filter_9_author_limit = 1;
@@ -4393,7 +4392,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.7.2";
+			$plugin_db_version = "1.9.7.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
