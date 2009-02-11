@@ -8,7 +8,11 @@ $CookieValidationName  		= $spamfree_options['cookie_validation_name'];
 $CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
 
 update_option( 'ak_count_pre', get_option('akismet_spam_count') );
+
+@setcookie( $CookieValidationName, $CookieValidationKey, 0, '/' );
 	
+header('Cache-Control: no-cache');
+header('Pragma: no-cache');
 header('Content-Type: application/x-javascript');
 echo "
 // WP-SpamFree ".$wpSpamFreeVer." JS Code :: BEGIN
