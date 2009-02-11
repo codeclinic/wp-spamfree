@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.1
+Version: 1.9.8.0
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.1';
+	$wpSpamFreeVer='1.9.8.0';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -606,7 +606,7 @@ function spamfree_check_comment_type($commentdata) {
 			}
 		// ONLY IF NOT ADMINS :: END
 		}
-		
+
 	return $commentdata;
 	}
 
@@ -667,7 +667,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-	
+
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -846,9 +846,7 @@ function spamfree_content_filter($commentdata) {
 	$blacklist_word_combo_total = 0;
 	
 	// Filter 1: Number of occurrences of 'http://' in comment_content
-	$filter_1_count_http = substr_count($commentdata_comment_content_lc, 'http://');
-	$filter_1_count_https = substr_count($commentdata_comment_content_lc, 'https://');
-	$filter_1_count = $filter_1_count_http + $filter_1_count_https;
+	$filter_1_count = substr_count($commentdata_comment_content_lc, 'http://');
 	$filter_1_limit = 4;
 	$filter_1_trackback_limit = 1;
 	
@@ -908,17 +906,11 @@ function spamfree_content_filter($commentdata) {
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_3_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_3_author_count;
 	// Filter 4: Number of occurrences of ' cialis' in comment_content
-	$filter_4_term = 'cialis'; 
-	// Testing something next 4 lines. Will make more efficient soon.
-	$filter_4_term_space = ' '.$filter_4_term; 
-	$filter_4_term_slash = '-'.$filter_4_term; 
-	$filter_4_term_dash = '/'.$filter_4_term;
-	$filter_4_count = substr_count($commentdata_comment_content_lc, $filter_4_term_space)+substr_count($commentdata_comment_content_lc, $filter_4_term_slash)+substr_count($commentdata_comment_content_lc, $filter_4_term_dash);
-	//$filter_4_count = substr_count($commentdata_comment_content_lc, $filter_4_term);
+	$filter_4_term = ' cialis';
+	$filter_4_count = substr_count($commentdata_comment_content_lc, $filter_4_term);
 	$filter_4_limit = 2;
 	$filter_4_trackback_limit = 1;
-	$filter_4_author_count = substr_count($commentdata_comment_author_lc, $filter_4_term_space)+substr_count($commentdata_comment_author_lc, $filter_4_term_slash)+substr_count($commentdata_comment_author_lc, $filter_4_term_dash);
-	//$filter_4_author_count = substr_count($commentdata_comment_author_lc, $filter_4_term);
+	$filter_4_author_count = substr_count($commentdata_comment_author_lc, $filter_4_term);
 	$filter_4_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_4_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_4_author_count;
@@ -3875,7 +3867,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-	
+		
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -4401,7 +4393,7 @@ if (!class_exists('wpSpamFree')) {
 			
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.1";
+			$plugin_db_version = "1.9.8.0";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
