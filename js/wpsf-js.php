@@ -1,6 +1,12 @@
 <?php
-include_once('../../../../wp-config.php');
-include_once('../../../../wp-includes/wp-db.php');
+$root = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+if (file_exists($root.'/wp-load.php')) {
+	// WP 2.6
+	include_once($root.'/wp-load.php');
+    } else {
+    // Before 2.6
+	include_once($root.'/wp-config.php');
+	}
 
 $wpSpamFreeVer				= get_option('wp_spamfree_version');
 $spamfree_options			= get_option('spamfree_options');
