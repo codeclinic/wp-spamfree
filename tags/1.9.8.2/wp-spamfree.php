@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.3
+Version: 1.9.8.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -25,11 +25,10 @@ Author URI: http://www.hybrid6.com/webgeek/
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.3';
+	$wpSpamFreeVer='1.9.8.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -298,9 +297,7 @@ function spamfree_contact_form($content) {
 			//$wpsf_contact_form_cc_to_name 		= $wpsf_contact_name;
 			$wpsf_contact_form_subject 			= '[Website Contact] '.$wpsf_contact_subject;
 			//$wpsf_contact_form_cc_subject		= '[Website Contact CC] '.$wpsf_contact_subject;
-			$wpsf_contact_form_msg_headers 		= "From: $wpsf_contact_name <$wpsf_contact_email>" . "\r\n" . "Content-Type: text/plain\r\n";
-			// Another option: "Content-Type: text/html"
-			
+			$wpsf_contact_form_msg_headers 		= "From: $wpsf_contact_name <$wpsf_contact_email>" . "\r\n" . "X-Mailer: PHP/" . phpversion();
 			// FORM INFO :: END
 			
 			// TEST TO PREVENT CONTACT FORM SPAM FROM BOTS :: BEGIN
@@ -415,7 +412,7 @@ function spamfree_contact_form($content) {
 					$wpsf_contact_form_msg_cc = $wpsf_contact_form_msg_1.$wpsf_contact_form_msg_3;
 					
 					// SEND MESSAGE
-					@wp_mail( $wpsf_contact_form_to, $wpsf_contact_form_subject, $wpsf_contact_form_msg, $wpsf_contact_form_msg_headers );
+					mail( $wpsf_contact_form_to, $wpsf_contact_form_subject, $wpsf_contact_form_msg, $wpsf_contact_form_msg_headers );
 										
 					$contact_response_status = 'thank-you';
 					
@@ -682,7 +679,7 @@ function spamfree_allowed_post($approved) {
 		
 function spamfree_denied_post($approved) {
 	// REJECT SPAM :: BEGIN
-
+	
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 	// Akismet Accuracy Fix :: BEGIN
@@ -3890,7 +3887,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-		
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -4480,7 +4477,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.3";
+			$plugin_db_version = "1.9.8.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
