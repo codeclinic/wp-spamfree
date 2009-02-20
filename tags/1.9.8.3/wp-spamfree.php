@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.4
+Version: 1.9.8.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.4';
+	$wpSpamFreeVer='1.9.8.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -125,7 +125,6 @@ function spamfree_update_keys($reset_keys) {
 		'form_message_height' 					=> $spamfree_options['form_message_height'],
 		'form_message_min_length'				=> $spamfree_options['form_message_min_length'],
 		'form_message_recipient'				=> $spamfree_options['form_message_recipient'],
-		'form_include_user_meta'				=> $spamfree_options['form_include_user_meta'],
 		);
 	update_option('spamfree_options', $spamfree_options_update);		
 	}
@@ -245,7 +244,6 @@ function spamfree_contact_form($content) {
 		$FormMessageHeight				= $spamfree_options['form_message_height'];
 		$FormMessageMinLength			= $spamfree_options['form_message_min_length'];
 		$FormMessageRecipient			= $spamfree_options['form_message_recipient'];
-		$FormIncludeUserMeta			= $spamfree_options['form_include_user_meta'];
 		
 		if ( $FormMessageWidth < 40 ) {
 			$FormMessageWidth = 40;
@@ -396,23 +394,20 @@ function spamfree_contact_form($content) {
 						$wpsf_contact_form_msg_1 .= $FormDropDownMenuTitle.": ".$wpsf_contact_drop_down_menu."\n";
 						}
 					
+					/*
 					$wpsf_contact_form_msg_2 .= "\n";
-					if ( $FormIncludeUserMeta ) {
-						/*
-						$wpsf_contact_form_msg_2 .= "\n";
-						$wpsf_contact_form_msg_2 .= "CC Sender: ".$wpsf_contact_cc."\n";	
-						*/
-						$wpsf_contact_form_msg_2 .= "\n";					
-						$wpsf_contact_form_msg_2 .= "User-Agent (Browser/OS): ".$_SERVER['HTTP_USER_AGENT']."\n";
-						$wpsf_contact_form_msg_2 .= "\n";
-						$wpsf_contact_form_msg_2 .= "Referrer: ".$_SERVER['HTTP_REFERER']."\n";
-						$wpsf_contact_form_msg_2 .= "\n";
-						$wpsf_contact_form_msg_2 .= "IP Address: ".$_SERVER['REMOTE_ADDR']."\n";
-						$wpsf_contact_form_msg_2 .= "Server: ".$_SERVER['REMOTE_HOST']."\n";
-						$wpsf_contact_form_msg_2 .= "Reverse DNS: ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\n";
-						$wpsf_contact_form_msg_2 .= "IP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$_SERVER['REMOTE_ADDR']."\n";
-						}
-						
+					$wpsf_contact_form_msg_2 .= "CC Sender: ".$wpsf_contact_cc."\n";	
+					*/
+					$wpsf_contact_form_msg_2 .= "\n";					
+					$wpsf_contact_form_msg_2 .= "User-Agent (Browser/OS): ".$_SERVER['HTTP_USER_AGENT']."\n";
+					$wpsf_contact_form_msg_2 .= "\n";
+					$wpsf_contact_form_msg_2 .= "Referrer: ".$_SERVER['HTTP_REFERER']."\n";
+					$wpsf_contact_form_msg_2 .= "\n";
+					$wpsf_contact_form_msg_2 .= "IP Address: ".$_SERVER['REMOTE_ADDR']."\n";
+					$wpsf_contact_form_msg_2 .= "Server: ".$_SERVER['REMOTE_HOST']."\n";
+					$wpsf_contact_form_msg_2 .= "Reverse DNS: ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\n";
+					$wpsf_contact_form_msg_2 .= "IP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$_SERVER['REMOTE_ADDR']."\n";
+					
 					$wpsf_contact_form_msg_3 .= "\n";
 					$wpsf_contact_form_msg_3 .= "\n";
 					
@@ -669,17 +664,15 @@ function spamfree_allowed_post($approved) {
 		
 		$spamfree_jsck_error_message_standard = 'Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.';
 		
-		$spamfree_jsck_error_message_detailed = '<span style="font-size:12px;"><strong>Sorry, there was an error. JavaScript and Cookies are required in order to post a comment.<br/>You appear to have at least one of these disabled.</strong><br /><br />'."\n";
+		$spamfree_jsck_error_message_detailed = '<strong>Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.</strong><br /><br />'."\n";
 		$spamfree_jsck_error_message_detailed .= 'Status:'."\n";
 		$spamfree_jsck_error_message_detailed .= '<ul style="list-style-type:disc;padding-left:30px;">'."\n";
 		$spamfree_jsck_error_message_detailed .= '<li><script type="text/javascript">document.write(\'JavaScript is enabled.\');</script><noscript>JavaScript is disabled.</noscript></li>'."\n";
 		$spamfree_jsck_error_message_detailed .= '<li>'.$spamfree_jsck_error_ck_status.'</li>'."\n";		
 		$spamfree_jsck_error_message_detailed .= '</ul>'."\n";
-		$spamfree_jsck_error_message_detailed .= '<strong>Please enable JavaScript and Cookies in your browser. Then, please go back, reload the page, and try posting your comment again.</strong><br /><br />'."\n";
-		$spamfree_jsck_error_message_detailed .= '<br /><hr noshade />'."\n";
+		
+		$spamfree_jsck_error_message_detailed .= 'This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.<br /><br />'."\n";
 		$spamfree_jsck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if both statuses above indicate that JavaScript and Cookies are in fact enabled</em> and you have tried to post several times), please alert the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
-		$spamfree_jsck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
-		$spamfree_jsck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
 
     	wp_die( __($spamfree_jsck_error_message_detailed) );
 		return false;
@@ -702,10 +695,10 @@ function spamfree_denied_post($approved) {
 		}
 	// Akismet Accuracy Fix :: END
 
-	$spamfree_filter_error_message_standard = '<span style="font-size:12px;">Comments have been temporarily disabled to prevent spam. Please try again later.</span>'; // Stop spammers without revealing why.
+	$spamfree_filter_error_message_standard = 'Comments have been temporarily disabled to prevent spam. Please try again later.'; // Stop spammers without revealing why.
 	
-	$spamfree_filter_error_message_detailed = '<span style="font-size:12px;"><strong>Hmmm, your comment seems a bit spammy. We\'re not real big on spam around here.</strong><br /><br />'."\n";
-	$spamfree_filter_error_message_detailed .= 'Please go back and try again.</span>'."\n";
+	$spamfree_filter_error_message_detailed = '<strong>Hmmm, your comment seems a bit spammy. We\'re not real big on spam around here.</strong><br /><br />'."\n";
+	$spamfree_filter_error_message_detailed .= 'Please go back and try again.'."\n";
 
 	wp_die( __($spamfree_filter_error_message_detailed) );
 	return false;
@@ -727,7 +720,7 @@ function spamfree_denied_post_short($approved) {
 		}
 	// Akismet Accuracy Fix :: END
 
-	wp_die( __('<span style="font-size:12px;">Your comment was a bit too short. Please go back and try again.</span>') );
+	wp_die( __('Your comment was a bit too short. Please go back and try again.') );
 	return false;
 	// REJECT SHORT COMMENTS :: END
 	}
@@ -747,7 +740,7 @@ function spamfree_denied_post_blacklist($approved) {
 		}
 	// Akismet Accuracy Fix :: END
 	
-	$spamfree_blacklist_error_message_detailed = '<span style="font-size:12px;"><strong>Your location has been identified as part of a known spam network. Comments have been disabled to prevent spam.</strong><br /><br /></span>'."\n";
+	$spamfree_blacklist_error_message_detailed = '<strong>Your location has been identified as part of a known spam network. Comments have been disabled to prevent spam.</strong><br /><br />'."\n";
 	
 	//$spamfree_blacklist_error_message_detailed .= 'This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree?code=bl_error" rel="external nofollow" target="_blank" >WP-SpamFree</a>.<br /><br />'."\n";
 	//$spamfree_blacklist_error_message_detailed .= 'If you would like to be removed from the blacklist, you will need to contact the developers of WP-SpamFree.<br />'."\n";
@@ -3897,7 +3890,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	update_option( 'spamfree_error_data', $spamfree_error_data );
-	
+		
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -3991,25 +3984,15 @@ if (!class_exists('wpSpamFree')) {
 			// Guess the location
 			$wpsf_plugin_path = WP_CONTENT_DIR.'/plugins/'.plugin_basename(dirname(__FILE__));
 			$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
-					
-			$installation_plugins_get_test_1		= 'wp-spamfree/wp-spamfree.php';
-			$installation_file_test_0 				= $wpsf_plugin_path . '/wp-spamfree.php';
-			if ( file_exists( ABSPATH . 'wp-load.php' ) ) {
-				// WP 2.6
-				$installation_file_test_1 			= ABSPATH . 'wp-load.php';
-				$installation_file_test_1_status	= true;
-				} 
-			else {
-				// Before 2.6
-				$installation_file_test_1 			= ABSPATH . 'wp-config.php';
-				if ( file_exists( $installation_file_test_1 ) ) {
-					$installation_file_test_1_status= true;
-					}
-				}
-			$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsf-js.php';
+			
+			$installation_plugins_get_test_1	= 'wp-spamfree/wp-spamfree.php';
+			$installation_file_test_0 			= $wpsf_plugin_path . '/wp-spamfree.php';
+			$installation_file_test_1 			= ABSPATH . 'wp-config.php';
+			$installation_file_test_2 			= ABSPATH . 'wp-includes/wp-db.php';
+			$installation_file_test_3 			= $wpsf_plugin_path . '/js/wpsf-js.php';
 			clearstatcache();
 
-			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&$installation_file_test_1_status&&file_exists($installation_file_test_3)) {
+			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&file_exists($installation_file_test_1)&&file_exists($installation_file_test_2)&&file_exists($installation_file_test_3)) {
 				$wp_installation_status = 1;
 				$wp_installation_status_color = 'green';
 				$wp_installation_status_bg_color = '#CCFFCC';
@@ -4075,7 +4058,6 @@ if (!class_exists('wpSpamFree')) {
 						'form_message_height' 					=> $spamfree_options['form_message_height'],
 						'form_message_min_length' 				=> $spamfree_options['form_message_min_length'],
 						'form_message_recipient' 				=> $spamfree_options['form_message_recipient'],
-						'form_include_user_meta' 				=> $spamfree_options['form_include_user_meta'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
 				}
@@ -4116,7 +4098,6 @@ if (!class_exists('wpSpamFree')) {
 						'form_message_height' 					=> $_REQUEST['form_message_height'],
 						'form_message_min_length' 				=> $_REQUEST['form_message_min_length'],
 						'form_message_recipient' 				=> $_REQUEST['form_message_recipient'],
-						'form_include_user_meta' 				=> $_REQUEST['form_include_user_meta'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
 				}
@@ -4327,13 +4308,6 @@ if (!class_exists('wpSpamFree')) {
 						<strong>Optional: Enter alternate form recipient. Default is blog admin email.</strong><br />&nbsp;
 					</label>
 					</li>
-					<li>
-					<label for="form_include_user_meta">
-						<input type="checkbox" id="form_include_user_meta" name="form_include_user_meta" <?php echo ($spamfree_options['form_include_user_meta']==true?"checked=\"checked\"":"") ?> />
-						<strong>Include meta user data in email. (Browser, IP Address, User-Agent, etc.)</strong><br />&nbsp;
-					</label>
-					</li>					
-
 				</ul>
 			</fieldset>
 			<p class="submit">
@@ -4435,17 +4409,9 @@ if (!class_exists('wpSpamFree')) {
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
 				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
 				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpsf-js.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
-        <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the <code>wp_head()</code> function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.<br />&nbsp;</li>
+        <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.)<br />&nbsp;</li>
         <li>Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
-		<li>Make sure the theme you are using has the call to <code>wp_head()</code> (which most properly coded themes do) usually found in the <code>header.php</code> file. It will be located somewhere before the <code>&lt;/head&gt;</code> tag. If not, you can insert it before the <code>&lt;/head&gt;</code> tag and save the file. If you've never edited a theme before, proceed at your own risk: 
-			<ol>
-				<li>In the WordPress admin, go to <em>Plugins - Theme Editor</em><br />&nbsp;</li>
-				<li>Click on Header (or <code>header.php</code>)<br />&nbsp;</li>
-				<li>Locate the line with <code>&lt;/head&gt;</code> and insert <code>&lt;?php wp_head(); ?&gt;</code> before it.<br />&nbsp;</li>
-				<li>Click 'Save'
-			&nbsp;</li>
-			</ol>
-		</li>
+				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
 				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
 			</ol>
 			
@@ -4514,7 +4480,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.4";
+			$plugin_db_version = "1.9.8.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -4573,7 +4539,6 @@ if (!class_exists('wpSpamFree')) {
 					'form_message_height' 					=> 10,
 					'form_message_min_length'				=> 25,
 					'form_message_recipient'				=> get_option('admin_email'),
-					'form_include_user_meta'				=> 0,
 					);
 					
 				$spamfree_count = get_option('spamfree_count');
