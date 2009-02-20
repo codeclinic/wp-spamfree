@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form
 Requires at least: 2.0.2
-Tested up to: 2.7
+Tested up to: 2.7.1
 Stable tag: trunk
 
 Powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
@@ -16,8 +16,8 @@ An extremely powerful anti-spam plugin for WordPress that virtually eliminates c
 Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is an effective solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **WP-SpamFree virtually eliminates automated comment spam from bots, including trackback and pingback spam.**
 
 = New Features =
-* Now with a drop-in **spam-free contact form!** Simple and effective. Just add a tag `<!--spamfree-contact-->` to pages where you want a contact form (using the HTML editing tab), and you're done. Easy to use - no configuration necessary.
-* Now can display your blocked spam stats on your blog. Simply insert the code into your theme and you can show off how much spam you're not getting anymore.
+* Has a drop-in **spam-free contact form!** Simple and effective. Just add a tag `<!--spamfree-contact-->` to pages where you want a contact form (using the HTML editing tab), and you're done. Easy to use - no configuration necessary.
+* Can display your blocked spam stats on your blog. Simply insert the code into your theme and you can show off how much spam you're not getting anymore.
 
 = Key Features =
 1. Virtually eliminates automated comment spam from bots. It works like a firewall to ensure that your commenters are in fact, human.
@@ -32,6 +32,7 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 10. The code has an extremely low bandwidth overhead and won't slow down your blog (very light database access), unlike some other anti-spam plugins.
 11. Completely compatible with all cache plugins, including WP Cache and WP Super Cache. Not all anti-spam plugins can say that.
 12. Display your blocked spam stats on your blog.
+13. Works in WordPress MU as well.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your blog. Every blog we manage had comment moderation enabled, Akismet and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam by Akismet that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
@@ -106,11 +107,13 @@ If you're having trouble getting things to work after installing the plugin, her
 
 8. Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpSpamFreeJS.php (where yourblog.com is your blog url) and check two things. **First, see if the file comes up normally or if it comes up blank or with errors.** That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. **Second, check for a 403 Forbidden error.** That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. The **AskApache Password Protect Plugin** is known to cause this error. Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the AskApache Password Protect Plugin and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.
 
-9. Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.)
+9. Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the `wp_head()` function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.
 
 10. Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the [Known Plugin Conflicts list](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_known_conflicts). If you've disabled any plugins on that list and still have a problem, then proceed. To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.
 
-11. If have checked these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
+11. Make sure the theme you are using has the call to `wp_head()` (which most properly coded themes do) usually found in the header.php file. It will be located somewhere before the `</head>` tag. If not, you can insert it before the `</head>` tag and save the file. If you've never edited a theme before, proceed at your own risk: In the WordPress admin, go to Plugins - Theme Editor; Click on Header (or header.php); Locate the line with `</head>` and insert `<?php wp_head(); ?>` before it.
+
+12. If have checked these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
 
 = Version History / Changelog =
 
