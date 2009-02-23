@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.4
+Version: 1.9.8.5
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.4';
+	$wpSpamFreeVer='1.9.8.5';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -100,9 +100,11 @@ function spamfree_update_keys($reset_keys) {
 		'form_validation_key_js' 				=> $FormValidationKeyJS,
 		'wp_cache' 								=> $spamfree_options['wp_cache'],
 		'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
-		'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 		'block_all_trackbacks' 					=> $spamfree_options['block_all_trackbacks'],
 		'block_all_pingbacks' 					=> $spamfree_options['block_all_pingbacks'],
+		'use_alt_cookie_method' 				=> $spamfree_options['use_alt_cookie_method'],
+		'use_alt_cookie_method_only' 			=> $spamfree_options['use_alt_cookie_method_only'],
+		'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 		'use_trackback_verification'		 	=> $spamfree_options['use_trackback_verification'],
 		'form_include_website' 					=> $spamfree_options['form_include_website'],
 		'form_require_website' 					=> $spamfree_options['form_require_website'],
@@ -203,13 +205,47 @@ function spamfree_counter($counter_option) {
 	
 	<?php
 	}
+	
+function spamfree_content_addendum($content) {
+
+	if ( !is_feed() && !is_page() && !is_home() ) {	
+
+		$spamfree_options = get_option('spamfree_options');
+	
+		if ( ($_COOKIE[$spamfree_options['cookie_validation_name']] != $spamfree_options['cookie_validation_key'] && $spamfree_options['use_alt_cookie_method'] ) || $spamfree_options['use_alt_cookie_method_only'] ) {
+		
+			if ( !defined('WP_CONTENT_URL') ) {
+				define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
+				}
+			if ( !eregi( 'opera', $_SERVER['HTTP_USER_AGENT'] ) ) { 
+				$wpsf_img_p_disp = ' style="display:none;"';
+				$wpsf_img_disp = ' display:none;';
+				}
+			else { $wpsf_img_p_disp = ''; $wpsf_img_disp = ''; }	
+			$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
+			
+			$content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" border="0" style="width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
+			}	
+		}
+	return $content;
+	}
 
 function spamfree_comment_form() {
 
-	echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>';
+	$spamfree_options = get_option('spamfree_options');
+	
+	if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
+		echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong> <a href="http://www.google.com/support/bin/answer.py?answer=23852&hl=en" target="_blank" rel="nofollow external" >Click here for instructions</a> on how to enable JavaScript in your browser.</p></noscript>';	
+		}
+
 	}
 	
 function spamfree_contact_form($content) {
+	if ( !defined('WP_CONTENT_URL') ) {
+		define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
+		}
+
+
 	$spamfree_contact_form_url = $_SERVER['REQUEST_URI'];
 	if ( $_SERVER['QUERY_STRING'] ) {
 		$spamfree_contact_form_query_op = '&amp;';
@@ -445,12 +481,23 @@ function spamfree_contact_form($content) {
 					$spamfree_contact_form_back_url = str_replace('?form=response','',$spamfree_contact_form_url );
 					}
 				if ( $MessageSpam ) {
-					$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>'."\n";
+					if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
+						$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>'."\n";
+						}
 					$spamfree_contact_form_content .= '<p><strong>ERROR: <br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
 					}
 				else {
-					$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>'."\n";
-					$spamfree_contact_form_content .= '<p><strong>ERROR: Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields. Please make sure JavaScript and Cookies are enabled in your browser.<br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
+					if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
+						$contact_response_status_message_addendum .= '<noscript><br />&nbsp;<br />&bull; Currently you have JavaScript disabled.</noscript>'."\n";
+						}
+					$spamfree_contact_form_content .= '<p><strong>ERROR: Please return to the <a href="'.$spamfree_contact_form_back_url.'" >contact form</a> and fill out all required fields.';
+					if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
+						$spamfree_contact_form_content .= ' Please make sure JavaScript and Cookies are enabled in your browser.';
+						}
+					else if ( $spamfree_options['use_alt_cookie_method_only'] ) {
+						$spamfree_contact_form_content .= ' Please make sure Images and Cookies are enabled in your browser.';
+						}
+					$spamfree_contact_form_content .= '<br />&nbsp;<br />'.$contact_response_status_message_addendum.'</strong><p>&nbsp;</p>'."\n";
 					}
 
 				}
@@ -532,13 +579,27 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<p><label><strong>Message</strong> *<br />'."\n";
 			$spamfree_contact_form_content .= '<textarea id="wpsf_contact_message" name="wpsf_contact_message" cols="'.$FormMessageWidth.'" rows="'.$FormMessageHeight.'"></textarea> </label></p>'."\n";
 			
-			$spamfree_contact_form_content .= '<noscript><p><strong>Currently you have JavaScript disabled. In order to use this contact form, please make sure JavaScript and Cookies are enabled, and reload the page.</strong></p></noscript>'."\n";
+			if ( ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) ) {
+				$spamfree_contact_form_content .= '<noscript><p><strong>Currently you have JavaScript disabled. In order to use this contact form, please make sure JavaScript and Cookies are enabled, and reload the page.</strong> <a href="http://www.google.com/support/bin/answer.py?answer=23852&hl=en" target="_blank" rel="nofollow external" >Click here for instructions</a> on how to enable JavaScript in your browser.</p></noscript>'."\n";		
+				}
 
 			$spamfree_contact_form_content .= '<p><input type="submit" value="Send Message" /></p>'."\n";
 
 			$spamfree_contact_form_content .= '<p>* Required Field</p>'."\n";
 			$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 			$spamfree_contact_form_content .= '</form>'."\n";
+			
+			if ( ($_COOKIE[$spamfree_options['cookie_validation_name']] != $spamfree_options['cookie_validation_key'] && $spamfree_options['use_alt_cookie_method'] ) || $spamfree_options['use_alt_cookie_method_only'] ) {
+				if ( !eregi( 'opera', $_SERVER['HTTP_USER_AGENT'] ) ) { 
+					$wpsf_img_p_disp = ' style="display:none;"';
+					$wpsf_img_disp = ' display:none;';
+					}
+				else { $wpsf_img_p_disp = ''; $wpsf_img_disp = ''; }	
+				$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
+				
+				$spamfree_contact_form_content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" border="0" style="width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
+				}	
+			
 			
 			$spamfree_contact_form_ip_bans = array(
 													'77.92.88.13',
@@ -566,8 +627,6 @@ function spamfree_contact_form($content) {
 			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
 				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}
-			
-			
 		
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
 			}
@@ -681,7 +740,25 @@ function spamfree_allowed_post($approved) {
 		$spamfree_jsck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
 		$spamfree_jsck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
 
-    	wp_die( __($spamfree_jsck_error_message_detailed) );
+	
+		$spamfree_imgphpck_error_message_standard = 'Sorry, there was an error. Please enable Images and Cookies in your browser and try again.';
+		
+		$spamfree_imgphpck_error_message_detailed = '<span style="font-size:12px;"><strong>Sorry, there was an error. Images and Cookies are required in order to post a comment.<br/>You appear to have at least one of these disabled.</strong><br /><br />'."\n";
+		$spamfree_imgphpck_error_message_detailed .= '<strong>Please enable Images and Cookies in your browser. Then, please go back, reload the page, and try posting your comment again.</strong><br /><br />'."\n";
+		$spamfree_imgphpck_error_message_detailed .= '<br /><hr noshade />'."\n";
+		$spamfree_imgphpck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if Images and Cookies are in fact enabled</em> and you have tried to post several times), please alert the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
+		$spamfree_imgphpck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
+		$spamfree_imgphpck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
+
+		$spamfree_options = get_option('spamfree_options');
+	
+		if( $spamfree_options['use_alt_cookie_method_only'] ) {
+			wp_die( __($spamfree_imgphpck_error_message_detailed) );
+			}
+		else {
+			wp_die( __($spamfree_jsck_error_message_detailed) );
+			}
+			
 		return false;
 		}
 	// TEST TO PREVENT COMMENT SPAM FROM BOTS :: END
@@ -2997,7 +3074,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
 		}
 	/*
-	// Following is causing errors on some systems. 06/17/08
+	// Following is causing errors on some systems. - 06/17/08
 	if ( $commentdata_remote_host_lc == 'blank' && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 		// Experimental - However, have never seen a human comment where this occurs.
 		$content_filter_status = '2';
@@ -3010,6 +3087,10 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1023-'.$ReverseDNS;
 		}
 	// Test Reverse DNS IP's
+	/* 
+	// Temporarily disabling to investigate errors - 02/22/09
+	// Possibly remove permanently in next version
+	// 
 	// If faked to Match blog Server IP
 	if ( $ReverseDNSIP == $BlogServerIP && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 		$content_filter_status = '2';
@@ -3020,6 +3101,7 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' 1032';
 		}
+	*/	
 	// Include in Blacklist :: END	
 	// Test Pingbacks and Trackbacks
 	if ( $commentdata_comment_type == 'pingback' || $commentdata_comment_type == 'trackback' ) {
@@ -3039,9 +3121,16 @@ function spamfree_content_filter($commentdata) {
 			}
 		if ( eregi( 'Incutio XML-RPC -- WordPress/', $commentdata_user_agent_lc ) ) {
 			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
-			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion ) {
+			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion && $commentdata_user_agent_lc_explode[1] !='MU' ) {
 				if ( !$content_filter_status ) { $content_filter_status = '1'; }
 				$spamfree_error_code .= ' T1001';
+				}
+			}
+		if ( eregi( 'The Incutio XML-RPC PHP Library -- WordPress/', $commentdata_user_agent_lc ) ) {
+			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
+			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion && $commentdata_user_agent_lc_explode[1] !='MU' ) {
+				if ( !$content_filter_status ) { $content_filter_status = '1'; }
+				$spamfree_error_code .= ' T1002';
 				}
 			}
 		if ( $commentdata_comment_author == $commentdata_comment_author_lc ) {
@@ -3952,6 +4041,7 @@ if (!class_exists('wpSpamFree')) {
 			add_action('admin_menu', array(&$this,'add_admin_pages'));
 			add_action('wp_head', array(&$this, 'wp_head_intercept'));
 			add_filter('the_content', 'spamfree_contact_form', 10);
+			add_filter('the_content', 'spamfree_content_addendum', 999);
 			add_action('comment_form', 'spamfree_comment_form');
 			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
 			add_action('activity_box_end', 'spamfree_stats');
@@ -4006,10 +4096,11 @@ if (!class_exists('wpSpamFree')) {
 					$installation_file_test_1_status= true;
 					}
 				}
+			$installation_file_test_2 				= $wpsf_plugin_path . '/img/wpsf-img.php';
 			$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsf-js.php';
 			clearstatcache();
 
-			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&$installation_file_test_1_status&&file_exists($installation_file_test_3)) {
+			if ($installation_plugins_get_test_1==$_GET['page']&&file_exists($installation_file_test_0)&&$installation_file_test_1_status&&file_exists($installation_file_test_2)&&file_exists($installation_file_test_3)) {
 				$wp_installation_status = 1;
 				$wp_installation_status_color = 'green';
 				$wp_installation_status_bg_color = '#CCFFCC';
@@ -4050,9 +4141,11 @@ if (!class_exists('wpSpamFree')) {
 						'comment_validation_function_name' 		=> $spamfree_options['comment_validation_function_name'],
 						'wp_cache' 								=> $spamfree_options['wp_cache'],
 						'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
-						'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 						'block_all_trackbacks' 					=> $_REQUEST['block_all_trackbacks'],
 						'block_all_pingbacks' 					=> $_REQUEST['block_all_pingbacks'],
+						'use_alt_cookie_method' 				=> $_REQUEST['use_alt_cookie_method'],
+						'use_alt_cookie_method_only' 			=> $_REQUEST['use_alt_cookie_method_only'],
+						'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 						'use_trackback_verification' 			=> $spamfree_options['use_trackback_verification'],
 						'form_include_website' 					=> $spamfree_options['form_include_website'],
 						'form_require_website' 					=> $spamfree_options['form_require_website'],
@@ -4091,9 +4184,11 @@ if (!class_exists('wpSpamFree')) {
 						'comment_validation_function_name' 		=> $spamfree_options['comment_validation_function_name'],
 						'wp_cache' 								=> $spamfree_options['wp_cache'],
 						'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
-						'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 						'block_all_trackbacks' 					=> $spamfree_options['block_all_trackbacks'],
 						'block_all_pingbacks' 					=> $spamfree_options['block_all_pingbacks'],
+						'use_alt_cookie_method' 				=> $spamfree_options['use_alt_cookie_method'],
+						'use_alt_cookie_method_only'			=> $spamfree_options['use_alt_cookie_method_only'],
+						'use_captcha_backup' 					=> $spamfree_options['use_captcha_backup'],
 						'use_trackback_verification' 			=> $spamfree_options['use_trackback_verification'],
 						'form_include_website' 					=> $_REQUEST['form_include_website'],
 						'form_require_website' 					=> $_REQUEST['form_require_website'],
@@ -4152,15 +4247,30 @@ if (!class_exists('wpSpamFree')) {
 					<li>
 					<label for="block_all_trackbacks">
 						<input type="checkbox" id="block_all_trackbacks" name="block_all_trackbacks" <?php echo ($spamfree_options['block_all_trackbacks']==true?"checked=\"checked\"":"") ?> />
-						<strong>Disable trackbacks.</strong><br />(Use if trackback spam is excessive.)<br />&nbsp;
+						<strong>Disable trackbacks.</strong><br />Use if trackback spam is excessive.<br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="block_all_pingbacks">
 						<input type="checkbox" id="block_all_pingbacks" name="block_all_pingbacks" <?php echo ($spamfree_options['block_all_pingbacks']==true?"checked=\"checked\"":"") ?> />
-						<strong>Disable pingbacks.</strong><br />(Use if pingback spam is excessive. Disadvantage is reduction of communication between blogs.)<br />&nbsp;
+						<strong>Disable pingbacks.</strong><br />Use if pingback spam is excessive. Disadvantage is reduction of communication between blogs.<br />&nbsp;
 					</label>
 					</li>
+					<li>
+					<label for="use_alt_cookie_method">
+						<input type="checkbox" id="use_alt_cookie_method" name="use_alt_cookie_method" <?php echo ($spamfree_options['use_alt_cookie_method']==true?"checked=\"checked\"":"") ?> />
+						<strong>Use two methods to set cookies.</strong><br />This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.<br />&nbsp;
+					</label>
+					</li>
+					<?php if ( $_REQUEST['showHiddenOptions']=='on' ) { // Still Testing ?>
+					<li>
+					<label for="use_alt_cookie_method_only">
+						<input type="checkbox" id="use_alt_cookie_method_only" name="use_alt_cookie_method_only" <?php echo ($spamfree_options['use_alt_cookie_method_only']==true?"checked=\"checked\"":"") ?> />
+						<strong style="color:red;">Use non-JavaScript method to set cookies. **STILL IN TESTING**</strong><br />This will ONLY use the non-JavaScript method to set cookies, INSTEAD of the standard JS method.<br />&nbsp;
+					</label>
+					</li>
+					<?php } ?>					
+					
 				</ul>
 			</fieldset>
 			<p class="submit">
@@ -4411,14 +4521,7 @@ if (!class_exists('wpSpamFree')) {
 
 			<p><a name="wpsf_known_conflicts"><strong>Known Plugin Conflicts</strong></a></p>
 			
-			<p>Plugins that are known to be incompatible with WP-SpamFree:</p>
-			
-			<ol style="list-style-type:decimal;padding-left:30px;">
-				<li><strong>AskApache Password Protect</strong><br />&nbsp;<br />Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
-				<li><strong>WP-OpenID</strong><br />&nbsp;</li>
-				<li><strong>Wordpress Thread Comment</strong><br />&nbsp;</li>
-				<li><strong>Some front-end anti-spam plugins, including CAPTCHA's, challenge questions, etc.</strong><br />&nbsp;<br />There's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)</li>
-			</ol>
+			<p>For the most up-to-date info, view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_known_conflicts" target="_blank" >Known Plugin Conflicts</a> list.</p>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
@@ -4437,17 +4540,17 @@ if (!class_exists('wpSpamFree')) {
 				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpsf-js.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
         <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the <code>wp_head()</code> function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.<br />&nbsp;</li>
         <li>Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
-		<li>Make sure the theme you are using has the call to <code>wp_head()</code> (which most properly coded themes do) usually found in the <code>header.php</code> file. It will be located somewhere before the <code>&lt;/head&gt;</code> tag. If not, you can insert it before the <code>&lt;/head&gt;</code> tag and save the file. If you've never edited a theme before, proceed at your own risk: 
-			<ol>
+		<li>Make sure the theme you are using has the call to <code>wp_head()</code> (which most properly coded themes do) usually found in the <code>header.php</code> file. It will be located somewhere before the <code>&lt;/head&gt;</code> tag. If not, you can insert it before the <code>&lt;/head&gt;</code> tag and save the file. If you've never edited a theme before, proceed at your own risk: <br />&nbsp;
+			<ol style="list-style-type:decimal;padding-left:30px;">
 				<li>In the WordPress admin, go to <em>Plugins - Theme Editor</em><br />&nbsp;</li>
 				<li>Click on Header (or <code>header.php</code>)<br />&nbsp;</li>
 				<li>Locate the line with <code>&lt;/head&gt;</code> and insert <code>&lt;?php wp_head(); ?&gt;</code> before it.<br />&nbsp;</li>
-				<li>Click 'Save'
-			&nbsp;</li>
+				<li>Click 'Save'<br/>&nbsp;</li>
 			</ol>
 		</li>
-				<li>If have checked these, and still can't quite get it working, please either submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
-			</ol>
+        <li>On the WP-SpamFree Options page in the WordPress Admin, under <a href="#wpsf_spam_options">Spam Options</a>, check the option "Use two methods to set cookies." and see if this helps.<br />&nbsp;</li>
+		<li>If have checked all of these, and still can't quite get it working, please submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
+	</ol>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
@@ -4498,15 +4601,22 @@ if (!class_exists('wpSpamFree')) {
 					define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
 					}
 				$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
-
+	
+	
+				$spamfree_options = get_option('spamfree_options');
 				$wpSpamFreeVer=get_option('wp_spamfree_version');
 				if ($wpSpamFreeVer!='') {
 					$wpSpamFreeVerJS=' v'.$wpSpamFreeVer;
 					}
 				echo "\n";
-				echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS BEGIN -->'."\n";
-				echo '<script type="text/javascript" src="'.$wpsf_plugin_url.'/js/wpsf-js.php"></script> '."\n";
-				echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS END -->'."\n";
+				if ( $spamfree_options['use_alt_cookie_method_only'] ) {
+					echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: M2 -->'."\n";
+					}
+				else {
+					echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS BEGIN -->'."\n";
+					echo '<script type="text/javascript" src="'.$wpsf_plugin_url.'/js/wpsf-js.php"></script> '."\n";
+					echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS END -->'."\n";
+					}				
 				echo "\n";
 				
 				}
@@ -4514,7 +4624,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.4";
+			$plugin_db_version = "1.9.8.5";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -4548,9 +4658,11 @@ if (!class_exists('wpSpamFree')) {
 					'form_validation_key_js' 				=> $FormValidationKeyJS,
 					'wp_cache' 								=> 0,
 					'wp_super_cache' 						=> 0,
-					'use_captcha_backup' 					=> 0,
 					'block_all_trackbacks' 					=> 0,
 					'block_all_pingbacks' 					=> 0,
+					'use_alt_cookie_method'					=> 0,
+					'use_alt_cookie_method_only'			=> 0,
+					'use_captcha_backup' 					=> 0,
 					'use_trackback_verification'		 	=> 0,
 					'form_include_website' 					=> 1,
 					'form_require_website' 					=> 0,
