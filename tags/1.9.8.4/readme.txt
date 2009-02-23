@@ -113,9 +113,7 @@ If you're having trouble getting things to work after installing the plugin, her
 
 11. Make sure the theme you are using has the call to `wp_head()` (which most properly coded themes do) usually found in the header.php file. It will be located somewhere before the `</head>` tag. If not, you can insert it before the `</head>` tag and save the file. If you've never edited a theme before, proceed at your own risk: In the WordPress admin, go to Plugins - Theme Editor; Click on Header (or header.php); Locate the line with `</head>` and insert `<?php wp_head(); ?>` before it.
 
-12. On the WP-SpamFree Options page in the WordPress Admin, under "Spam Options", check the option "Use two methods to set cookies." and see if this helps.
-
-13. If have checked all of these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
+12. If have checked these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
 
 = Version History / Changelog =
 
