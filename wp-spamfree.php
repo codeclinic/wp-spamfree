@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.6
+Version: 1.9.8.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.6';
+	$wpSpamFreeVer='1.9.8.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -64,6 +64,9 @@ function spamfree_create_random_key() {
 	
 function spamfree_update_keys($reset_keys) {
 	$spamfree_options 								= get_option('spamfree_options');
+	
+	// Determine Time Key Was Last Updater
+	$KeyUpdateTime = $spamfree_options['last_key_update'];
 
 	// Set Random Cookie Name
 	$CookieValidationName = $spamfree_options['cookie_validation_name'];
@@ -93,11 +96,19 @@ function spamfree_update_keys($reset_keys) {
 		$randomComValCodeJS2 = spamfree_create_random_key();
 		$FormValidationKeyJS = $randomComValCodeJS1.$randomComValCodeJS2;
 		}
+	if (!$KeyUpdateTime||$reset_keys==1) {
+		$KeyUpdateTime = time();
+		}
 	$spamfree_options_update = array (
 		'cookie_validation_name' 				=> $CookieValidationName,
 		'cookie_validation_key' 				=> $CookieValidationKey,
 		'form_validation_field_js' 				=> $FormValidationFieldJS,
 		'form_validation_key_js' 				=> $FormValidationKeyJS,
+		'cookie_get_function_name' 				=> '',
+		'cookie_set_function_name' 				=> '',
+		'cookie_delete_function_name' 			=> '',
+		'comment_validation_function_name' 		=> '',
+		'last_key_update'						=> $KeyUpdateTime,
 		'wp_cache' 								=> $spamfree_options['wp_cache'],
 		'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
 		'block_all_trackbacks' 					=> $spamfree_options['block_all_trackbacks'],
@@ -169,7 +180,7 @@ function spamfree_counter($counter_option) {
 	<style type="text/css">
 	
 	#spamfree_counter_wrap {color:#ffffff;text-decoration:none;width:140px;}
-	#spamfree_counter {background:url(<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-<?php echo $counter_option; ?>.png) no-repeat top left;height:<?php echo $counter_div_height[$counter_option]; ?>px;width:140px;overflow:hidden;border-style:none;color:#ffffff;Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;padding-top:<?php echo $counter_count_padding_top[$counter_option]; ?>px;}
+	#spamfree_counter {background:url(<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-<?php echo $counter_option; ?>.png) no-repeat top left;height:<?php echo $counter_div_height[$counter_option]; ?>px;width:140px;overflow:hidden;border-style:none;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;padding-top:<?php echo $counter_count_padding_top[$counter_option]; ?>px;}
 	
 	</style>
 	
@@ -177,25 +188,25 @@ function spamfree_counter($counter_option) {
 		<div id="spamfree_counter" >
 		<?php 
 			if ( $counter_option >= 1 && $counter_option <= 3 ) {
-				echo '<strong style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="WP-SpamFree Anti-Spam for WordPress" >';
-				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
-				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM KILLED</span><br />'; 
-				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">BY WP-SPAMFREE</span>';
+				echo '<strong style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="WP-SpamFree Spam Plugin for WordPress" >';
+				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
+				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM KILLED</span><br />'; 
+				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">BY WP-SPAMFREE</span>';
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 4 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="WP-SpamFree - Spam Protection for WordPress" >';
-				echo '<span style="color:#000000;font-size:9px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
+				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="WP-SpamFree - WordPress Spam Protection" >';
+				echo '<span style="color:#000000;font-size:9px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 5 ) {
-				echo '<strong style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
-				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
+				echo '<strong style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree, a WordPress Anti-Spam Plugin" >';
+				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 6 ) {
-				echo '<strong style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree" >';
-				echo '<span style="color:#000000;font-size:14px;line-height:100%;font:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
+				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree - Powerful Spam Protection" >';
+				echo '<span style="color:#000000;font-size:14px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
 
@@ -231,7 +242,7 @@ function spamfree_content_addendum($content) {
 	}
 
 function spamfree_comment_form() {
-		
+
 	$spamfree_options = get_option('spamfree_options');
 	
 	if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
@@ -696,12 +707,25 @@ function spamfree_allowed_post($approved) {
 	$CookieValidationKey 		= $spamfree_options['cookie_validation_key'];
 	$FormValidationFieldJS 		= $spamfree_options['form_validation_field_js'];
 	$FormValidationKeyJS 		= $spamfree_options['form_validation_key_js'];
+	$KeyUpdateTime 				= $spamfree_options['last_key_update'];
 	$WPCommentValidationJS 		= $_COOKIE[$CookieValidationName];
 	//$WPFormValidationPost 		= $_POST[$FormValidationFieldJS]; //Comments Post Verification
 	//if( $WPCommentValidationJS == $CookieValidationKey ) { // Comment allowed
 	if( $_COOKIE[$spamfree_options['cookie_validation_name']] == $spamfree_options['cookie_validation_key'] ) { // Comment allowed
 		// Clear Key Values and Update
-		spamfree_update_keys(1);
+		$GetCurrentTime = time();
+		$ResetIntervalHours = 24; // Reset interval in hours
+		$ResetIntervalMinutes = 60; // Reset interval minutes default
+		$ResetIntervalMinutesOverride = $ResetIntervalMinutes; // Use as override for testing; leave = $ResetIntervalMinutes when not testing
+        if ( $ResetIntervalMinutesOverride != $ResetIntervalMinutes ) {
+			$ResetIntervalHours = 1;
+			$ResetIntervalMinutes = $ResetIntervalMinutesOverride;
+			}
+		$TimeThreshold = $GetCurrentTime - ( 60 * $ResetIntervalMinutes * $ResetIntervalHours ); // seconds * minutes * hours
+		// This only resets key if over x amount of time after last reset
+		if ( $TimeThreshold > $KeyUpdateTime  ) {
+			spamfree_update_keys(1);
+			}
 		return $approved;
 		}
 	else { // Comment spam killed
@@ -726,17 +750,13 @@ function spamfree_allowed_post($approved) {
 			$spamfree_jsck_error_ck_status = 'PHP detects that cookies appear to be disabled. <script type="text/javascript">if (navigator.cookieEnabled==true) { document.write(\'(However, JavaScript detects that cookies are enabled.)\'); } else { document.write(\'\(JavaScript also detects that cookies are disabled.\)\'); }; </script>';
 			}
 		
-		$spamfree_jsck_error_message_standard = 'Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again.';
-		
-		$spamfree_jsck_error_message_detailed = '<span style="font-size:12px;"><strong>Sorry, there was an error. JavaScript and Cookies are required in order to post a comment.<br/>You appear to have at least one of these disabled.</strong><br /><br />'."\n";
-		$spamfree_jsck_error_message_detailed .= 'Status:'."\n";
-		$spamfree_jsck_error_message_detailed .= '<ul style="list-style-type:disc;padding-left:30px;">'."\n";
-		$spamfree_jsck_error_message_detailed .= '<li><script type="text/javascript">document.write(\'JavaScript is enabled.\');</script><noscript>JavaScript is disabled.</noscript></li>'."\n";
-		$spamfree_jsck_error_message_detailed .= '<li>'.$spamfree_jsck_error_ck_status.'</li>'."\n";		
-		$spamfree_jsck_error_message_detailed .= '</ul>'."\n";
-		$spamfree_jsck_error_message_detailed .= '<strong>Please enable JavaScript and Cookies in your browser. Then, please go back, reload the page, and try posting your comment again.</strong><br /><br />'."\n";
+		$spamfree_jsck_error_message_standard = 'Sorry, there was an error. Please be sure JavaScript and Cookies are enabled in your browser and try again.';
+
+		$spamfree_jsck_error_message_detailed = '<span style="font-size:12px;"><strong>Sorry, there was an error. JavaScript and Cookies are required in order to post a comment.</strong><br /><br />'."\n";
+		$spamfree_jsck_error_message_detailed .= '<noscript>Status: JavaScript is currently disabled.<br /><br /></noscript>'."\n";
+		$spamfree_jsck_error_message_detailed .= '<strong>Please be sure JavaScript and Cookies are enabled in your browser. Then, please hit the back button on your browser, and try posting your comment again. (You may need to reload the page)</strong><br /><br />'."\n";
 		$spamfree_jsck_error_message_detailed .= '<br /><hr noshade />'."\n";
-		$spamfree_jsck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if both statuses above indicate that JavaScript and Cookies are in fact enabled</em> and you have tried to post several times), please alert the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
+		$spamfree_jsck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if JavaScript and Cookies are in fact enabled</em> and you have tried to post several times), there is most likely a technical problem (could be a plugin conflict or misconfiguration). Please contact the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
 		$spamfree_jsck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
 		$spamfree_jsck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
 	
@@ -855,7 +875,9 @@ function spamfree_content_short($commentdata) {
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
-	update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: BEGIN
+	//update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: END
 
 	return $content_short_status;
 	// COMMENT LENGTH CHECK :: END
@@ -3984,7 +4006,9 @@ function spamfree_content_filter($commentdata) {
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
-	update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: BEGIN
+	//update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: END
 	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
@@ -4138,6 +4162,7 @@ if (!class_exists('wpSpamFree')) {
 						'cookie_set_function_name' 				=> $spamfree_options['cookie_set_function_name'],
 						'cookie_delete_function_name' 			=> $spamfree_options['cookie_delete_function_name'],
 						'comment_validation_function_name' 		=> $spamfree_options['comment_validation_function_name'],
+						'last_key_update'						=> $spamfree_options['last_key_update'],
 						'wp_cache' 								=> $spamfree_options['wp_cache'],
 						'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
 						'block_all_trackbacks' 					=> $_REQUEST['block_all_trackbacks'],
@@ -4181,6 +4206,7 @@ if (!class_exists('wpSpamFree')) {
 						'cookie_set_function_name' 				=> $spamfree_options['cookie_set_function_name'],
 						'cookie_delete_function_name' 			=> $spamfree_options['cookie_delete_function_name'],
 						'comment_validation_function_name' 		=> $spamfree_options['comment_validation_function_name'],
+						'last_key_update'						=> $spamfree_options['last_key_update'],
 						'wp_cache' 								=> $spamfree_options['wp_cache'],
 						'wp_super_cache' 						=> $spamfree_options['wp_super_cache'],
 						'block_all_trackbacks' 					=> $spamfree_options['block_all_trackbacks'],
@@ -4258,7 +4284,7 @@ if (!class_exists('wpSpamFree')) {
 					<li>
 					<label for="use_alt_cookie_method">
 						<input type="checkbox" id="use_alt_cookie_method" name="use_alt_cookie_method" <?php echo ($spamfree_options['use_alt_cookie_method']==true?"checked=\"checked\"":"") ?> />
-						<strong>Use two methods to set cookies.</strong><br />This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.<br />&nbsp;
+						<strong>M2 - Use two methods to set cookies.</strong><br />This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.<br />&nbsp;
 					</label>
 					</li>
 					<?php if ( $_REQUEST['showHiddenOptions']=='on' ) { // Still Testing ?>
@@ -4439,7 +4465,7 @@ if (!class_exists('wpSpamFree')) {
 					<li>
 					<label for="form_include_user_meta">
 						<input type="checkbox" id="form_include_user_meta" name="form_include_user_meta" <?php echo ($spamfree_options['form_include_user_meta']==true?"checked=\"checked\"":"") ?> />
-						<strong>Include meta user data in email. (Browser, IP Address, User-Agent, etc.)</strong><br />&nbsp;
+						<strong>Include user technical data in email.</strong><br />This adds some extra technical data to the end of the contact form email about the person submitting the form.<br />It includes: <strong>Browser / User Agent</strong>, <strong>Referrer</strong>, <strong>IP Address</strong>, <strong>Server</strong>, etc.<br />This is helpful for dealing with abusive or threatening comments. You can use the IP address provided to identify or block trolls from your site with whatever method you prefer.<br />&nbsp;
 					</label>
 					</li>					
 
@@ -4578,7 +4604,15 @@ if (!class_exists('wpSpamFree')) {
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
 			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
 			End Blog Spam: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a><br />
-			Twitter: <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a></p>
+			Twitter: <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />
+
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+			</form>	
+			</p>
 
 			<p>&nbsp;</p>
 
@@ -4623,7 +4657,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.6";
+			$plugin_db_version = "1.9.8.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -4648,6 +4682,8 @@ if (!class_exists('wpSpamFree')) {
 				$randomComValCodeJS1 = spamfree_create_random_key();
 				$randomComValCodeJS2 = spamfree_create_random_key();
 				$FormValidationKeyJS = $randomComValCodeJS1.$randomComValCodeJS2;
+				// TIME
+				$KeyUpdateTime = time();
 
 				// Options array
 				$spamfree_options_update = array (
@@ -4655,6 +4691,11 @@ if (!class_exists('wpSpamFree')) {
 					'cookie_validation_key' 				=> $CookieValidationKey,
 					'form_validation_field_js' 				=> $FormValidationFieldJS,
 					'form_validation_key_js' 				=> $FormValidationKeyJS,
+					'cookie_get_function_name' 				=> '',
+					'cookie_set_function_name' 				=> '',
+					'cookie_delete_function_name' 			=> '',
+					'comment_validation_function_name' 		=> '',
+					'last_key_update'						=> $KeyUpdateTime,
 					'wp_cache' 								=> 0,
 					'wp_super_cache' 						=> 0,
 					'block_all_trackbacks' 					=> 0,
