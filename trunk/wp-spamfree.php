@@ -4299,7 +4299,7 @@ if (!class_exists('wpSpamFree')) {
 				</ul>
 			</fieldset>
 			<p class="submit">
-			<input type="submit" name="submit_wpsf_spam_options" value="Update Options &raquo;" style="float:left;" />
+			<input type="submit" name="submit_wpsf_spam_options" value="Update Options &raquo;" class="button-primary" style="float:left;" />
 			</p>
 			</form>
 
@@ -4472,7 +4472,7 @@ if (!class_exists('wpSpamFree')) {
 				</ul>
 			</fieldset>
 			<p class="submit">
-			<input type="submit" name="submit_wpsf_contact_options" value="Update Options &raquo;" style="float:left;" />
+			<input type="submit" name="submit_wpsf_contact_options" value="Update Options &raquo;" class="button-primary" style="float:left;" />
 			</p>
 			</form>
 			
