@@ -73,7 +73,7 @@ Simply undo any edits you made to your `header.php` and `wp-comments-post.php` f
 WP-SpamFree was created specifically to stop automated comment spam (which accounts for over 99% of comment spam), and recently we have added some features that help combat human comment spam, as well as trackback/pingback spam. Unfortunately, no plugin can perfectly detect human comment spam. As other experts will tell you, the most effective strategy for blocking spam involves applying a variety of techniques. For best results, enable comment moderation, and if you desire a backup, feel free to use Akismet, as the two plugins are compatible.
 
 = Displaying Stats on Your Blog =
-Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: `<?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?>` where '1' is the style. Replace the '1' with a number from 1-9 corresponding to one of the background styles you'd like to use. (See plugin admin page for more info.)
+Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: `<?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?>` where '1' is the style. Replace the '1' with a number from 1-6 corresponding to one of the background styles you'd like to use. (See plugin admin page for more info.)
 
 To add stats to individual posts, you'll need to install the Exec-PHP plugin.
 
