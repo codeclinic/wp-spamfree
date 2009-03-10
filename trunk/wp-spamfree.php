@@ -348,7 +348,7 @@ function spamfree_contact_form($content) {
 			$wpsf_contact_form_subject 			= '[Website Contact] '.$wpsf_contact_subject;
 			//$wpsf_contact_form_cc_subject		= '[Website Contact CC] '.$wpsf_contact_subject;
 			$wpsf_contact_form_msg_headers 		= "From: $wpsf_contact_name <$wpsf_contact_email>" . "\r\n" . "Reply-To: $wpsf_contact_email" . "\r\n" . "Content-Type: text/plain\r\n";
-s			// Another option: "Content-Type: text/html"
+			// Another option: "Content-Type: text/html"
 			
 			// FORM INFO :: END
 			
