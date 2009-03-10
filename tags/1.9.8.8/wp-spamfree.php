@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 1.9.8.9
+Version: 1.9.8.8
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='1.9.8.9';
+	$wpSpamFreeVer='1.9.8.8';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -235,7 +235,7 @@ function spamfree_content_addendum($content) {
 			else { $wpsf_img_p_disp = ''; $wpsf_img_disp = ''; }	
 			$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
 			
-			$content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" alt="" style="border-style:none;width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
+			$content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" border="0" style="width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
 			}	
 		}
 	return $content;
@@ -608,7 +608,7 @@ function spamfree_contact_form($content) {
 				else { $wpsf_img_p_disp = ''; $wpsf_img_disp = ''; }	
 				$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
 				
-				$spamfree_contact_form_content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" alt="" style="border-style:none;width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
+				$spamfree_contact_form_content .=  '<p'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" border="0" style="width:0px;height:0px;'.$wpsf_img_disp.'" /></p>';
 				}	
 			
 			
@@ -4506,31 +4506,31 @@ if (!class_exists('wpSpamFree')) {
 			
 			<ol style="list-style-type:decimal;padding-left:30px;">
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-1-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" width="140" height="66" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-1-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-2-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" width="140" height="66" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-2-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-3-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 66px" width="140" height="66" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-3-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-4-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 106px" width="140" height="106" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-4-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 106px" border="0" width="140" height="106" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-5-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 61px" width="140" height="61" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-5-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 61px" border="0" width="140" height="61" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-6-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 67px" width="140" height="67" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-6-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 67px" border="0" width="140" height="67" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-7-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" width="140" height="66" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-7-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-8-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" width="140" height="66" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-8-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px;  width: 140px; height: 66px" border="0" width="140" height="66" /></li>
 
 			    <li>&nbsp;<br />&nbsp;
-				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-9-preview.png' style="border-style:none; margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 106px" width="140" height="106" /></li>
+				<img src='<?php echo $wpsf_plugin_url; ?>/counter/spamfree-counter-bg-9-preview.png' style="margin-right: 10px; margin-top: 7px; margin-bottom: 7px; width: 140px; height: 106px" border="0" width="140" height="106" /></li>
 			</ol>
 						
 			<p>To add stats to individual posts, you'll need to install the <a href="http://wordpress.org/extend/plugins/exec-php/" rel="external" target="_blank" >Exec-PHP</a> plugin.</p>
@@ -4604,7 +4604,7 @@ if (!class_exists('wpSpamFree')) {
 
 			<p>&nbsp;</p>			
 			
-			<p><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="<?php echo $wpsf_plugin_url; ?>/img/end-blog-spam-button-01-red.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" width="140" height="66" style="border-style:none;text-decoration:none;" /></a></p>
+			<p><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="http://www.hybrid6.com/webgeek/images/wp-spamfree/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" border="0" style="border-style:none;text-decoration:none;" /></a></p>
 			
 			<p><a name="wpsf_download_plugin_documentation"><strong>Download Plugin / Documentation</strong></a><br />
 			Latest Version: <a href="http://www.hybrid6.com/webgeek/downloads/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
@@ -4666,7 +4666,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "1.9.8.9";
+			$plugin_db_version = "1.9.8.8";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
