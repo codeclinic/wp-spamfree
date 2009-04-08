@@ -85,18 +85,15 @@ First create a page (not post) where you want to have your contact form. Then, i
 There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.
 
 **What the Contact Form feature IS:** A simple drop-in contact form that won't get spammed. 
-
 **What the Contact Form feature is NOT:** A configurable and full-featured plugin like some other contact form plugins out there. 
-
 **Note:** Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you. 
 
 == Other Notes ==
 
-= Troubleshooting Guide / Support =
-
+[WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
 [Troubleshooting Guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting)
 
-[WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
+= Troubleshooting Guide / Support =
 
 If you're having trouble getting things to work after installing the plugin, here are a few things to check:
 
