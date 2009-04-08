@@ -92,11 +92,9 @@ There is no need to configure the form. It allows you to simply drop it into the
 
 == Other Notes ==
 
+[Troubleshooting Guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting) | [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
+
 = Troubleshooting Guide / Support =
-
-[Troubleshooting Guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting)
-
-[WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
 
 If you're having trouble getting things to work after installing the plugin, here are a few things to check:
 
