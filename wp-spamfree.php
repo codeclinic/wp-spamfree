@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.1
+Version: 2.0.0.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.1';
+	$wpSpamFreeVer='2.0.0.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -65,7 +65,7 @@ function spamfree_create_random_key() {
 function spamfree_update_keys($reset_keys) {
 	$spamfree_options 								= get_option('spamfree_options');
 	
-	// Determine Time Key Was Last Updater
+	// Determine Time Key Was Last Updated
 	$KeyUpdateTime = $spamfree_options['last_key_update'];
 
 	// Set Random Cookie Name
@@ -524,7 +524,22 @@ function spamfree_comment_form() {
 	$PromotePluginLink = $spamfree_options['promote_plugin_link'];
 	
 	if ( $PromotePluginLink ) {
-		echo '<p style="font-size:9px;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
+		$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
+		if ( $server_ip_first_char == '6' ) {
+			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
+			}
+		else if ( $server_ip_first_char == '7' ) {
+			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			}
+		else if ( $server_ip_first_char == '8' ) {
+			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
+			}
+		else if ( $server_ip_first_char == '9' ) {
+			echo '<p style="font-size:9px;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
+			}
+		else {
+			echo '<p style="font-size:9px;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
+			}
 		}
 	
 	if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
@@ -894,7 +909,16 @@ function spamfree_contact_form($content) {
 			$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 			
 			if ( $PromotePluginLink ) {
-				$spamfree_contact_form_content .= '<p style="font-size:9px;">Contact Form Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
+				$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
+				if ( $server_ip_first_char == '7' ) {
+					$spamfree_contact_form_content .= '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >Contact Form</a> Powered by WP-SpamFree</p>'."\n";
+					}
+				else if ( $server_ip_first_char == '6' ) {
+					$spamfree_contact_form_content .= '<p style="font-size:9px;">Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree Contact Form</a></p>'."\n";
+					}
+				else {
+					$spamfree_contact_form_content .= '<p style="font-size:9px;">Contact Form Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
+					}
 				$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 				}
 			$spamfree_contact_form_content .= '</form>'."\n";
@@ -2297,7 +2321,11 @@ function spamfree_content_filter($commentdata) {
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_author_count;
 
 
-
+	//Simple Author='' Tests
+	$filter_400_term = 'business';
+	$filter_401_term = 'marketing';
+	$filter_402_term = 'cialis';
+	$filter_403_term = 'seo';
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -3367,15 +3395,20 @@ function spamfree_content_filter($commentdata) {
 	if ( !$commentdata_user_agent_lc  ) {
 		// There is no reason for a blank UA String, unless it's been altered.
 		$content_filter_status = '2';
-		$spamfree_error_code .= ' 1001';
+		$spamfree_error_code .= ' UA1001';
 		}
 	$commentdata_user_agent_lc_word_count = count( explode( " ", $commentdata_user_agent_lc ) );
 	if ( $commentdata_user_agent_lc_word_count < 3 ) {
 		if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' || ( !eregi( 'movabletype', $commentdata_user_agent_lc ) && ( $commentdata_comment_type == 'trackback' || $commentdata_comment_type == 'pingback' ) ) ) {
 			// Another test for altered UA's.
 			$content_filter_status = '2';
-			$spamfree_error_code .= ' 1001.1-'.$commentdata_user_agent_lc;
+			$spamfree_error_code .= ' UA1001.1-'.$commentdata_user_agent_lc;
 			}
+		}
+	if ( eregi( 'libwww-perl', $commentdata_user_agent_lc ) ) {
+		// There is no reason for a human to use a libwww-perl UA String.
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' UA1002';
 		}
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
@@ -3404,12 +3437,12 @@ function spamfree_content_filter($commentdata) {
 
 		// KeywordSpy caught using IP's in the range 123.237.144. and 123.237.147.
 		$content_filter_status = '2';
-		$spamfree_error_code .= ' 1002-'.$commentdata_remote_addr_lc;
+		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
 		}
 	// Test Remote Hosts
 	if ( eregi( 'keywordspy.com', $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
-		$spamfree_error_code .= ' 1003-'.$commentdata_remote_host_lc;
+		$spamfree_error_code .= ' RH1003-'.$commentdata_remote_host_lc;
 		}
 	/*
 	// Following is causing errors on some systems. - 06/17/08
@@ -4303,6 +4336,24 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 334AUTH';
 			}
+		
+		// Simple Author='' Tests
+		if ( $commentdata_comment_author_lc == $filter_400_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 400AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_401_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 401AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_402_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 402AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_403_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 403AUTH';
+			}
 
 		}
 	
@@ -5089,7 +5140,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.1";
+			$plugin_db_version = "2.0.0.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
