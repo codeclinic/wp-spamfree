@@ -142,4 +142,6 @@ As with any WordPress plugin, for security reasons, you should only download plu
 
 Please see the [FAQ's](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs).
 
+Also, see the [troubleshooting guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting).
+
 If you have any further questions, please submit them on the [support page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
