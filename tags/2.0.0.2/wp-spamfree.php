@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.3
+Version: 2.0.0.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.3';
+	$wpSpamFreeVer='2.0.0.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -460,7 +460,6 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 				}
 			}
 		else if ( $wpsf_log_comment_type == 'contact form' ) {
-			$wpsf_log_comment_data .= $wpsf_log_datum."\n";			
 			$wpsf_log_comment_data .= '----------------------------------------------------------------------------------'."\n";
 			$wpsf_log_comment_data .= $wpsf_log_contact_form_data;
 			$wpsf_log_comment_data .= '----------------------------------------------------------------------------------'."\n";
@@ -686,12 +685,12 @@ function spamfree_contact_form($content) {
 			$contact_form_spam_subj_2_limit = 0;
 			
 			$contact_form_spam_term_total = $contact_form_spam_1_count + $contact_form_spam_2_count + $contact_form_spam_3_count + $contact_form_spam_4_count + $contact_form_spam_5_count + $contact_form_spam_6_count + $contact_form_spam_7_count + $contact_form_spam_subj_1_count + $contact_form_spam_subj_2_count;
-			$contact_form_spam_term_total_limit = 15;
+			$contact_form_spam_term_total = 15;
 			
 			if ( eregi( "\.in$", $ReverseDNS ) ) {
 				$contact_form_spam_loc_in = 1;
 				}
-			if ( ( $contact_form_spam_term_total > $contact_form_spam_term_total_limit || $contact_form_spam_1_count > $contact_form_spam_1_limit || $contact_form_spam_2_count > $contact_form_spam_2_limit || $contact_form_spam_5_count > $contact_form_spam_5_limit || $contact_form_spam_6_count > $contact_form_spam_6_limit ) && $contact_form_spam_loc_in ) {
+			if ( ( $contact_form_spam_term_total > $contact_form_spam_term_total_limit || $contact_form_spam_1_count > $contact_form_spam_1_limit || $contact_form_spam_2_count > $contact_form_spam_2_limit || $contact_form_spam_5_count > $contact_form_spam_5_limit || $contact_form_spam_6_count > $contact_form_spam_6_limit ) && ( $contact_form_spam_loc_in || $contact_form_spam_2_count > $contact_form_spam_2_limit ) ) {
 				$MessageSpam=1;
 				$spamfree_error_code .= ' CONTACTFORM-MESSAGESPAM1';
 				$contact_response_status_message_addendum .= '&bull; Message appears to be spam. Please note that link requests and link exchange requests will be automatically deleted, and are not an acceptable use of this contact form.<br />&nbsp;<br />';
@@ -1304,7 +1303,7 @@ function spamfree_content_filter($commentdata) {
 
 	// Simple Filters
 	
-	$blacklist_word_combo_total_limit = 10; // you may increase to 30+ if blog's topic is adult in nature
+	$blacklist_word_combo_total_limit = 10;
 	$blacklist_word_combo_total = 0;
 	
 	// Filter 1: Number of occurrences of 'http://' in comment_content
@@ -1759,7 +1758,7 @@ function spamfree_content_filter($commentdata) {
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_110_count;
 	// Filter 111: Number of occurrences of 'sex' in comment_content
 	$filter_111_count = substr_count($commentdata_comment_content_lc, 'sex');
-	$filter_111_limit = 5; // you may increase to 15+ if blog's topic is adult in nature
+	$filter_111_limit = 5;
 	$filter_111_trackback_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_111_count;
 	// Filter 112: Number of occurrences of 'sex' in comment_content
@@ -5141,7 +5140,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.3";
+			$plugin_db_version = "2.0.0.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
