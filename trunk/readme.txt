@@ -10,7 +10,7 @@ Powerful anti-spam plugin that eliminates blog comment spam. Finally, you can en
 
 == Description ==
 
-An extremely powerful WordPress anti-spam plugin that eliminates blog comment spam, including trackback and pingback spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
+**An extremely powerful WordPress anti-spam plugin that eliminates blog comment spam, including trackback and pingback spam.** Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 
 = A Powerful Weapon Against Comment Spam =
 Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is an anti-spam plugin for WordPress that provides an effective solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **WP-SpamFree eliminates automated blog comment spam from bots, including trackback and pingback spam.**
