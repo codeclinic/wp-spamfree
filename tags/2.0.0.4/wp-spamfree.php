@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.5
+Version: 2.0.0.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.5';
+	$wpSpamFreeVer='2.0.0.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -990,12 +990,7 @@ function spamfree_contact_form($content) {
 													);
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
-			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
-				// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
-				// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
-				// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
-				// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
-				// KeywordSpy caught using IP's in the range 123.237.144. and 123.237.147.
+			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
 				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}
 		
@@ -2356,15 +2351,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_334_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_author_count;
-	// Filter 335: Number of occurrences of 'webdesign' in comment_content
-	$filter_335_term = 'webdesign';
-	$filter_335_count = substr_count($commentdata_comment_content_lc, $filter_335_term);
-	$filter_335_limit = 8;
-	$filter_335_trackback_limit = 8;
-	$filter_335_author_count = substr_count($commentdata_comment_author_lc, $filter_335_term);
-	$filter_335_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;
 
 
 	//Simple Author='' Tests
@@ -3479,12 +3465,9 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.152',
 								'193.46.236.234',
 								);
-	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) ) {
-		// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
-		// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
-		// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
-		// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
-		// KeywordSpy.com caught using IP's in the range 123.237.144. and 123.237.147.
+	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
+
+		// KeywordSpy caught using IP's in the range 123.237.144. and 123.237.147.
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
 		}
@@ -3553,9 +3536,8 @@ function spamfree_content_filter($commentdata) {
 				$spamfree_error_code .= ' T1002';
 				}
 			}
-		if ( $commentdata_comment_author == $commentdata_comment_author_lc && eregi( "([a-z]+)", $commentdata_comment_author ) ) {
+		if ( $commentdata_comment_author == $commentdata_comment_author_lc ) {
 			// Check to see if Comment Author is lowercase. Normal blog pings Authors are properly capitalized. No brainer.
-			// Added second test to only run when using standard alphabet.
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' T1010';
 			}
@@ -4386,12 +4368,7 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 334AUTH';
 			}
-		if ( $filter_335_author_count >= 1 ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 335AUTH';
-			}
-
-	
+		
 		// Simple Author='' Tests
 		if ( $commentdata_comment_author_lc == $filter_400_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
@@ -5195,7 +5172,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.5";
+			$plugin_db_version = "2.0.0.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
