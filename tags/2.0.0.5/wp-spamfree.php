@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.6
+Version: 2.0.0.5
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.6';
+	$wpSpamFreeVer='2.0.0.5';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -322,9 +322,9 @@ function spamfree_log_reset() {
 	
 	clearstatcache();
 	if ( !file_exists( $wpsf_htaccess_file ) ) {
-		@chmod( $wpsf_log_dir, 0775 );
-		@chmod( $wpsf_htaccess_orig_file, 0666 );
-		@chmod( $wpsf_htaccess_empty_file, 0666 );
+		@chmod( $wpsf_log_dir, 0755 );
+		@chmod( $wpsf_htaccess_orig_file, 0644 );
+		@chmod( $wpsf_htaccess_empty_file, 0644 );
 		@rename( $wpsf_htaccess_orig_file, $wpsf_htaccess_file );
 		@copy( $wpsf_htaccess_empty_file, $wpsf_htaccess_orig_file );
 		}
@@ -335,12 +335,12 @@ function spamfree_log_reset() {
 	$wpsf_perm_log_empty_file = substr(sprintf('%o', fileperms($wpsf_log_empty_file)), -4);
 	$wpsf_perm_htaccess_file = substr(sprintf('%o', fileperms($wpsf_htaccess_file)), -4);
 	$wpsf_perm_htaccess_empty_file = substr(sprintf('%o', fileperms($wpsf_htaccess_empty_file)), -4);
-	if ( $wpsf_perm_log_dir < '0775' || !is_writable($wpsf_log_dir) || $wpsf_perm_log_file < '0666' || !is_writable($wpsf_log_file) || $wpsf_perm_log_empty_file < '0666' || !is_writable($wpsf_log_empty_file) || $wpsf_perm_htaccess_file < '0666' || !is_writable($wpsf_htaccess_file) || $wpsf_perm_htaccess_empty_file < '0666' || !is_writable($wpsf_htaccess_empty_file) ) {
-		@chmod( $wpsf_log_dir, 0775 );
-		@chmod( $wpsf_log_file, 0666 );
-		@chmod( $wpsf_log_empty_file, 0666 );
-		@chmod( $wpsf_htaccess_file, 0666 );
-		@chmod( $wpsf_htaccess_empty_file, 0666 );
+	if ( $wpsf_perm_log_dir != '0755' || $wpsf_perm_log_file != '0644' || $wpsf_perm_log_empty_file != '0644' || $wpsf_perm_htaccess_file != '0644' || $wpsf_perm_htaccess_empty_file != '0644' ) {
+		@chmod( $wpsf_log_dir, 0755 );
+		@chmod( $wpsf_log_file, 0644 );
+		@chmod( $wpsf_log_empty_file, 0644 );
+		@chmod( $wpsf_htaccess_file, 0644 );
+		@chmod( $wpsf_htaccess_empty_file, 0644 );
 		}
 	if ( file_exists( $wpsf_log_file ) && file_exists( $wpsf_log_empty_file ) ) {
 		@copy( $wpsf_log_empty_file, $wpsf_log_file );
@@ -4560,7 +4560,7 @@ if (!class_exists('wpSpamFree')) {
 			clearstatcache();
 			$installation_file_test_2_perm = substr(sprintf('%o', fileperms($installation_file_test_2)), -4);
 			$installation_file_test_3_perm = substr(sprintf('%o', fileperms($installation_file_test_3)), -4);
-			if ( $installation_file_test_2_perm < '0644' || $installation_file_test_3_perm < '0644' ) {
+			if ( $installation_file_test_2_perm != '0644' || $installation_file_test_3_perm != '0644' ) {
 				@chmod( $installation_file_test_2, 0644 );
 				@chmod( $installation_file_test_3, 0644 );
 				}
@@ -4766,9 +4766,9 @@ if (!class_exists('wpSpamFree')) {
 						
 						clearstatcache();
 						if ( !file_exists( $wpsf_htaccess_file ) ) {
-							@chmod( $wpsf_log_dir, 0775 );
-							@chmod( $wpsf_htaccess_orig_file, 0666 );
-							@chmod( $wpsf_htaccess_empty_file, 0666 );
+							@chmod( $wpsf_log_dir, 0755 );
+							@chmod( $wpsf_htaccess_orig_file, 0644 );
+							@chmod( $wpsf_htaccess_empty_file, 0644 );
 							@rename( $wpsf_htaccess_orig_file, $wpsf_htaccess_file );
 							@copy( $wpsf_htaccess_empty_file, $wpsf_htaccess_orig_file );
 							}
@@ -4779,12 +4779,12 @@ if (!class_exists('wpSpamFree')) {
 						$wpsf_perm_log_empty_file = substr(sprintf('%o', fileperms($wpsf_log_empty_file)), -4);
 						$wpsf_perm_htaccess_file = substr(sprintf('%o', fileperms($wpsf_htaccess_file)), -4);
 						$wpsf_perm_htaccess_empty_file = substr(sprintf('%o', fileperms($wpsf_htaccess_empty_file)), -4);
-						if ( $wpsf_perm_log_dir < '0775' || !is_writable($wpsf_log_dir) || $wpsf_perm_log_file < '0666' || !is_writable($wpsf_log_file) || $wpsf_perm_log_empty_file < '0666' || !is_writable($wpsf_log_empty_file) || $wpsf_perm_htaccess_file < '0666' || !is_writable($wpsf_htaccess_file) || $wpsf_perm_htaccess_empty_file < '0666' || !is_writable($wpsf_htaccess_empty_file) ) {
-							@chmod( $wpsf_log_dir, 0775 );
-							@chmod( $wpsf_log_file, 0666 );
-							@chmod( $wpsf_log_empty_file, 0666 );
-							@chmod( $wpsf_htaccess_file, 0666 );
-							@chmod( $wpsf_htaccess_empty_file, 0666 );
+						if ( $wpsf_perm_log_dir != '0755' || $wpsf_perm_log_file != '0644' || $wpsf_perm_log_empty_file != '0644' || $wpsf_perm_htaccess_file != '0644' || $wpsf_perm_htaccess_empty_file != '0644' ) {
+							@chmod( $wpsf_log_dir, 0755 );
+							@chmod( $wpsf_log_file, 0644 );
+							@chmod( $wpsf_log_empty_file, 0644 );
+							@chmod( $wpsf_htaccess_file, 0644 );
+							@chmod( $wpsf_htaccess_empty_file, 0644 );
 							}
 						clearstatcache();
 						$wpsf_perm_log_dir = substr(sprintf('%o', fileperms($wpsf_log_dir)), -4);
@@ -4792,8 +4792,8 @@ if (!class_exists('wpSpamFree')) {
 						$wpsf_perm_log_empty_file = substr(sprintf('%o', fileperms($wpsf_log_empty_file)), -4);
 						$wpsf_perm_htaccess_file = substr(sprintf('%o', fileperms($wpsf_htaccess_file)), -4);
 						$wpsf_perm_htaccess_empty_file = substr(sprintf('%o', fileperms($wpsf_htaccess_empty_file)), -4);
-						if ( $wpsf_perm_log_dir < '0755' || !is_writable($wpsf_log_dir) || $wpsf_perm_log_file < '0644' || !is_writable($wpsf_log_file) || $wpsf_perm_log_empty_file < '0644' || !is_writable($wpsf_log_empty_file) || ( file_exists( $wpsf_htaccess_file ) && ( $wpsf_perm_htaccess_file < '0644' || !is_writable($wpsf_htaccess_file) ) ) || $wpsf_perm_htaccess_empty_file < '0644' || !is_writable($wpsf_htaccess_empty_file) ) {
-							echo '<br/>'."\n".'<span style="color:red;"><strong>The log file may not be writeable. You may need to manually correct the file permissions.<br/>Set the  permission for the "/wp-spamfree/data" directory to 755 and all files within to 644.</strong><br/>If that doesn\'t work then you may want to read the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs_5" target="_blank">FAQ</a> for this topic.</span><br/>'."\n";
+						if ( $wpsf_perm_log_dir != '0755' || $wpsf_perm_log_file != '0644' || $wpsf_perm_log_empty_file != '0644' || ( file_exists( $wpsf_htaccess_file ) && $wpsf_perm_htaccess_file != '0644' ) || $wpsf_perm_htaccess_empty_file != '0644' ) {
+							echo '<br/>'."\n".'<strong style="color:red;">The log file may not be writeable. You will need to manually correct the file permissions.<br/>Set the  permission for the "/wp-spamfree/data" directory to 755 and all files within to 644.</strong><br/>'."\n";
 							}
 						}
 					?>
@@ -5195,7 +5195,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.6";
+			$plugin_db_version = "2.0.0.5";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
