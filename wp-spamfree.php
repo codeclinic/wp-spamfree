@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.6
+Version: 2.0.0.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.6';
+	$wpSpamFreeVer='2.0.0.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -293,7 +293,7 @@ function widget_spamfree_register() {
 	function widget_spamfree($args) {
 		extract($args);
 		echo $before_widget;
-		echo $before_title.''.$after_title;
+		echo $before_title.'Spam'.$after_title;
 		spamfree_counter_sm();
 		echo $after_widget;
 		}
@@ -987,15 +987,18 @@ function spamfree_contact_form($content) {
 													'193.46.236.151',
 													'193.46.236.152',
 													'193.46.236.234',
+													'91.121.77.168',
 													);
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
-			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) ) {
+			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) || eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) || eregi( "clients.your-server.de$", $ReverseDNS ) ) {
 				// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
 				// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
 				// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
 				// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
 				// KeywordSpy caught using IP's in the range 123.237.144. and 123.237.147.
+				// 91.121.77.168 real-url.org
+				// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
 				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}
 		
@@ -1266,7 +1269,7 @@ function spamfree_content_filter($commentdata) {
 	$spamfree_options = get_option('spamfree_options');
 	
 	// CONTENT FILTERING :: BEGIN
-	$CurrentWordPressVersion = '2.8';
+	$CurrentWordPressVersion = '2.9';
 	
 	$commentdata_comment_author						= $commentdata['comment_author'];
 	$commentdata_comment_author_lc					= strtolower($commentdata_comment_author);
@@ -1387,6 +1390,8 @@ function spamfree_content_filter($commentdata) {
 	$filter_12_count = substr_count($commentdata_comment_content_lc, 'valium');
 	$filter_12_limit = 5;
 	*/
+	
+	// Dev Note: Redo later to use word breaks in php regex
 	
 	$filter_2_term = 'viagra';
 	$filter_2_count = substr_count($commentdata_comment_content_lc, $filter_2_term);
@@ -1744,6 +1749,15 @@ function spamfree_content_filter($commentdata) {
 	$filter_40_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_40_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_40_author_count;
+	// Filter 41: Number of occurrences of 'herbalife' in comment_content
+	$filter_41_term = 'herbalife';
+	$filter_41_count = substr_count($commentdata_comment_content_lc, $filter_41_term);
+	$filter_41_limit = 8;
+	$filter_41_trackback_limit = 7;
+	$filter_41_author_count = substr_count($commentdata_comment_author_lc, $filter_41_term);
+	$filter_41_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_41_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_41_author_count;
 
 
 	// Non-Medical Author Tests
@@ -2364,7 +2378,7 @@ function spamfree_content_filter($commentdata) {
 	$filter_335_author_count = substr_count($commentdata_comment_author_lc, $filter_335_term);
 	$filter_335_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;	
 
 
 	//Simple Author='' Tests
@@ -2372,6 +2386,12 @@ function spamfree_content_filter($commentdata) {
 	$filter_401_term = 'marketing';
 	$filter_402_term = 'cialis';
 	$filter_403_term = 'seo';
+	$filter_404_term = 'cheap';
+	$filter_405_term = 'discount';
+	$filter_406_term = 'insurance';
+	$filter_407_term = 'development';
+	$filter_408_term = 'software';
+	$filter_409_term = 'company';
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2768,11 +2788,14 @@ function spamfree_content_filter($commentdata) {
 	$filter_20037C_count = substr_count($commentdata_comment_content_lc, $filter_20037_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20037_domain_dot);
 	$filter_20037_limit = 1;
 	$filter_20037_trackback_limit = 1;
-
-
-
-
-
+	// Filter 20038: Number of occurrences of 'real-url.org' in comment_author_url / comment_content
+	$filter_20038_domain = 'real-url.org'; // SPAMMERS
+	$filter_20038_domain_http = 'http://'.$filter_20038_domain;
+	$filter_20038_domain_dot = '.'.$filter_20038_domain;
+	$filter_20038_count = substr_count($commentdata_comment_author_url_lc, $filter_20038_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20038_domain_dot);
+	$filter_20038C_count = substr_count($commentdata_comment_content_lc, $filter_20038_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20038_domain_dot);
+	$filter_20038_limit = 1;
+	$filter_20038_trackback_limit = 1;
 
 
 
@@ -3027,6 +3050,11 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 40';
 		}
 	if ( $filter_40_count ) { $blacklist_word_combo++; }
+	if ( $filter_41_count >= $filter_41_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 41';
+		}
+	if ( $filter_41_count ) { $blacklist_word_combo++; }
 		
 	if ( $filter_104_count >= $filter_104_limit ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
@@ -3426,7 +3454,7 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
 		}
@@ -3478,6 +3506,7 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.151',
 								'193.46.236.152',
 								'193.46.236.234',
+								'91.121.77.168',
 								);
 	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) ) {
 		// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
@@ -3485,6 +3514,7 @@ function spamfree_content_filter($commentdata) {
 		// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
 		// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
 		// KeywordSpy.com caught using IP's in the range 123.237.144. and 123.237.147.
+		// 91.121.77.168 real-url.org
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
 		}
@@ -3493,6 +3523,11 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1003-'.$commentdata_remote_host_lc;
 		}
+	if ( eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1004-'.$commentdata_remote_host_lc;
+		}
+
 	/*
 	// Following is causing errors on some systems. - 06/17/08
 	if ( $commentdata_remote_host_lc == 'blank' && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
@@ -3504,7 +3539,11 @@ function spamfree_content_filter($commentdata) {
 	// Test Reverse DNS Hosts
 	if ( eregi( 'keywordspy.com', $ReverseDNS ) ) {
 		$content_filter_status = '2';
-		$spamfree_error_code .= ' 1023-'.$ReverseDNS;
+		$spamfree_error_code .= ' REVD1023-'.$ReverseDNS;
+		}
+	if ( eregi( "clients.your-server.de$", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1024-'.$ReverseDNS;
 		}
 	// Test Reverse DNS IP's
 	/* 
@@ -3684,7 +3723,7 @@ function spamfree_content_filter($commentdata) {
 		}
 	if ( $filter_10003_count ) { $blacklist_word_combo++; }
 
-	// Comment Author URL Tests - Free Websits
+	// Comment Author URL Tests - Free Websites / Crap Websites
 	if ( eregi( 'groups.google.com', $commentdata_comment_author_url_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 20001';
@@ -4061,7 +4100,15 @@ function spamfree_content_filter($commentdata) {
 	if ( $filter_20037C_count >= $filter_20037_limit ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 20037C';
-		}	
+		}
+	if ( $filter_20038_count >= $filter_20038_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20038A';
+		}
+	if ( $filter_20038C_count >= $filter_20038_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20038C';
+		}
 
 
 	// Comment Author Tests
@@ -4392,7 +4439,7 @@ function spamfree_content_filter($commentdata) {
 			}
 
 	
-		// Simple Author='' Tests
+		// Simple Author='' Tests - Non-Trackback/Non-Pingback
 		if ( $commentdata_comment_author_lc == $filter_400_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 400AUTH';
@@ -4408,6 +4455,30 @@ function spamfree_content_filter($commentdata) {
 		if ( $commentdata_comment_author_lc == $filter_403_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 403AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_404_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 404AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_405_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 405AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_406_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 406AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_407_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 407AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_408_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 408AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_409_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 409AUTH';
 			}
 
 		}
@@ -4705,7 +4776,7 @@ if (!class_exists('wpSpamFree')) {
 				$SiteURL = get_option('siteurl');
 			?>
 			
-			<p>&nbsp;</p>
+			<div style="width:305px;height:250px;border-style:none;border-width:0px;border-color:#000000;padding:0px 15px 0px 15px;margin-top:15px;margin-right:15px;float:left;clear:left;">
 			
 			<p><a name="wpsf_top"><strong>Quick Navigation - Contents</strong></a></p>
 			
@@ -4720,8 +4791,33 @@ if (!class_exists('wpSpamFree')) {
 				<li><a href="#wpsf_let_others_know">Let Others Know About WP-SpamFree</a></li>
 				<li><a href="#wpsf_download_plugin_documentation">Download Plugin / Documentation</a></li>
 			</ol>
+			</div>
 			
-			<p>&nbsp;</p>
+			<div style="width:250px;height:250px;border-style:solid;border-width:1px;border-color:#000033;background-color:#CCCCFF;padding:0px 15px 0px 15px;margin-top:15px;margin-right:15px;float:left;">
+			
+			<p>
+			<?php if ( $spamCount > 100 ) { ?>
+			<strong>Happy with WP-SpamFree?</strong><br /> Let others know by <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >giving it a good rating</a> on WordPress.org!<br />
+			<img src='<?php echo $wpsf_plugin_url; ?>/img/5-stars-rating.gif' alt='' width='99' height='19' style='border-style:none;padding-top:3px;padding-bottom:0px;' /><br /><br />
+			<?php } ?>
+			
+			<strong>Documentation:</strong> <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >Plugin Homepage</a><br />
+			<strong>Tech Support:</strong> <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support</a><br />
+			<strong>Follow on Twitter:</strong> <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />			
+			<strong>Let Others Know:</strong> <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank" rel="external" >Leave Comments</a><br />
+
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+			</form>	
+			</p>
+			
+			</div>
+
+
+			<p style="clear:both;">&nbsp;</p>
 			
 			<p><a name="wpsf_general_options"><strong>General Options</strong></a></p>
 
@@ -5097,6 +5193,7 @@ if (!class_exists('wpSpamFree')) {
 				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br /><strong>Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>If you are receiving the error message: "Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again." then you need to make sure <em>JavaScript</em> and <em>cookies</em> are enabled in your browser. (JavaScript is different from Java. Java is not required.) These are enabled by default in web browsers. The status display will let you know if these are turned on or off (as best the page can detect - occasionally the detection does not work.) If this message comes up consistently even after JavaScript and cookies are enabled, then there most likely is an installation problem, plugin conflict, or JavaScript conflict. Read on for possible solutions.<br />&nbsp;</li>
+				<li>If you have multiple domains that resolve to the same server, or are parked on the same hosting account, make sure the domain set in the WordPress configuration options matches the domain where you are accessing the blog from. In other words, if you have people going to your blog using http://www.yourdomain.com/ and the WordPress configuration has: http://www.yourdomain2.com/ you will have a problem (not just with this plugin, but with a lot of things.)<br />&nbsp;</li>
 				<li>Check your WordPress Version. If you are using a release earlier than 2.3, you may want to upgrade for a whole slew of reasons, including features and security.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
 				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
@@ -5125,7 +5222,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<ul style="list-style-type:disc;padding-left:30px;">
 				<li><a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank" >Post a comment.</a></li>
-				<li><a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" >Rate WP-SpamFree</a> on WordPress.org.</li>
+				<li><a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" >Give WP-SpamFree a good rating</a> on WordPress.org.</li>
 				<li><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" >Place a graphic link</a>  on your site letting others know how they can help end blog spam. ( &lt/BLOGSPAM&gt; )</li>
 			</ul>
 			
@@ -5195,7 +5292,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.6";
+			$plugin_db_version = "2.0.0.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -5238,7 +5335,7 @@ if (!class_exists('wpSpamFree')) {
 					'wp_super_cache' 						=> 0,
 					'block_all_trackbacks' 					=> 0,
 					'block_all_pingbacks' 					=> 0,
-					'use_alt_cookie_method'					=> 0,
+					'use_alt_cookie_method'					=> 1,
 					'use_alt_cookie_method_only'			=> 0,
 					'use_captcha_backup' 					=> 0,
 					'use_trackback_verification'		 	=> 0,
