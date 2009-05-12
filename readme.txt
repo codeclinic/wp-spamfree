@@ -81,7 +81,7 @@ To add smaller counter to your site, add the following code to your WordPress th
 Or, you can simply use the widget. It displays stats in the style of small counter #1. Now you can show spam stats on your blog without knowing any code.
 
 = Adding a Contact Form to Your Blog =
-First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab) and you're done: `<!--spamfree-contact-->`
+First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab, NOT the Visual editor) and you're done: `<!--spamfree-contact-->`
 
 There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.
 
