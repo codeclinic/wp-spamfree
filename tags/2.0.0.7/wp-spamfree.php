@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.8
+Version: 2.0.0.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.8';
+	$wpSpamFreeVer='2.0.0.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -140,7 +140,6 @@ function spamfree_update_keys($reset_keys) {
 		'form_message_height' 					=> $spamfree_options['form_message_height'],
 		'form_message_min_length'				=> $spamfree_options['form_message_min_length'],
 		'form_message_recipient'				=> $spamfree_options['form_message_recipient'],
-		'form_response_thank_you_message'		=> $spamfree_options['form_response_thank_you_message'],
 		'form_include_user_meta'				=> $spamfree_options['form_include_user_meta'],
 		'promote_plugin_link'					=> $spamfree_options['promote_plugin_link'],
 		);
@@ -450,7 +449,6 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 			'form_message_height' 					=> $spamfree_options['form_message_height'],
 			'form_message_min_length' 				=> $spamfree_options['form_message_min_length'],
 			'form_message_recipient' 				=> $spamfree_options['form_message_recipient'],
-			'form_response_thank_you_message' 		=> $spamfree_options['form_response_thank_you_message'],
 			'form_include_user_meta' 				=> $spamfree_options['form_include_user_meta'],
 			'promote_plugin_link' 					=> $spamfree_options['promote_plugin_link'],
 			);
@@ -622,7 +620,6 @@ function spamfree_contact_form($content) {
 		$FormMessageHeight				= $spamfree_options['form_message_height'];
 		$FormMessageMinLength			= $spamfree_options['form_message_min_length'];
 		$FormMessageRecipient			= $spamfree_options['form_message_recipient'];
-		$FormResponseThankYouMessage	= $spamfree_options['form_response_thank_you_message'];
 		$FormIncludeUserMeta			= $spamfree_options['form_include_user_meta'];
 		$PromotePluginLink				= $spamfree_options['promote_plugin_link'];
 		
@@ -821,17 +818,9 @@ function spamfree_contact_form($content) {
 				}				
 			
 			// TEST TO PREVENT CONTACT FORM SPAM :: END
-			
-			$FormResponseThankYouMessageDefault = '<p>Your message was sent successfully. Thank you.</p><p>&nbsp;</p>';
-			$FormResponseThankYouMessage = str_replace( "\\", "", $FormResponseThankYouMessage );
 		
 			if ( $contact_response_status == 'thank-you' ) {
-				if ( $FormResponseThankYouMessage ) {
-					$spamfree_contact_form_content .= '<p>'.$FormResponseThankYouMessage.'</p><p>&nbsp;</p>'."\n";
-					}
-				else {
-					$spamfree_contact_form_content .= $FormResponseThankYouMessageDefault."\n";
-					}
+				$spamfree_contact_form_content .= '<p>Your message was sent successfully. Thank you.<p>&nbsp;</p>'."\n";
 				}
 			else {
 				if ( eregi ( '\&form\=response', $spamfree_contact_form_url ) ) {
@@ -4731,7 +4720,6 @@ if (!class_exists('wpSpamFree')) {
 						'form_message_height' 					=> $spamfree_options['form_message_height'],
 						'form_message_min_length' 				=> $spamfree_options['form_message_min_length'],
 						'form_message_recipient' 				=> $spamfree_options['form_message_recipient'],
-						'form_response_thank_you_message' 		=> $spamfree_options['form_response_thank_you_message'],
 						'form_include_user_meta' 				=> $spamfree_options['form_include_user_meta'],
 						'promote_plugin_link' 					=> $_REQUEST['promote_plugin_link'],
 						);
@@ -4779,7 +4767,6 @@ if (!class_exists('wpSpamFree')) {
 						'form_message_height' 					=> $_REQUEST['form_message_height'],
 						'form_message_min_length' 				=> $_REQUEST['form_message_min_length'],
 						'form_message_recipient' 				=> $_REQUEST['form_message_recipient'],
-						'form_response_thank_you_message' 		=> $_REQUEST['form_response_thank_you_message'],
 						'form_include_user_meta' 				=> $_REQUEST['form_include_user_meta'],
 						'promote_plugin_link' 					=> $spamfree_options['promote_plugin_link'],
 						);
@@ -5062,6 +5049,8 @@ if (!class_exists('wpSpamFree')) {
 						<strong>Drop-down select menu item 10. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
+					
+
 					<li>
 					<label for="form_message_width">
 						<?php $FormMessageWidth = $spamfree_options['form_message_width']; ?>
@@ -5088,16 +5077,6 @@ if (!class_exists('wpSpamFree')) {
 						<?php $FormMessageRecipient = $spamfree_options['form_message_recipient']; ?>
 						<input type="text" size="40" id="form_message_recipient" name="form_message_recipient" value="<?php if ( !$FormMessageRecipient ) { echo get_option('admin_email'); } else { echo $FormMessageRecipient; } ?>" />
 						<strong>Optional: Enter alternate form recipient. Default is blog admin email.</strong><br />&nbsp;
-					</label>
-					</li>
-					<li>
-					<label for="form_response_thank_you_message">
-						<?php 
-						$FormResponseThankYouMessage = $spamfree_options['form_response_thank_you_message'];
-						$FormResponseThankYouMessage = str_replace( "\\", "", $FormResponseThankYouMessage );
-						?>
-						<strong>Enter message to be displayed upon successful contact form submission.</strong><br/>Can be plain text, HTML, or an ad, etc.<br />
-						<textarea id="form_response_thank_you_message" name="form_response_thank_you_message" cols="80" rows="2" /><?php if ( !$FormResponseThankYouMessage ) { echo 'Your message was sent successfully. Thank you.'; } else { echo $FormResponseThankYouMessage; } ?></textarea><br/>&nbsp;
 					</label>
 					</li>
 					<li>
@@ -5186,7 +5165,7 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><a name="wpsf_adding_contact_form"><strong>Adding a Contact Form to Your Blog</strong></a></p>
 
-			<p>First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab, NOT the Visual editor) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
+			<p>First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab) and you're done: <code>&lt;!--spamfree-contact--&gt;</code><br />&nbsp;<br />
 			
 			There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.<br />&nbsp;<br />
 
@@ -5313,7 +5292,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.8";
+			$plugin_db_version = "2.0.0.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -5383,7 +5362,6 @@ if (!class_exists('wpSpamFree')) {
 					'form_message_height' 					=> 10,
 					'form_message_min_length'				=> 25,
 					'form_message_recipient'				=> get_option('admin_email'),
-					'form_response_thank_you_message'		=> 'Your message was sent successfully. Thank you.',
 					'form_include_user_meta'				=> 1,
 					'promote_plugin_link'					=> 1,
 					);
