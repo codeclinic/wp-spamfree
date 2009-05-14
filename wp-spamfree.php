@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.0.8
+Version: 2.0.0.9
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.0.8';
+	$wpSpamFreeVer='2.0.0.9';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -557,22 +557,22 @@ function spamfree_comment_form() {
 		$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
 		$server_ip_fourth_char = substr($_SERVER['SERVER_ADDR'], 3, 1);
 		if ( $server_ip_first_char == '6' ) {
-			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '7' ) {
-			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '8' ) {
-			echo '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '9' ) {
-			echo '<p style="font-size:9px;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
 			}
 		else if ( $server_ip_fourth_char == '5' ) {
-			echo '<p style="font-size:9px;"><a href="http://wordpress.org/extend/plugins/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://wordpress.org/extend/plugins/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else {
-			echo '<p style="font-size:9px;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
 			}
 		}
 	
@@ -954,13 +954,13 @@ function spamfree_contact_form($content) {
 			if ( $PromotePluginLink ) {
 				$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
 				if ( $server_ip_first_char == '7' ) {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >Contact Form</a> Powered by WP-SpamFree</p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >Contact Form</a> Powered by WP-SpamFree</p>'."\n";
 					}
 				else if ( $server_ip_first_char == '6' ) {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;">Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree Contact Form</a></p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree Contact Form</a></p>'."\n";
 					}
 				else {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;">Contact Form Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Contact Form Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
 					}
 				$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 				}
@@ -2065,7 +2065,8 @@ function spamfree_content_filter($commentdata) {
 	$filter_200_limit = 1;
 	$filter_200_trackback_limit = 1;
 
-	// SEO/WebDev/Offshore-Related Filter - Authors Only - Non-Trackback
+	// Authors Only - Non-Trackback
+	// SEO/WebDev/Offshore-Related Filter - 
 	// Filter 300: Number of occurrences of 'web development' in comment_content
 	$filter_300_term = 'web development'; //'web development'
 	$filter_300_count = substr_count($commentdata_comment_content_lc, $filter_300_term);
@@ -2389,10 +2390,56 @@ function spamfree_content_filter($commentdata) {
 	$filter_335_author_count = substr_count($commentdata_comment_author_lc, $filter_335_term);
 	$filter_335_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_count;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;	
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;
+	// Other
+	// Filter 336: Number of occurrences of 'company' in comment_content
+	$filter_336_term = 'company';
+	$filter_336_count = substr_count($commentdata_comment_content_lc, $filter_336_term);
+	$filter_336_limit = 15;
+	$filter_336_trackback_limit = 15;
+	$filter_336_author_count = substr_count($commentdata_comment_author_lc, $filter_336_term);
+	$filter_336_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_336_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_336_author_count;
+	// Filter 337: Number of occurrences of 'blackjack' in comment_content
+	$filter_337_term = 'blackjack';
+	$filter_337_count = substr_count($commentdata_comment_content_lc, $filter_337_term);
+	$filter_337_limit = 12;
+	$filter_337_trackback_limit = 12;
+	$filter_337_author_count = substr_count($commentdata_comment_author_lc, $filter_337_term);
+	$filter_337_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_337_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_337_author_count;
+	// Filter 338: Number of occurrences of 'website' in comment_content
+	$filter_338_term = 'website';
+	$filter_338_count = substr_count($commentdata_comment_content_lc, $filter_338_term);
+	$filter_338_limit = 25;
+	$filter_338_trackback_limit = 25;
+	$filter_338_author_count = substr_count($commentdata_comment_author_lc, $filter_338_term);
+	$filter_338_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_338_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_338_author_count;
+	// Filter 339: Number of occurrences of 'template' in comment_content
+	$filter_339_term = 'template';
+	$filter_339_count = substr_count($commentdata_comment_content_lc, $filter_339_term);
+	$filter_339_limit = 25;
+	$filter_339_trackback_limit = 25;
+	$filter_339_author_count = substr_count($commentdata_comment_author_lc, $filter_339_term);
+	$filter_339_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_339_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_339_author_count;
+	// Filter 340: Number of occurrences of 'gambling' in comment_content
+	$filter_340_term = 'gambling';
+	$filter_340_count = substr_count($commentdata_comment_content_lc, $filter_340_term);
+	$filter_340_limit = 12;
+	$filter_340_trackback_limit = 12;
+	$filter_340_author_count = substr_count($commentdata_comment_author_lc, $filter_340_term);
+	$filter_340_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_340_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_340_author_count;
 
 
-	//Simple Author='' Tests
+	//Simple Author equals X (==) Tests
 	$filter_400_term = 'business';
 	$filter_401_term = 'marketing';
 	$filter_402_term = 'cialis';
@@ -2402,7 +2449,6 @@ function spamfree_content_filter($commentdata) {
 	$filter_406_term = 'insurance';
 	$filter_407_term = 'development';
 	$filter_408_term = 'software';
-	$filter_409_term = 'company';
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -4302,7 +4348,7 @@ function spamfree_content_filter($commentdata) {
 		}
 	if ( $filter_210_count ) { $blacklist_word_combo++; }
 	
-	// Comment Author Tests - Non-Trackback - SEO/WebDev/Offshore
+	// Comment Author Tests - Non-Trackback - SEO/WebDev/Offshore + Other
 	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 		if ( $filter_300_author_count >= 1 ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
@@ -4448,6 +4494,26 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 335AUTH';
 			}
+		if ( $filter_336_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 336AUTH';
+			}
+		if ( $filter_337_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 337AUTH';
+			}
+		if ( $filter_338_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 338AUTH';
+			}
+		if ( $filter_339_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 339AUTH';
+			}
+		if ( $filter_340_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 340AUTH';
+			}
 
 	
 		// Simple Author='' Tests - Non-Trackback/Non-Pingback
@@ -4487,11 +4553,6 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 408AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_409_term ) {
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 409AUTH';
-			}
-
 		}
 	
 	// Blacklist Word Combinations
@@ -5313,7 +5374,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.0.8";
+			$plugin_db_version = "2.0.0.9";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
