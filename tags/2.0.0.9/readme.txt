@@ -83,9 +83,7 @@ Or, you can simply use the widget. It displays stats in the style of small count
 = Adding a Contact Form to Your Blog =
 First create a page (not post) where you want to have your contact form. Then, insert the following tag (using the HTML editing tab, NOT the Visual editor) and you're done: `<!--spamfree-contact-->`
 
-There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, set the minimum message length, set the form recipient, enter a custom message to be displayed upon successful contact form submission, and choose whether or not to include user technical data in the email.
-
-If you want to modify the style of the form using CSS, all the form elements have an ID attribute you can reference in your stylesheet.
+There is no need to configure the form. It allows you to simply drop it into the page you want to install it on. However, there are a few basic configuration options. You can choose whether or not to include Phone and Website fields, whether they should be required, add a drop down menu with up to 10 options, set the width and height of the Message box, and the minimum message length.
 
 **What the Contact Form feature IS:** A simple drop-in contact form that won't get spammed. 
 
