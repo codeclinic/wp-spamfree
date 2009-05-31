@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.1
+Version: 2.0.1.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.1';
+	$wpSpamFreeVer='2.0.1.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -119,6 +119,7 @@ function spamfree_update_keys($reset_keys) {
 		'use_trackback_verification'		 	=> $spamfree_options['use_trackback_verification'],
 		'comment_logging'						=> $spamfree_options['comment_logging'],
 		'comment_logging_start_date'			=> $spamfree_options['comment_logging_start_date'],
+		'comment_logging_all'					=> $spamfree_options['comment_logging_all'],
 		'form_include_website' 					=> $spamfree_options['form_include_website'],
 		'form_require_website' 					=> $spamfree_options['form_require_website'],
 		'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -392,6 +393,7 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 	
 	$CommentLogging 			= $spamfree_options['comment_logging'];
 	$CommentLoggingStartDate 	= $spamfree_options['comment_logging_start_date'];
+	$CommentLoggingAll 			= $spamfree_options['comment_logging_all'];
 	
 	$GetCurrentTime = time();
 	$ResetIntervalHours = 24 * 3; // Reset interval in hours
@@ -409,6 +411,7 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 		//spamfree_log_reset();
 		$CommentLogging = 0;
 		$CommentLoggingStartDate = 0;
+		$CommentLoggingAll = 0;
 		$spamfree_options_update = array (
 			'cookie_validation_name' 				=> $spamfree_options['cookie_validation_name'],
 			'cookie_validation_key' 				=> $spamfree_options['cookie_validation_key'],
@@ -429,6 +432,7 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 			'use_trackback_verification' 			=> $spamfree_options['use_trackback_verification'],
 			'comment_logging'						=> $CommentLogging,
 			'comment_logging_start_date'			=> $CommentLoggingStartDate,
+			'comment_logging_all'					=> $CommentLoggingAll,
 			'form_include_website' 					=> $spamfree_options['form_include_website'],
 			'form_require_website' 					=> $spamfree_options['form_require_website'],
 			'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -514,6 +518,7 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 			$wpsf_log_comment_data .= '[none]';
 			}
 		$wpsf_log_comment_data .= "\n";
+		if ( !$wpsf_log_comment_data_errors ) { $wpsf_log_comment_data_errors = '[none]'; }
 		$wpsf_log_comment_data .= "Failed Test Code(s): ".$wpsf_log_comment_data_errors."\n";
 		$wpsf_log_comment_data .= ":: ".$wpsf_log_comment_type_display." END ::"."\n\n";
 		
@@ -786,6 +791,7 @@ function spamfree_contact_form($content) {
 				}
 			
 			$wpsf_contact_form_msg_2 .= "\n";
+			//Check following variables tomake sure not repeating
 			if ( $FormIncludeUserMeta ) {
 				/*
 				$wpsf_contact_form_msg_2 .= "\n";
@@ -813,8 +819,11 @@ function spamfree_contact_form($content) {
 				// SEND MESSAGE
 				@wp_mail( $wpsf_contact_form_to, $wpsf_contact_form_subject, $wpsf_contact_form_msg, $wpsf_contact_form_msg_headers );								
 				$contact_response_status = 'thank-you';
+				$spamfree_error_code = 'No Error';
+				if ( $spamfree_options['comment_logging'] && $spamfree_options['comment_logging_all'] ) {
+					spamfree_log_data( '', $spamfree_error_code, 'contact form', $wpsf_contact_form_msg );
+					}
 				}
-				
 			else {
 				update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
 				if ( $spamfree_options['comment_logging'] ) {
@@ -985,16 +994,25 @@ function spamfree_contact_form($content) {
 			
 			
 			$spamfree_contact_form_ip_bans = array(
+													'66.60.98.1',
+													'67.227.135.200',
+													'74.86.148.194',
 													'77.92.88.13',
 													'77.92.88.27',
 													'78.129.202.15',
 													'78.129.202.2',
 													'78.157.143.202',
+													'87.106.55.101',
+													'91.121.77.168',
 													'92.241.176.200',
 													'92.48.122.2',
 													'92.48.122.3',
 													'92.48.65.27',
 													'92.241.168.216',
+													'115.42.64.19',
+													'116.71.33.252',
+													'116.71.35.192',
+													'116.71.59.69',
 													'122.160.70.94',
 													'122.162.251.167',
 													'123.237.144.189',
@@ -1004,11 +1022,11 @@ function spamfree_contact_form($content) {
 													'193.46.236.151',
 													'193.46.236.152',
 													'193.46.236.234',
-													'91.121.77.168',
 													);
+			// Check following variables to make sure not repeating										
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
-			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) || eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) || eregi( "clients.your-server.de$", $ReverseDNS ) ) {
+			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116.71.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) || eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) || eregi( "clients.your-server.de$", $ReverseDNS ) || eregi( "^rover-host.com$", $commentdata_remote_host_lc ) || eregi( "^rover-host.com$", $ReverseDNS ) || eregi( "^host.lotosus.com$", $commentdata_remote_host_lc ) || eregi( "^host.lotosus.com$", $ReverseDNS ) || ( eregi( "^192.168.", $commentdata_remote_addr_lc ) && !eregi( "^192.168.", $_SERVER['SERVER_ADDR'] ) && !eregi( 'localhost', $_SERVER['SERVER_NAME'] ) ) ) {
 				// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
 				// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
 				// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
@@ -1016,6 +1034,12 @@ function spamfree_contact_form($content) {
 				// KeywordSpy caught using IP's in the range 123.237.144. and 123.237.147.
 				// 91.121.77.168 real-url.org
 				// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
+				
+				// 87.106.55.101 SPAM NETWORK - SERVERS, NOT ISP - (.websitehome.co.uk)
+				// 74.86.148.194 SPAM NETWORK - WEB HOST, NOT ISP (rover-host.com)
+				// 67.227.135.200 SPAM NETWORK - WEB HOST, NOT ISP (host.lotosus.com)
+				// 66.60.98.1 SPAM NETWORK - WEB SITE/HOST, NOT ISP - (rdns.softwiseonline.com)
+				// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
 				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
@@ -1052,6 +1076,9 @@ function spamfree_check_comment_type($commentdata) {
 			$content_filter_status 	= spamfree_content_filter($commentdata);
 			}
 		*/
+		
+		
+		
 		if ( !$content_short_status ) {
 			$content_filter_status 	= spamfree_content_filter($commentdata);
 			}		
@@ -1084,13 +1111,17 @@ function spamfree_check_comment_type($commentdata) {
 					$spamfree_error_code = 'COOKIE';
 					spamfree_log_data( $commentdata, $spamfree_error_code );
 					}
+				else if ( $spamfree_options['comment_logging_all'] ) {
+					$spamfree_error_code = 'No Error';
+					spamfree_log_data( $commentdata, $spamfree_error_code );
+					}
 				}
 			// LOG DATA :: END
 			}
-
+			
 		// ONLY IF NOT ADMINS :: END
 		}
-		
+			
 	return $commentdata;
 	}
 
@@ -1260,7 +1291,7 @@ function spamfree_content_short($commentdata) {
 		$content_short_status = true;
 		$spamfree_error_code .= ' SHORT10';
 		}
-		
+	
 	if ( !$spamfree_error_code ) {
 		$spamfree_error_code = 'No Error';
 		}
@@ -2072,304 +2103,304 @@ function spamfree_content_filter($commentdata) {
 
 	// Authors Only - Non-Trackback
 	// SEO/WebDev/Offshore-Related Filter - 
-	// Filter 300: Number of occurrences of 'web development' in comment_content
+	// Filter 300: Number of occurrences of 'web development' in comment_author
 	$filter_300_term = 'web development'; //'web development'
 	$filter_300_count = substr_count($commentdata_comment_content_lc, $filter_300_term);
 	$filter_300_limit = 8;
 	$filter_300_trackback_limit = 8;
 	$filter_300_author_count = substr_count($commentdata_comment_author_lc, $filter_300_term);
 	$filter_300_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_300_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_300_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_300_author_count;
-	// Filter 301: Number of occurrences of 'website development' in comment_content
+	// Filter 301: Number of occurrences of 'website development' in comment_author
 	$filter_301_term = 'website development';
 	$filter_301_count = substr_count($commentdata_comment_content_lc, $filter_301_term);
 	$filter_301_limit = 8;
 	$filter_301_trackback_limit = 8;
 	$filter_301_author_count = substr_count($commentdata_comment_author_lc, $filter_301_term);
 	$filter_301_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_301_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_301_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_301_author_count;
-	// Filter 302: Number of occurrences of 'web site development' in comment_content
+	// Filter 302: Number of occurrences of 'web site development' in comment_author
 	$filter_302_term = 'web site development';
 	$filter_302_count = substr_count($commentdata_comment_content_lc, $filter_302_term);
 	$filter_302_limit = 8;
 	$filter_302_trackback_limit = 8;
 	$filter_302_author_count = substr_count($commentdata_comment_author_lc, $filter_302_term);
 	$filter_302_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_302_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_302_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_302_author_count;
-	// Filter 303: Number of occurrences of 'web design' in comment_content
+	// Filter 303: Number of occurrences of 'web design' in comment_author
 	$filter_303_term = 'web design';
 	$filter_303_count = substr_count($commentdata_comment_content_lc, $filter_303_term);
 	$filter_303_limit = 8;
 	$filter_303_trackback_limit = 8;
 	$filter_303_author_count = substr_count($commentdata_comment_author_lc, $filter_303_term);
 	$filter_303_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_303_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_303_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_303_author_count;
-	// Filter 304: Number of occurrences of 'website design' in comment_content
+	// Filter 304: Number of occurrences of 'website design' in comment_author
 	$filter_304_term = 'website design';
 	$filter_304_count = substr_count($commentdata_comment_content_lc, $filter_304_term);
 	$filter_304_limit = 8;
 	$filter_304_trackback_limit = 8;
 	$filter_304_author_count = substr_count($commentdata_comment_author_lc, $filter_304_term);
 	$filter_304_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_304_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_304_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_304_author_count;
-	// Filter 305: Number of occurrences of 'web site design' in comment_content
+	// Filter 305: Number of occurrences of 'web site design' in comment_author
 	$filter_305_term = 'web site design';
 	$filter_305_count = substr_count($commentdata_comment_content_lc, $filter_305_term);
 	$filter_305_limit = 8;
 	$filter_305_trackback_limit = 8;
 	$filter_305_author_count = substr_count($commentdata_comment_author_lc, $filter_305_term);
 	$filter_305_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_305_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_305_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_305_author_count;
-	// Filter 306: Number of occurrences of 'search engine optimization' in comment_content
+	// Filter 306: Number of occurrences of 'search engine optimization' in comment_author
 	$filter_306_term = 'search engine optimization';
 	$filter_306_count = substr_count($commentdata_comment_content_lc, $filter_306_term);
 	$filter_306_limit = 8;
 	$filter_306_trackback_limit = 8;
 	$filter_306_author_count = substr_count($commentdata_comment_author_lc, $filter_306_term);
 	$filter_306_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_306_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_306_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_306_author_count;
-	// Filter 307: Number of occurrences of 'link building' in comment_content
+	// Filter 307: Number of occurrences of 'link building' in comment_author
 	$filter_307_term = 'link building';
 	$filter_307_count = substr_count($commentdata_comment_content_lc, $filter_307_term);
 	$filter_307_limit = 8;
 	$filter_307_trackback_limit = 8;
 	$filter_307_author_count = substr_count($commentdata_comment_author_lc, $filter_307_term);
 	$filter_307_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_307_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_307_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_307_author_count;
-	// Filter 308: Number of occurrences of 'india offshore' in comment_content
+	// Filter 308: Number of occurrences of 'india offshore' in comment_author
 	$filter_308_term = 'india offshore';
 	$filter_308_count = substr_count($commentdata_comment_content_lc, $filter_308_term);
 	$filter_308_limit = 8;
 	$filter_308_trackback_limit = 8;
 	$filter_308_author_count = substr_count($commentdata_comment_author_lc, $filter_308_term);
 	$filter_308_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_308_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_308_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_308_author_count;
-	// Filter 309: Number of occurrences of 'offshore india' in comment_content
+	// Filter 309: Number of occurrences of 'offshore india' in comment_author
 	$filter_309_term = 'offshore india';
 	$filter_309_count = substr_count($commentdata_comment_content_lc, $filter_309_term);
 	$filter_309_limit = 8;
 	$filter_309_trackback_limit = 8;
 	$filter_309_author_count = substr_count($commentdata_comment_author_lc, $filter_309_term);
 	$filter_309_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_309_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_309_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_309_author_count;
-	// Filter 310: Number of occurrences of ' seo ' in comment_content & comment_author
+	// Filter 310: Number of occurrences of ' seo ' in comment_author & comment_author
 	$filter_310_term = ' seo ';
 	$filter_310_count = substr_count($commentdata_comment_content_lc, $filter_310_term);
 	$filter_310_limit = 8;
 	$filter_310_trackback_limit = 8;
 	$filter_310_author_count = substr_count($commentdata_comment_author_lc_space, $filter_310_term);
 	$filter_310_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_310_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_310_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_310_author_count;
-	// Filter 311: Number of occurrences of 'search engine marketing' in comment_content
+	// Filter 311: Number of occurrences of 'search engine marketing' in comment_author
 	$filter_311_term = 'search engine marketing';
 	$filter_311_count = substr_count($commentdata_comment_content_lc, $filter_311_term);
 	$filter_311_limit = 8;
 	$filter_311_trackback_limit = 8;
 	$filter_311_author_count = substr_count($commentdata_comment_author_lc, $filter_311_term);
 	$filter_311_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_311_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_311_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_311_author_count;
-	// Filter 312: Number of occurrences of 'internet marketing' in comment_content
+	// Filter 312: Number of occurrences of 'internet marketing' in comment_author
 	$filter_312_term = 'internet marketing';
 	$filter_312_count = substr_count($commentdata_comment_content_lc, $filter_312_term);
 	$filter_312_limit = 8;
 	$filter_312_trackback_limit = 8;
 	$filter_312_author_count = substr_count($commentdata_comment_author_lc, $filter_312_term);
 	$filter_312_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_312_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_312_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_312_author_count;
-	// Filter 313: Number of occurrences of 'social media optimization' in comment_content
+	// Filter 313: Number of occurrences of 'social media optimization' in comment_author
 	$filter_313_term = 'social media optimization';
 	$filter_313_count = substr_count($commentdata_comment_content_lc, $filter_313_term);
 	$filter_313_limit = 8;
 	$filter_313_trackback_limit = 8;
 	$filter_313_author_count = substr_count($commentdata_comment_author_lc, $filter_313_term);
 	$filter_313_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_313_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_313_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_313_author_count;
-	// Filter 314: Number of occurrences of 'social media marketing' in comment_content
+	// Filter 314: Number of occurrences of 'social media marketing' in comment_author
 	$filter_314_term = 'social media marketing';
 	$filter_314_count = substr_count($commentdata_comment_content_lc, $filter_314_term);
 	$filter_314_limit = 8;
 	$filter_314_trackback_limit = 8;
 	$filter_314_author_count = substr_count($commentdata_comment_author_lc, $filter_314_term);
 	$filter_314_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_314_author_count;
-	// Filter 315: Number of occurrences of 'web developer' in comment_content
+	// Filter 315: Number of occurrences of 'web developer' in comment_author
 	$filter_315_term = 'web developer'; //'web development'
 	$filter_315_count = substr_count($commentdata_comment_content_lc, $filter_315_term);
 	$filter_315_limit = 8;
 	$filter_315_trackback_limit = 8;
 	$filter_315_author_count = substr_count($commentdata_comment_author_lc, $filter_315_term);
 	$filter_315_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_315_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_315_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_315_author_count;
-	// Filter 316: Number of occurrences of 'website developer' in comment_content
+	// Filter 316: Number of occurrences of 'website developer' in comment_author
 	$filter_316_term = 'website developer';
 	$filter_316_count = substr_count($commentdata_comment_content_lc, $filter_316_term);
 	$filter_316_limit = 8;
 	$filter_316_trackback_limit = 8;
 	$filter_316_author_count = substr_count($commentdata_comment_author_lc, $filter_316_term);
 	$filter_316_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_316_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_316_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_316_author_count;
-	// Filter 317: Number of occurrences of 'web site developer' in comment_content
+	// Filter 317: Number of occurrences of 'web site developer' in comment_author
 	$filter_317_term = 'web site developer';
 	$filter_317_count = substr_count($commentdata_comment_content_lc, $filter_317_term);
 	$filter_317_limit = 8;
 	$filter_317_trackback_limit = 8;
 	$filter_317_author_count = substr_count($commentdata_comment_author_lc, $filter_317_term);
 	$filter_317_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_317_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_317_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_317_author_count;
-	// Filter 318: Number of occurrences of 'javascript' in comment_content
+	// Filter 318: Number of occurrences of 'javascript' in comment_author
 	$filter_318_term = 'javascript';
 	$filter_318_count = substr_count($commentdata_comment_content_lc, $filter_318_term);
 	$filter_318_limit = 8;
 	$filter_318_trackback_limit = 8;
 	$filter_318_author_count = substr_count($commentdata_comment_author_lc, $filter_318_term);
 	$filter_318_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_318_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_318_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_318_author_count;
-	// Filter 319: Number of occurrences of 'search engine optimizer' in comment_content
+	// Filter 319: Number of occurrences of 'search engine optimizer' in comment_author
 	$filter_319_term = 'search engine optimizer';
 	$filter_319_count = substr_count($commentdata_comment_content_lc, $filter_319_term);
 	$filter_319_limit = 8;
 	$filter_319_trackback_limit = 8;
 	$filter_319_author_count = substr_count($commentdata_comment_author_lc, $filter_319_term);
 	$filter_319_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_319_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_319_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_319_author_count;
-	// Filter 320: Number of occurrences of 'link builder' in comment_content
+	// Filter 320: Number of occurrences of 'link builder' in comment_author
 	$filter_320_term = 'link builder';
 	$filter_320_count = substr_count($commentdata_comment_content_lc, $filter_320_term);
 	$filter_320_limit = 8;
 	$filter_320_trackback_limit = 8;
 	$filter_320_author_count = substr_count($commentdata_comment_author_lc, $filter_320_term);
 	$filter_320_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_320_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_320_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_320_author_count;
-	// Filter 321: Number of occurrences of 'search engine marketer' in comment_content
+	// Filter 321: Number of occurrences of 'search engine marketer' in comment_author
 	$filter_321_term = 'search engine marketer';
 	$filter_321_count = substr_count($commentdata_comment_content_lc, $filter_321_term);
 	$filter_321_limit = 8;
 	$filter_321_trackback_limit = 8;
 	$filter_321_author_count = substr_count($commentdata_comment_author_lc, $filter_321_term);
 	$filter_321_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_321_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_321_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_321_author_count;
-	// Filter 322: Number of occurrences of 'internet marketer' in comment_content
+	// Filter 322: Number of occurrences of 'internet marketer' in comment_author
 	$filter_322_term = 'internet marketer';
 	$filter_322_count = substr_count($commentdata_comment_content_lc, $filter_322_term);
 	$filter_322_limit = 8;
 	$filter_322_trackback_limit = 8;
 	$filter_322_author_count = substr_count($commentdata_comment_author_lc, $filter_322_term);
 	$filter_322_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_322_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_322_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_322_author_count;
-	// Filter 323: Number of occurrences of 'social media optimizer' in comment_content
+	// Filter 323: Number of occurrences of 'social media optimizer' in comment_author
 	$filter_323_term = 'social media optimizer';
 	$filter_323_count = substr_count($commentdata_comment_content_lc, $filter_323_term);
 	$filter_323_limit = 8;
 	$filter_323_trackback_limit = 8;
 	$filter_323_author_count = substr_count($commentdata_comment_author_lc, $filter_323_term);
 	$filter_323_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_323_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_323_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_323_author_count;
-	// Filter 324: Number of occurrences of 'social media marketer' in comment_content
+	// Filter 324: Number of occurrences of 'social media marketer' in comment_author
 	$filter_324_term = 'social media marketer';
 	$filter_324_count = substr_count($commentdata_comment_content_lc, $filter_324_term);
 	$filter_324_limit = 8;
 	$filter_324_trackback_limit = 8;
 	$filter_324_author_count = substr_count($commentdata_comment_author_lc, $filter_324_term);
 	$filter_324_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_324_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_324_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_324_author_count;
-	// Filter 325: Number of occurrences of 'social media consultant' in comment_content
+	// Filter 325: Number of occurrences of 'social media consultant' in comment_author
 	$filter_325_term = 'social media consultant';
 	$filter_325_count = substr_count($commentdata_comment_content_lc, $filter_325_term);
 	$filter_325_limit = 8;
 	$filter_325_trackback_limit = 8;
 	$filter_325_author_count = substr_count($commentdata_comment_author_lc, $filter_325_term);
 	$filter_325_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_325_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_325_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_325_author_count;
-	// Filter 326: Number of occurrences of 'social media consulting' in comment_content
+	// Filter 326: Number of occurrences of 'social media consulting' in comment_author
 	$filter_326_term = 'social media consulting';
 	$filter_326_count = substr_count($commentdata_comment_content_lc, $filter_326_term);
 	$filter_326_limit = 8;
 	$filter_326_trackback_limit = 8;
 	$filter_326_author_count = substr_count($commentdata_comment_author_lc, $filter_326_term);
 	$filter_326_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_326_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_326_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_326_author_count;
-	// Filter 327: Number of occurrences of 'web promotion' in comment_content
+	// Filter 327: Number of occurrences of 'web promotion' in comment_author
 	$filter_327_term = 'web promotion'; 
 	$filter_327_count = substr_count($commentdata_comment_content_lc, $filter_327_term);
 	$filter_327_limit = 8;
 	$filter_327_trackback_limit = 8;
 	$filter_327_author_count = substr_count($commentdata_comment_author_lc, $filter_327_term);
 	$filter_327_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_327_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_327_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_327_author_count;
-	// Filter 328: Number of occurrences of 'website promotion' in comment_content
+	// Filter 328: Number of occurrences of 'website promotion' in comment_author
 	$filter_328_term = 'website promotion';
 	$filter_328_count = substr_count($commentdata_comment_content_lc, $filter_328_term);
 	$filter_328_limit = 8;
 	$filter_328_trackback_limit = 8;
 	$filter_328_author_count = substr_count($commentdata_comment_author_lc, $filter_328_term);
 	$filter_328_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_328_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_328_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_328_author_count;
-	// Filter 329: Number of occurrences of 'web site promotion' in comment_content
+	// Filter 329: Number of occurrences of 'web site promotion' in comment_author
 	$filter_329_term = 'web site promotion';
 	$filter_329_count = substr_count($commentdata_comment_content_lc, $filter_329_term);
 	$filter_329_limit = 8;
 	$filter_329_trackback_limit = 8;
 	$filter_329_author_count = substr_count($commentdata_comment_author_lc, $filter_329_term);
 	$filter_329_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_329_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_329_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_329_author_count;
-	// Filter 330: Number of occurrences of 'search engine ranking' in comment_content
+	// Filter 330: Number of occurrences of 'search engine ranking' in comment_author
 	$filter_330_term = 'search engine ranking';
 	$filter_330_count = substr_count($commentdata_comment_content_lc, $filter_330_term);
 	$filter_330_limit = 8;
 	$filter_330_trackback_limit = 8;
 	$filter_330_author_count = substr_count($commentdata_comment_author_lc, $filter_330_term);
 	$filter_330_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_330_author_count;
-	// Filter 331: Number of occurrences of 'modulesoft' in comment_content
+	// Filter 331: Number of occurrences of 'modulesoft' in comment_author
 	$filter_331_term = 'modulesoft';
 	$filter_331_count = substr_count($commentdata_comment_content_lc, $filter_331_term);
 	$filter_331_limit = 8;
 	$filter_331_trackback_limit = 8;
 	$filter_331_author_count = substr_count($commentdata_comment_author_lc, $filter_331_term);
 	$filter_331_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_331_author_count;
-	// Filter 332: Number of occurrences of 'zoekmachine optimalisatie' in comment_content
+	// Filter 332: Number of occurrences of 'zoekmachine optimalisatie' in comment_author
 	$filter_332_term = 'zoekmachine optimalisatie';
 	$filter_332_count = substr_count($commentdata_comment_content_lc, $filter_332_term);
 	$filter_332_limit = 8;
 	$filter_332_trackback_limit = 8;
 	$filter_332_author_count = substr_count($commentdata_comment_author_lc, $filter_332_term);
 	$filter_332_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_332_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_332_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_332_author_count;
-	// Filter 333: Number of occurrences of 'data entry india' in comment_content
+	// Filter 333: Number of occurrences of 'data entry india' in comment_author
 	$filter_333_term = 'data entry india';
 	$filter_333_count = substr_count($commentdata_comment_content_lc, $filter_333_term);
 	$filter_333_limit = 8;
@@ -2378,82 +2409,528 @@ function spamfree_content_filter($commentdata) {
 	$filter_333_author_limit = 1;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_333_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_333_author_count;
-	// Filter 334: Number of occurrences of 'webdesigner' in comment_content
+	// Filter 334: Number of occurrences of 'webdesigner' in comment_author
 	$filter_334_term = 'webdesigner';
 	$filter_334_count = substr_count($commentdata_comment_content_lc, $filter_334_term);
 	$filter_334_limit = 8;
 	$filter_334_trackback_limit = 8;
 	$filter_334_author_count = substr_count($commentdata_comment_author_lc, $filter_334_term);
 	$filter_334_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_334_author_count;
-	// Filter 335: Number of occurrences of 'webdesign' in comment_content
+	// Filter 335: Number of occurrences of 'webdesign' in comment_author
 	$filter_335_term = 'webdesign';
 	$filter_335_count = substr_count($commentdata_comment_content_lc, $filter_335_term);
 	$filter_335_limit = 8;
 	$filter_335_trackback_limit = 8;
 	$filter_335_author_count = substr_count($commentdata_comment_author_lc, $filter_335_term);
 	$filter_335_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_335_author_count;
 	// Other
-	// Filter 336: Number of occurrences of 'company' in comment_content
+	// Filter 336: Number of occurrences of 'company' in comment_author
 	$filter_336_term = 'company';
 	$filter_336_count = substr_count($commentdata_comment_content_lc, $filter_336_term);
 	$filter_336_limit = 15;
 	$filter_336_trackback_limit = 15;
 	$filter_336_author_count = substr_count($commentdata_comment_author_lc, $filter_336_term);
 	$filter_336_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_336_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_336_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_336_author_count;
-	// Filter 337: Number of occurrences of 'blackjack' in comment_content
+	// Filter 337: Number of occurrences of 'blackjack' in comment_author
 	$filter_337_term = 'blackjack';
 	$filter_337_count = substr_count($commentdata_comment_content_lc, $filter_337_term);
 	$filter_337_limit = 12;
 	$filter_337_trackback_limit = 12;
 	$filter_337_author_count = substr_count($commentdata_comment_author_lc, $filter_337_term);
 	$filter_337_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_337_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_337_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_337_author_count;
-	// Filter 338: Number of occurrences of 'website' in comment_content
+	// Filter 338: Number of occurrences of 'website' in comment_author
 	$filter_338_term = 'website';
 	$filter_338_count = substr_count($commentdata_comment_content_lc, $filter_338_term);
 	$filter_338_limit = 25;
 	$filter_338_trackback_limit = 25;
 	$filter_338_author_count = substr_count($commentdata_comment_author_lc, $filter_338_term);
 	$filter_338_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_338_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_338_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_338_author_count;
-	// Filter 339: Number of occurrences of 'template' in comment_content
+	// Filter 339: Number of occurrences of 'template' in comment_author
 	$filter_339_term = 'template';
 	$filter_339_count = substr_count($commentdata_comment_content_lc, $filter_339_term);
 	$filter_339_limit = 25;
 	$filter_339_trackback_limit = 25;
 	$filter_339_author_count = substr_count($commentdata_comment_author_lc, $filter_339_term);
 	$filter_339_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_339_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_339_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_339_author_count;
-	// Filter 340: Number of occurrences of 'gambling' in comment_content
+	// Filter 340: Number of occurrences of 'gambling' in comment_author
 	$filter_340_term = 'gambling';
 	$filter_340_count = substr_count($commentdata_comment_content_lc, $filter_340_term);
 	$filter_340_limit = 12;
 	$filter_340_trackback_limit = 12;
 	$filter_340_author_count = substr_count($commentdata_comment_author_lc, $filter_340_term);
 	$filter_340_author_limit = 1;
-	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_340_count;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_340_count;
 	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_340_author_count;
+	// Filter 341: Number of occurrences of 'phpdug' in comment_author
+	$filter_341_term = 'phpdug';
+	$filter_341_count = substr_count($commentdata_comment_content_lc, $filter_341_term);
+	$filter_341_limit = 12;
+	$filter_341_trackback_limit = 12;
+	$filter_341_author_count = substr_count($commentdata_comment_author_lc, $filter_341_term);
+	$filter_341_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_341_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_341_author_count;
+	// Filter 342: Number of occurrences of 'social poster' in comment_author
+	$filter_342_term = 'social poster';
+	$filter_342_count = substr_count($commentdata_comment_content_lc, $filter_342_term);
+	$filter_342_limit = 12;
+	$filter_342_trackback_limit = 12;
+	$filter_342_author_count = substr_count($commentdata_comment_author_lc, $filter_342_term);
+	$filter_342_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_342_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_342_author_count;
+	// Filter 343: Number of occurrences of 'submitter' in comment_author
+	$filter_343_term = 'submitter';
+	$filter_343_count = substr_count($commentdata_comment_content_lc, $filter_343_term);
+	$filter_343_limit = 30;
+	$filter_343_trackback_limit = 30;
+	$filter_343_author_count = substr_count($commentdata_comment_author_lc, $filter_343_term);
+	$filter_343_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_343_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_343_author_count;
+	// Filter 344: Number of occurrences of ' review' in comment_author
+	$filter_344_term = ' review';
+	$filter_344_count = substr_count($commentdata_comment_content_lc, $filter_344_term);
+	$filter_344_limit = 30;
+	$filter_344_trackback_limit = 30;
+	$filter_344_author_count = substr_count($commentdata_comment_author_lc, $filter_344_term);
+	$filter_344_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_344_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_344_author_count;
+	// Filter 345: Number of occurrences of 'property vault' in comment_author
+	$filter_345_term = 'property vault';
+	$filter_345_count = substr_count($commentdata_comment_content_lc, $filter_345_term);
+	$filter_345_limit = 12;
+	$filter_345_trackback_limit = 12;
+	$filter_345_author_count = substr_count($commentdata_comment_author_lc, $filter_345_term);
+	$filter_345_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_345_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_345_author_count;
+	// Filter 346: Number of occurrences of ' seminar' in comment_author
+	$filter_346_term = ' seminar';
+	$filter_346_count = substr_count($commentdata_comment_content_lc, $filter_346_term);
+	$filter_346_limit = 25;
+	$filter_346_trackback_limit = 25;
+	$filter_346_author_count = substr_count($commentdata_comment_author_lc, $filter_346_term);
+	$filter_346_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_346_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_346_author_count;
+	// Filter 347: Number of occurrences of 'foreclosure' in comment_author
+	$filter_347_term = 'foreclosure';
+	$filter_347_count = substr_count($commentdata_comment_content_lc, $filter_347_term);
+	$filter_347_limit = 25;
+	$filter_347_trackback_limit = 25;
+	$filter_347_author_count = substr_count($commentdata_comment_author_lc, $filter_347_term);
+	$filter_347_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_347_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_347_author_count;
+	// Filter 348: Number of occurrences of 'trackback submitter' in comment_author
+	$filter_348_term = 'trackback submitter';
+	$filter_348_count = substr_count($commentdata_comment_content_lc, $filter_348_term);
+	$filter_348_limit = 12;
+	$filter_348_trackback_limit = 12;
+	$filter_348_author_count = substr_count($commentdata_comment_author_lc, $filter_348_term);
+	$filter_348_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_348_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_348_author_count;
+	// Filter 349: Number of occurrences of 'earn money' in comment_author
+	$filter_349_term = 'earn money';
+	$filter_349_count = substr_count($commentdata_comment_content_lc, $filter_349_term);
+	$filter_349_limit = 12;
+	$filter_349_trackback_limit = 12;
+	$filter_349_author_count = substr_count($commentdata_comment_author_lc, $filter_349_term);
+	$filter_349_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_349_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_349_author_count;
+	// Filter 350: Number of occurrences of 'software' in comment_author
+	$filter_350_term = 'software';
+	$filter_350_count = substr_count($commentdata_comment_content_lc, $filter_350_term);
+	$filter_350_limit = 25;
+	$filter_350_trackback_limit = 25;
+	$filter_350_author_count = substr_count($commentdata_comment_author_lc, $filter_350_term);
+	$filter_350_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_350_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_350_author_count;
+	// Filter 351: Number of occurrences of 'home design' in comment_author
+	$filter_351_term = 'home design';
+	$filter_351_count = substr_count($commentdata_comment_content_lc, $filter_351_term);
+	$filter_351_limit = 25;
+	$filter_351_trackback_limit = 25;
+	$filter_351_author_count = substr_count($commentdata_comment_author_lc, $filter_351_term);
+	$filter_351_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_351_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_351_author_count;
+	// Filter 352: Number of occurrences of 'webmaster' in comment_author
+	$filter_352_term = 'webmaster';
+	$filter_352_count = substr_count($commentdata_comment_content_lc, $filter_352_term);
+	$filter_352_limit = 25;
+	$filter_352_trackback_limit = 25;
+	$filter_352_author_count = substr_count($commentdata_comment_author_lc, $filter_352_term);
+	$filter_352_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_352_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_352_author_count;
+	// Filter 353: Number of occurrences of 'learning ' in comment_author
+	$filter_353_term = 'learning ';
+	$filter_353_count = substr_count($commentdata_comment_content_lc, $filter_353_term);
+	$filter_353_limit = 25;
+	$filter_353_trackback_limit = 25;
+	$filter_353_author_count = substr_count($commentdata_comment_author_lc, $filter_353_term);
+	$filter_353_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_353_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_353_author_count;
+	// Filter 354: Number of occurrences of 'student loans' in comment_author
+	$filter_354_term = 'students loans';
+	$filter_354_count = substr_count($commentdata_comment_content_lc, $filter_354_term);
+	$filter_354_limit = 25;
+	$filter_354_trackback_limit = 25;
+	$filter_354_author_count = substr_count($commentdata_comment_author_lc, $filter_354_term);
+	$filter_354_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_354_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_354_author_count;
+	// Filter 355: Number of occurrences of 'comments poster' in comment_author
+	$filter_355_term = 'comments poster';
+	$filter_355_count = substr_count($commentdata_comment_content_lc, $filter_355_term);
+	$filter_355_limit = 12;
+	$filter_355_trackback_limit = 12;
+	$filter_355_author_count = substr_count($commentdata_comment_author_lc, $filter_355_term);
+	$filter_355_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_355_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_355_author_count;
+	// Filter 356: Number of occurrences of 'comment poster' in comment_author
+	$filter_356_term = 'comment poster';
+	$filter_356_count = substr_count($commentdata_comment_content_lc, $filter_356_term);
+	$filter_356_limit = 12;
+	$filter_356_trackback_limit = 12;
+	$filter_356_author_count = substr_count($commentdata_comment_author_lc, $filter_356_term);
+	$filter_356_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_356_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_356_author_count;
+	// Filter 357: Number of occurrences of 'youtube' in comment_author
+	$filter_357_term = 'youtube';
+	$filter_357_count = substr_count($commentdata_comment_content_lc, $filter_357_term);
+	$filter_357_limit = 25;
+	$filter_357_trackback_limit = 25;
+	$filter_357_author_count = substr_count($commentdata_comment_author_lc, $filter_357_term);
+	$filter_357_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_357_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_357_author_count;
+	// Filter 358: Number of occurrences of 'united states' in comment_author
+	$filter_358_term = 'united states';
+	$filter_358_count = substr_count($commentdata_comment_content_lc, $filter_358_term);
+	$filter_358_limit = 25;
+	$filter_358_trackback_limit = 25;
+	$filter_358_author_count = substr_count($commentdata_comment_author_lc, $filter_358_term);
+	$filter_358_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_358_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_358_author_count;
+	// Filter 359: Number of occurrences of 'business' in comment_author
+	$filter_359_term = 'business';
+	$filter_359_count = substr_count($commentdata_comment_content_lc, $filter_359_term);
+	$filter_359_limit = 25;
+	$filter_359_trackback_limit = 25;
+	$filter_359_author_count = substr_count($commentdata_comment_author_lc, $filter_359_term);
+	$filter_359_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_359_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_359_author_count;
+	// Filter 360: Number of occurrences of 'for sale' in comment_author
+	$filter_360_term = 'for sale';
+	$filter_360_count = substr_count($commentdata_comment_content_lc, $filter_360_term);
+	$filter_360_limit = 25;
+	$filter_360_trackback_limit = 25;
+	$filter_360_author_count = substr_count($commentdata_comment_author_lc, $filter_360_term);
+	$filter_360_author_limit = 1;
+	//$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_360_count;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_360_author_count;
+	// After this, remove line: //$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_360_count;
+	// Filter 361: Number of occurrences of 'buy cheap' in comment_author
+	$filter_361_term = 'buy cheap';
+	$filter_361_count = substr_count($commentdata_comment_content_lc, $filter_361_term);
+	$filter_361_limit = 25;
+	$filter_361_trackback_limit = 25;
+	$filter_361_author_count = substr_count($commentdata_comment_author_lc, $filter_361_term);
+	$filter_361_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_361_author_count;
+	// Filter 362: Number of occurrences of 'steroid' in comment_author
+	$filter_362_term = 'steroid';
+	$filter_362_count = substr_count($commentdata_comment_content_lc, $filter_362_term);
+	$filter_362_limit = 25;
+	$filter_362_trackback_limit = 25;
+	$filter_362_author_count = substr_count($commentdata_comment_author_lc, $filter_362_term);
+	$filter_362_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_362_author_count;
+	// Filter 363: Number of occurrences of 'property' in comment_author
+	$filter_363_term = 'property';
+	$filter_363_count = substr_count($commentdata_comment_content_lc, $filter_363_term);
+	$filter_363_limit = 25;
+	$filter_363_trackback_limit = 25;
+	$filter_363_author_count = substr_count($commentdata_comment_author_lc, $filter_363_term);
+	$filter_363_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_363_author_count;
+	// Filter 364: Number of occurrences of 'logo design' in comment_author
+	$filter_364_term = 'logo design';
+	$filter_364_count = substr_count($commentdata_comment_content_lc, $filter_364_term);
+	$filter_364_limit = 25;
+	$filter_364_trackback_limit = 25;
+	$filter_364_author_count = substr_count($commentdata_comment_author_lc, $filter_364_term);
+	$filter_364_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_364_author_count;
+	// Filter 365: Number of occurrences of 'injury lawyer' in comment_author
+	$filter_365_term = 'injury lawyer';
+	$filter_365_count = substr_count($commentdata_comment_content_lc, $filter_365_term);
+	$filter_365_limit = 25;
+	$filter_365_trackback_limit = 25;
+	$filter_365_author_count = substr_count($commentdata_comment_author_lc, $filter_365_term);
+	$filter_365_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_365_author_count;
+	// Filter 366: Number of occurrences of 'internastional' in comment_author
+	$filter_366_term = 'internastional';
+	$filter_366_count = substr_count($commentdata_comment_content_lc, $filter_366_term);
+	$filter_366_limit = 25;
+	$filter_366_trackback_limit = 25;
+	$filter_366_author_count = substr_count($commentdata_comment_author_lc, $filter_366_term);
+	$filter_366_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_366_author_count;
+	// Filter 367: Number of occurrences of 'information' in comment_author
+	$filter_367_term = 'information';
+	$filter_367_count = substr_count($commentdata_comment_content_lc, $filter_367_term);
+	$filter_367_limit = 25;
+	$filter_367_trackback_limit = 25;
+	$filter_367_author_count = substr_count($commentdata_comment_author_lc, $filter_367_term);
+	$filter_367_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_367_author_count;
+	// Filter 368: Number of occurrences of 'advertising' in comment_author
+	$filter_368_term = 'advertising';
+	$filter_368_count = substr_count($commentdata_comment_content_lc, $filter_368_term);
+	$filter_368_limit = 25;
+	$filter_368_trackback_limit = 25;
+	$filter_368_author_count = substr_count($commentdata_comment_author_lc, $filter_368_term);
+	$filter_368_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_368_author_count;
+	// Filter 369: Number of occurrences of 'car rental' in comment_author
+	$filter_369_term = 'car rental';
+	$filter_369_count = substr_count($commentdata_comment_content_lc, $filter_369_term);
+	$filter_369_limit = 25;
+	$filter_369_trackback_limit = 25;
+	$filter_369_author_count = substr_count($commentdata_comment_author_lc, $filter_369_term);
+	$filter_369_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_369_author_count;
+	// Filter 370: Number of occurrences of 'rent a car' in comment_author
+	$filter_370_term = 'rent a car';
+	$filter_370_count = substr_count($commentdata_comment_content_lc, $filter_370_term);
+	$filter_370_limit = 25;
+	$filter_370_trackback_limit = 25;
+	$filter_370_author_count = substr_count($commentdata_comment_author_lc, $filter_370_term);
+	$filter_370_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_370_author_count;
+	// Filter 371: Number of occurrences of 'development' in comment_author
+	$filter_371_term = 'development';
+	$filter_371_count = substr_count($commentdata_comment_content_lc, $filter_371_term);
+	$filter_371_limit = 25;
+	$filter_371_trackback_limit = 25;
+	$filter_371_author_count = substr_count($commentdata_comment_author_lc, $filter_371_term);
+	$filter_371_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_371_author_count;
+	// Filter 372: Number of occurrences of 'technology' in comment_author
+	$filter_372_term = 'technology';
+	$filter_372_count = substr_count($commentdata_comment_content_lc, $filter_372_term);
+	$filter_372_limit = 25;
+	$filter_372_trackback_limit = 25;
+	$filter_372_author_count = substr_count($commentdata_comment_author_lc, $filter_372_term);
+	$filter_372_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_372_author_count;
+	// Filter 373: Number of occurrences of 'cash advance' in comment_author
+	$filter_373_term = 'cash advance';
+	$filter_373_count = substr_count($commentdata_comment_content_lc, $filter_373_term);
+	$filter_373_limit = 25;
+	$filter_373_trackback_limit = 25;
+	$filter_373_author_count = substr_count($commentdata_comment_author_lc, $filter_373_term);
+	$filter_373_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_373_author_count;
+	// Filter 374: Number of occurrences of 'forex trading' in comment_author
+	$filter_374_term = 'forex trading';
+	$filter_374_count = substr_count($commentdata_comment_content_lc, $filter_374_term);
+	$filter_374_limit = 25;
+	$filter_374_trackback_limit = 25;
+	$filter_374_author_count = substr_count($commentdata_comment_author_lc, $filter_374_term);
+	$filter_374_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_374_author_count;
+	// Filter 375: Number of occurrences of 'anonymous' in comment_author
+	$filter_375_term = 'anonymous';
+	$filter_375_count = substr_count($commentdata_comment_content_lc, $filter_375_term);
+	$filter_375_limit = 25;
+	$filter_375_trackback_limit = 25;
+	$filter_375_author_count = substr_count($commentdata_comment_author_lc, $filter_375_term);
+	$filter_375_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_375_author_count;
+	// Filter 376: Number of occurrences of 'php expert' in comment_author
+	$filter_376_term = 'php expert';
+	$filter_376_count = substr_count($commentdata_comment_content_lc, $filter_376_term);
+	$filter_376_limit = 25;
+	$filter_376_trackback_limit = 25;
+	$filter_376_author_count = substr_count($commentdata_comment_author_lc, $filter_376_term);
+	$filter_376_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_376_author_count;
+	// Filter 377: Number of occurrences of 'designer handbags' in comment_author
+	$filter_377_term = 'designer handbags';
+	$filter_377_count = substr_count($commentdata_comment_content_lc, $filter_377_term);
+	$filter_377_limit = 25;
+	$filter_377_trackback_limit = 25;
+	$filter_377_author_count = substr_count($commentdata_comment_author_lc, $filter_377_term);
+	$filter_377_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_377_author_count;
+	// Filter 378: Number of occurrences of 'travel deals' in comment_author
+	$filter_378_term = 'travel deals';
+	$filter_378_count = substr_count($commentdata_comment_content_lc, $filter_378_term);
+	$filter_378_limit = 25;
+	$filter_378_trackback_limit = 25;
+	$filter_378_author_count = substr_count($commentdata_comment_author_lc, $filter_378_term);
+	$filter_378_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_378_author_count;
+	// Filter 379: Number of occurrences of 'social bookmark' in comment_author
+	$filter_379_term = 'social bookmark';
+	$filter_379_count = substr_count($commentdata_comment_content_lc, $filter_379_term);
+	$filter_379_limit = 25;
+	$filter_379_trackback_limit = 25;
+	$filter_379_author_count = substr_count($commentdata_comment_author_lc, $filter_379_term);
+	$filter_379_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_379_author_count;
+	// Filter 380: Number of occurrences of 'win now' in comment_author
+	$filter_380_term = 'win now';
+	$filter_380_count = substr_count($commentdata_comment_content_lc, $filter_380_term);
+	$filter_380_limit = 25;
+	$filter_380_trackback_limit = 25;
+	$filter_380_author_count = substr_count($commentdata_comment_author_lc, $filter_380_term);
+	$filter_380_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_380_author_count;
+	// Filter 381: Number of occurrences of 'poker online' in comment_author
+	$filter_381_term = 'poker online';
+	$filter_381_count = substr_count($commentdata_comment_content_lc, $filter_381_term);
+	$filter_381_limit = 25;
+	$filter_381_trackback_limit = 25;
+	$filter_381_author_count = substr_count($commentdata_comment_author_lc, $filter_381_term);
+	$filter_381_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_381_author_count;
+	// Filter 382: Number of occurrences of 'online poker' in comment_author
+	$filter_382_term = 'online poker';
+	$filter_382_count = substr_count($commentdata_comment_content_lc, $filter_382_term);
+	$filter_382_limit = 25;
+	$filter_382_trackback_limit = 25;
+	$filter_382_author_count = substr_count($commentdata_comment_author_lc, $filter_382_term);
+	$filter_382_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_382_author_count;
+	// Filter 383: Number of occurrences of 'college student' in comment_author
+	$filter_383_term = 'college student';
+	$filter_383_count = substr_count($commentdata_comment_content_lc, $filter_383_term);
+	$filter_383_limit = 25;
+	$filter_383_trackback_limit = 25;
+	$filter_383_author_count = substr_count($commentdata_comment_author_lc, $filter_383_term);
+	$filter_383_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_383_author_count;
+	// Filter 384: Number of occurrences of 'health insurance' in comment_author
+	$filter_384_term = 'health insurance';
+	$filter_384_count = substr_count($commentdata_comment_content_lc, $filter_384_term);
+	$filter_384_limit = 25;
+	$filter_384_trackback_limit = 25;
+	$filter_384_author_count = substr_count($commentdata_comment_author_lc, $filter_384_term);
+	$filter_384_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_384_author_count;
+	// Filter 385: Number of occurrences of 'click here' in comment_author
+	$filter_385_term = 'click here';
+	$filter_385_count = substr_count($commentdata_comment_content_lc, $filter_385_term);
+	$filter_385_limit = 25;
+	$filter_385_trackback_limit = 25;
+	$filter_385_author_count = substr_count($commentdata_comment_author_lc, $filter_385_term);
+	$filter_385_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_385_author_count;
+	// Filter 386: Number of occurrences of 'health care' in comment_author
+	$filter_386_term = 'health care';
+	$filter_386_count = substr_count($commentdata_comment_content_lc, $filter_386_term);
+	$filter_386_limit = 25;
+	$filter_386_trackback_limit = 25;
+	$filter_386_author_count = substr_count($commentdata_comment_author_lc, $filter_386_term);
+	$filter_386_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_386_author_count;
+	// Filter 387: Number of occurrences of 'healthcare' in comment_author
+	$filter_387_term = 'healthcare';
+	$filter_387_count = substr_count($commentdata_comment_content_lc, $filter_387_term);
+	$filter_387_limit = 25;
+	$filter_387_trackback_limit = 25;
+	$filter_387_author_count = substr_count($commentdata_comment_author_lc, $filter_387_term);
+	$filter_387_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_387_author_count;
+	// Filter 388: Number of occurrences of 'visit now' in comment_author
+	$filter_388_term = 'visit now';
+	$filter_388_count = substr_count($commentdata_comment_content_lc, $filter_388_term);
+	$filter_388_limit = 25;
+	$filter_388_trackback_limit = 25;
+	$filter_388_author_count = substr_count($commentdata_comment_author_lc, $filter_388_term);
+	$filter_388_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_388_author_count;
+	// Filter 389: Number of occurrences of 'turbo tax' in comment_author
+	$filter_389_term = 'turbo tax';
+	$filter_389_count = substr_count($commentdata_comment_content_lc, $filter_389_term);
+	$filter_389_limit = 25;
+	$filter_389_trackback_limit = 25;
+	$filter_389_author_count = substr_count($commentdata_comment_author_lc, $filter_389_term);
+	$filter_389_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_389_author_count;
+	// Filter 390: Number of occurrences of 'photoshop' in comment_author
+	$filter_390_term = 'photoshop';
+	$filter_390_count = substr_count($commentdata_comment_content_lc, $filter_390_term);
+	$filter_390_limit = 25;
+	$filter_390_trackback_limit = 25;
+	$filter_390_author_count = substr_count($commentdata_comment_author_lc, $filter_390_term);
+	$filter_390_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_390_author_count;
+	// Filter 391: Number of occurrences of 'drug rehab' in comment_author
+	$filter_391_term = 'drug rehab';
+	$filter_391_count = substr_count($commentdata_comment_content_lc, $filter_391_term);
+	$filter_391_limit = 25;
+	$filter_391_trackback_limit = 25;
+	$filter_391_author_count = substr_count($commentdata_comment_author_lc, $filter_391_term);
+	$filter_391_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_391_author_count;
+	// Filter 392: Number of occurrences of 'power kite' in comment_author
+	$filter_392_term = 'power kite';
+	$filter_392_count = substr_count($commentdata_comment_content_lc, $filter_392_term);
+	$filter_392_limit = 25;
+	$filter_392_trackback_limit = 25;
+	$filter_392_author_count = substr_count($commentdata_comment_author_lc, $filter_392_term);
+	$filter_392_author_limit = 1;
+	$blacklist_word_combo_total = $blacklist_word_combo_total + $filter_392_author_count;
 
+	// Author Test: for *author names* surrounded by asterisks
+	if ( eregi( "^\*", $commentdata_comment_author_lc ) || eregi( "\*$", $commentdata_comment_author_lc ) ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 300001AUTH';
+		}
 
 	//Simple Author equals X (==) Tests
-	$filter_400_term = 'business';
-	$filter_401_term = 'marketing';
-	$filter_402_term = 'cialis';
-	$filter_403_term = 'seo';
-	$filter_404_term = 'cheap';
-	$filter_405_term = 'discount';
-	$filter_406_term = 'insurance';
-	$filter_407_term = 'development';
-	$filter_408_term = 'software';
+	$filter_300400_term = 'business';
+	$filter_300401_term = 'marketing';
+	$filter_300402_term = 'cialis';
+	$filter_300403_term = 'seo';
+	$filter_300404_term = 'cheap';
+	$filter_300405_term = 'discount';
+	$filter_300406_term = 'insurance';
+	$filter_300407_term = 'development';
+	$filter_300408_term = 'software';
+	$filter_300409_term = 'guide';
+	$filter_300410_term = 'tips';
+	$filter_300411_term = 'reviews';
+	
 
 	// General Spam Terms
 	// Filter 500: Number of occurrences of ' loan' in comment_content
@@ -2858,6 +3335,118 @@ function spamfree_content_filter($commentdata) {
 	$filter_20038C_count = substr_count($commentdata_comment_content_lc, $filter_20038_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20038_domain_dot);
 	$filter_20038_limit = 1;
 	$filter_20038_trackback_limit = 1;
+	// Filter 20039: Number of occurrences of 'phpdug.net' in comment_author_url / comment_content
+	$filter_20039_domain = 'phpdug.net'; // SPAMMERS
+	$filter_20039_domain_http = 'http://'.$filter_20039_domain;
+	$filter_20039_domain_dot = '.'.$filter_20039_domain;
+	$filter_20039_count = substr_count($commentdata_comment_author_url_lc, $filter_20039_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20039_domain_dot);
+	$filter_20039C_count = substr_count($commentdata_comment_content_lc, $filter_20039_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20039_domain_dot);
+	$filter_20039_limit = 1;
+	$filter_20039_trackback_limit = 1;
+	// Filter 20040: Number of occurrences of 'submit-trackback.com' in comment_author_url / comment_content
+	$filter_20040_domain = 'submit-trackback.com'; // SPAMMERS
+	$filter_20040_domain_http = 'http://'.$filter_20040_domain;
+	$filter_20040_domain_dot = '.'.$filter_20040_domain;
+	$filter_20040_count = substr_count($commentdata_comment_author_url_lc, $filter_20040_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20040_domain_dot);
+	$filter_20040C_count = substr_count($commentdata_comment_content_lc, $filter_20040_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20040_domain_dot);
+	$filter_20040_limit = 1;
+	$filter_20040_trackback_limit = 1;
+	// Filter 20041: Number of occurrences of 'commentposter.com' in comment_author_url / comment_content
+	$filter_20041_domain = 'commentposter.com'; // SPAMMERS
+	$filter_20041_domain_http = 'http://'.$filter_20041_domain;
+	$filter_20041_domain_dot = '.'.$filter_20041_domain;
+	$filter_20041_count = substr_count($commentdata_comment_author_url_lc, $filter_20041_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20041_domain_dot);
+	$filter_20041C_count = substr_count($commentdata_comment_content_lc, $filter_20041_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20041_domain_dot);
+	$filter_20041_limit = 1;
+	$filter_20041_trackback_limit = 1;
+	// Filter 20042: Number of occurrences of 'post-comments.com' in comment_author_url / comment_content
+	$filter_20042_domain = 'post-comments.com'; // SPAMMERS
+	$filter_20042_domain_http = 'http://'.$filter_20042_domain;
+	$filter_20042_domain_dot = '.'.$filter_20042_domain;
+	$filter_20042_count = substr_count($commentdata_comment_author_url_lc, $filter_20042_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20042_domain_dot);
+	$filter_20042C_count = substr_count($commentdata_comment_content_lc, $filter_20042_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20042_domain_dot);
+	$filter_20042_limit = 1;
+	$filter_20042_trackback_limit = 1;
+	// Filter 20043: Number of occurrences of 'submitbookmark.com' in comment_author_url / comment_content
+	$filter_20043_domain = 'submitbookmark.com'; // SPAMMERS
+	$filter_20043_domain_http = 'http://'.$filter_20043_domain;
+	$filter_20043_domain_dot = '.'.$filter_20043_domain;
+	$filter_20043_count = substr_count($commentdata_comment_author_url_lc, $filter_20043_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20043_domain_dot);
+	$filter_20043C_count = substr_count($commentdata_comment_content_lc, $filter_20043_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20043_domain_dot);
+	$filter_20043_limit = 1;
+	$filter_20043_trackback_limit = 1;
+	// Filter 20044: Number of occurrences of 'youtube-poster.com' in comment_author_url / comment_content
+	$filter_20044_domain = 'youtube-poster.com'; // SPAMMERS
+	$filter_20044_domain_http = 'http://'.$filter_20044_domain;
+	$filter_20044_domain_dot = '.'.$filter_20044_domain;
+	$filter_20044_count = substr_count($commentdata_comment_author_url_lc, $filter_20044_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20044_domain_dot);
+	$filter_20044C_count = substr_count($commentdata_comment_content_lc, $filter_20044_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20044_domain_dot);
+	$filter_20044_limit = 1;
+	$filter_20044_trackback_limit = 1;
+	// Filter 20045: Number of occurrences of 'wordpressautocomment.com' in comment_author_url / comment_content
+	$filter_20045_domain = 'wordpressautocomment.com'; // SPAMMERS
+	$filter_20045_domain_http = 'http://'.$filter_20045_domain;
+	$filter_20045_domain_dot = '.'.$filter_20045_domain;
+	$filter_20045_count = substr_count($commentdata_comment_author_url_lc, $filter_20045_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20045_domain_dot);
+	$filter_20045C_count = substr_count($commentdata_comment_content_lc, $filter_20045_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20045_domain_dot);
+	$filter_20045_limit = 1;
+	$filter_20045_trackback_limit = 1;
+	// Filter 20046: Number of occurrences of 'johnbeck.com' in comment_author_url / comment_content
+	$filter_20046_domain = 'johnbeck.com'; // SPAMMERS
+	$filter_20046_domain_http = 'http://'.$filter_20046_domain;
+	$filter_20046_domain_dot = '.'.$filter_20046_domain;
+	$filter_20046_count = substr_count($commentdata_comment_author_url_lc, $filter_20046_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20046_domain_dot);
+	$filter_20046C_count = substr_count($commentdata_comment_content_lc, $filter_20046_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20046_domain_dot);
+	$filter_20046_limit = 1;
+	$filter_20046_trackback_limit = 1;
+	// Filter 20047: Number of occurrences of 'johnbeck.net' in comment_author_url / comment_content
+	$filter_20047_domain = 'johnbeck.net'; // SPAMMERS
+	$filter_20047_domain_http = 'http://'.$filter_20047_domain;
+	$filter_20047_domain_dot = '.'.$filter_20047_domain;
+	$filter_20047_count = substr_count($commentdata_comment_author_url_lc, $filter_20047_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20047_domain_dot);
+	$filter_20047C_count = substr_count($commentdata_comment_content_lc, $filter_20047_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20047_domain_dot);
+	$filter_20047_limit = 1;
+	$filter_20047_trackback_limit = 1;
+	// Filter 20048: Number of occurrences of 'johnbeck.tv' in comment_author_url / comment_content
+	$filter_20048_domain = 'johnbeck.tv'; // SPAMMERS
+	$filter_20048_domain_http = 'http://'.$filter_20048_domain;
+	$filter_20048_domain_dot = '.'.$filter_20048_domain;
+	$filter_20048_count = substr_count($commentdata_comment_author_url_lc, $filter_20048_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20048_domain_dot);
+	$filter_20048C_count = substr_count($commentdata_comment_content_lc, $filter_20048_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20048_domain_dot);
+	$filter_20048_limit = 1;
+	$filter_20048_trackback_limit = 1;
+	// Filter 20049: Number of occurrences of 'johnbeckseminar.com' in comment_author_url / comment_content
+	$filter_20049_domain = 'johnbeckseminar.com'; // SPAMMERS
+	$filter_20049_domain_http = 'http://'.$filter_20049_domain;
+	$filter_20049_domain_dot = '.'.$filter_20049_domain;
+	$filter_20049_count = substr_count($commentdata_comment_author_url_lc, $filter_20049_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20049_domain_dot);
+	$filter_20049C_count = substr_count($commentdata_comment_content_lc, $filter_20049_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20049_domain_dot);
+	$filter_20049_limit = 1;
+	$filter_20049_trackback_limit = 1;
+	// Filter 20050: Number of occurrences of 'johnbeckssuccessstories.com' in comment_author_url / comment_content
+	$filter_20050_domain = 'johnbeckssuccessstories.com'; // SPAMMERS
+	$filter_20050_domain_http = 'http://'.$filter_20050_domain;
+	$filter_20050_domain_dot = '.'.$filter_20050_domain;
+	$filter_20050_count = substr_count($commentdata_comment_author_url_lc, $filter_20050_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20050_domain_dot);
+	$filter_20050C_count = substr_count($commentdata_comment_content_lc, $filter_20050_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20050_domain_dot);
+	$filter_20050_limit = 1;
+	$filter_20050_trackback_limit = 1;
+	// Filter 20051: Number of occurrences of 'grillpartssteak.com' in comment_author_url / comment_content
+	$filter_20051_domain = 'grillpartssteak.com'; // SPAMMERS
+	$filter_20051_domain_http = 'http://'.$filter_20051_domain;
+	$filter_20051_domain_dot = '.'.$filter_20051_domain;
+	$filter_20051_count = substr_count($commentdata_comment_author_url_lc, $filter_20051_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20051_domain_dot);
+	$filter_20051C_count = substr_count($commentdata_comment_content_lc, $filter_20051_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20051_domain_dot);
+	$filter_20051_limit = 1;
+	$filter_20051_trackback_limit = 1;
+	// Filter 20052: Number of occurrences of 'kankamforum.net' in comment_author_url / comment_content
+	$filter_20052_domain = 'kankamforum.net'; // SPAMMERS
+	$filter_20052_domain_http = 'http://'.$filter_20052_domain;
+	$filter_20052_domain_dot = '.'.$filter_20052_domain;
+	$filter_20052_count = substr_count($commentdata_comment_author_url_lc, $filter_20052_domain_http) + substr_count($commentdata_comment_author_url_lc, $filter_20052_domain_dot);
+	$filter_20052C_count = substr_count($commentdata_comment_content_lc, $filter_20052_domain_http) + substr_count($commentdata_comment_content_lc, $filter_20052_domain_dot);
+	$filter_20052_limit = 1;
+	$filter_20052_trackback_limit = 1;
 
 
 
@@ -3516,7 +4105,7 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || eregi( '\.seo@gmail\.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || 	$commentdata_comment_author_email_lc == 'poster78@gmail.com' || $commentdata_comment_author_email_lc == 'ycp_m23@hotmail.com' || $commentdata_comment_author_email_lc == 'grey_dave@yahoo.com' || $commentdata_comment_author_email_lc == 'grren_dave55@hotmail.com' || $commentdata_comment_author_email_lc == 'dave_morales@hotmail.com' || $commentdata_comment_author_email_lc == 'tbs_guy@hotmail.com' || eregi( '.seo@gmail.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) || eregi( 'anonymous@', $commentdata_comment_author_email_lc ) || eregi( 'root@', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
 		}
@@ -3526,6 +4115,13 @@ function spamfree_content_filter($commentdata) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 1000';
 		}
+	//if ( !$commentdata_referrer_lc ) {
+	if ( !eregi( $BlogServerName, $commentdata_referrer_lc ) ) {
+		// Often spammers send the referrer as blank. Only valid if equal to site domain.
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 1001';
+		}
+
 	// Include in Blacklist :: BEGIN
 	// Test User-Agents
 	if ( !$commentdata_user_agent_lc  ) {
@@ -3549,16 +4145,25 @@ function spamfree_content_filter($commentdata) {
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
 	$spamfree_ip_bans = array(
+								'66.60.98.1',
+								'67.227.135.200',
+								'74.86.148.194',
 								'77.92.88.13',
 								'77.92.88.27',
 								'78.129.202.15',
 								'78.129.202.2',
 								'78.157.143.202',
+								'87.106.55.101',
+								'91.121.77.168',
 								'92.241.176.200',
 								'92.48.122.2',
 								'92.48.122.3',
 								'92.48.65.27',
 								'92.241.168.216',
+								'115.42.64.19',
+								'116.71.33.252',
+								'116.71.35.192',
+								'116.71.59.69',
 								'122.160.70.94',
 								'122.162.251.167',
 								'123.237.144.189',
@@ -3568,17 +4173,27 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.151',
 								'193.46.236.152',
 								'193.46.236.234',
-								'91.121.77.168',
 								);
-	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) ) {
+	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116.71.", $commentdata_remote_addr_lc ) ) {
 		// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
 		// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
 		// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
 		// 92.48.122.0 - 92.48.122.31 SPAM NETWORK - SERVERS, NOT ISP - BELGRADE
 		// KeywordSpy.com caught using IP's in the range 123.237.144. and 123.237.147.
 		// 91.121.77.168 real-url.org
+		
+		// 87.106.55.101 SPAM NETWORK - SERVERS, NOT ISP - (.websitehome.co.uk)
+		// 74.86.148.194 SPAM NETWORK - WEB HOST, NOT ISP (rover-host.com)
+		// 67.227.135.200 SPAM NETWORK - WEB HOST, NOT ISP (host.lotosus.com)
+		// 66.60.98.1 SPAM NETWORK - WEB SITE/HOST, NOT ISP - (rdns.softwiseonline.com)
+		// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
+
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
+		}
+	if ( eregi( "^192.168.", $commentdata_remote_addr_lc ) && !eregi( "^192.168.", $BlogServerIP ) && !eregi( 'localhost', $BlogServerName ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' IP1003-'.$commentdata_remote_addr_lc;
 		}
 	// Test Remote Hosts
 	if ( eregi( 'keywordspy.com', $commentdata_remote_host_lc ) ) {
@@ -3589,6 +4204,27 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1004-'.$commentdata_remote_host_lc;
 		}
+	if ( eregi( "^rover-host.com$", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1005-'.$commentdata_remote_host_lc;
+		}
+	if ( eregi( "^host.lotosus.com$", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1006-'.$commentdata_remote_host_lc;
+		}
+	if ( eregi( "^rdns.softwiseonline.com$", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1007-'.$commentdata_remote_host_lc;
+		}
+	if ( eregi( "s([a-z0-9]+).websitehome.co.uk$", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1008-'.$commentdata_remote_host_lc;
+		}
+	if ( eregi( "^host.", $commentdata_remote_host_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' RH1009-'.$commentdata_remote_host_lc;
+		}
+
 
 	/*
 	// Following is causing errors on some systems. - 06/17/08
@@ -3607,6 +4243,28 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1024-'.$ReverseDNS;
 		}
+	if ( eregi( "^rover-host.com$", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1025-'.$ReverseDNS;
+		}
+	if ( eregi( "^host.lotosus.com$", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1026-'.$ReverseDNS;
+		}
+	if ( eregi( "^rdns.softwiseonline.com$", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1027-'.$ReverseDNS;
+		}
+	if ( eregi( "^s([a-z0-9]+).websitehome.co.uk$", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1028-'.$ReverseDNS;
+		}
+	if ( eregi( "^host.", $ReverseDNS ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' REVD1029-'.$ReverseDNS;
+		}
+
+
 	// Test Reverse DNS IP's
 	/* 
 	// Temporarily disabling to investigate errors - 02/22/09
@@ -3640,6 +4298,7 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' T3000';
 			}
+		// Check History of WordPress User-Agents and Keep up to Date
 		if ( eregi( 'Incutio XML-RPC -- WordPress/', $commentdata_user_agent_lc ) ) {
 			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
 			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion && $commentdata_user_agent_lc_explode[1] !='MU' ) {
@@ -4171,6 +4830,118 @@ function spamfree_content_filter($commentdata) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 20038C';
 		}
+	if ( $filter_20039_count >= $filter_20039_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20039A';
+		}
+	if ( $filter_20039C_count >= $filter_20039_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20039C';
+		}
+	if ( $filter_20040_count >= $filter_20040_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20040A';
+		}
+	if ( $filter_20040C_count >= $filter_20040_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20040C';
+		}
+	if ( $filter_20041_count >= $filter_20041_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20041A';
+		}
+	if ( $filter_20041C_count >= $filter_20041_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20041C';
+		}
+	if ( $filter_20042_count >= $filter_20042_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20042A';
+		}
+	if ( $filter_20042C_count >= $filter_20042_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20042C';
+		}
+	if ( $filter_20043_count >= $filter_20043_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20043A';
+		}
+	if ( $filter_20043C_count >= $filter_20043_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20043C';
+		}
+	if ( $filter_20044_count >= $filter_20044_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20044A';
+		}
+	if ( $filter_20044C_count >= $filter_20044_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20044C';
+		}
+	if ( $filter_20045_count >= $filter_20045_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20045A';
+		}
+	if ( $filter_20045C_count >= $filter_20045_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20045C';
+		}
+	if ( $filter_20046_count >= $filter_20046_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20046A';
+		}
+	if ( $filter_20046C_count >= $filter_20046_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20046C';
+		}
+	if ( $filter_20047_count >= $filter_20047_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20047A';
+		}
+	if ( $filter_20047C_count >= $filter_20047_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20047C';
+		}
+	if ( $filter_20048_count >= $filter_20048_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20048A';
+		}
+	if ( $filter_20048C_count >= $filter_20048_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20048C';
+		}
+	if ( $filter_20049_count >= $filter_20049_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20049A';
+		}
+	if ( $filter_20049C_count >= $filter_20049_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20049C';
+		}
+	if ( $filter_20050_count >= $filter_20050_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20050A';
+		}
+	if ( $filter_20050C_count >= $filter_20050_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20050C';
+		}
+	if ( $filter_20051_count >= $filter_20051_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20051A';
+		}
+	if ( $filter_20051C_count >= $filter_20051_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20051C';
+		}
+	if ( $filter_20052_count >= $filter_20052_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20052A';
+		}
+	if ( $filter_20052C_count >= $filter_20052_limit ) {
+		if ( !$content_filter_status ) { $content_filter_status = '1'; }
+		$spamfree_error_code .= ' 20052C';
+		}
 
 
 	// Comment Author Tests
@@ -4519,44 +5290,264 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 340AUTH';
 			}
+		if ( $filter_341_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 341AUTH';
+			}
+		if ( $filter_342_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 342AUTH';
+			}
+		if ( $filter_343_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 343AUTH';
+			}
+		if ( $filter_344_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 344AUTH';
+			}
+		if ( $filter_345_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 345AUTH';
+			}
+		if ( $filter_346_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 346AUTH';
+			}
+		if ( $filter_347_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 347AUTH';
+			}
+		if ( $filter_348_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 348AUTH';
+			}
+		if ( $filter_349_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 349AUTH';
+			}
+		if ( $filter_350_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 350AUTH';
+			}
+		if ( $filter_351_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 351AUTH';
+			}
+		if ( $filter_352_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 352AUTH';
+			}
+		if ( $filter_353_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 353AUTH';
+			}
+		if ( $filter_354_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 354AUTH';
+			}
+		if ( $filter_355_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 355AUTH';
+			}
+		if ( $filter_356_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 356AUTH';
+			}
+		if ( $filter_357_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 357AUTH';
+			}
+		if ( $filter_358_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 358AUTH';
+			}
+		if ( $filter_359_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 359AUTH';
+			}
+		if ( $filter_360_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 360AUTH';
+			}
+		if ( $filter_361_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 361AUTH';
+			}
+		if ( $filter_362_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 362AUTH';
+			}
+		if ( $filter_363_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 363AUTH';
+			}
+		if ( $filter_364_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 364AUTH';
+			}
+		if ( $filter_365_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 365AUTH';
+			}
+		if ( $filter_366_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 366AUTH';
+			}
+		if ( $filter_367_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 367AUTH';
+			}
+		if ( $filter_368_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 368AUTH';
+			}
+		if ( $filter_369_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 369AUTH';
+			}
+		if ( $filter_370_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 370AUTH';
+			}
+		if ( $filter_371_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 371AUTH';
+			}
+		if ( $filter_372_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 372AUTH';
+			}
+		if ( $filter_373_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 373AUTH';
+			}
+		if ( $filter_374_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 374AUTH';
+			}
+		if ( $filter_375_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 375AUTH';
+			}
+		if ( $filter_376_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 376AUTH';
+			}
+		if ( $filter_377_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 377AUTH';
+			}
+		if ( $filter_378_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 378AUTH';
+			}
+		if ( $filter_379_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 379AUTH';
+			}
+		if ( $filter_380_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 380AUTH';
+			}
+		if ( $filter_381_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 381AUTH';
+			}
+		if ( $filter_382_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 382AUTH';
+			}
+		if ( $filter_383_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 383AUTH';
+			}
+		if ( $filter_384_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 384AUTH';
+			}
+		if ( $filter_385_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 385AUTH';
+			}
+		if ( $filter_386_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 386AUTH';
+			}
+		if ( $filter_387_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 387AUTH';
+			}
+		if ( $filter_388_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 388AUTH';
+			}
+		if ( $filter_389_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 389AUTH';
+			}
+		if ( $filter_390_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 390AUTH';
+			}
+		if ( $filter_391_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 391AUTH';
+			}
+		if ( $filter_392_author_count >= 1 ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 392AUTH';
+			}
 
 	
 		// Simple Author='' Tests - Non-Trackback/Non-Pingback
-		if ( $commentdata_comment_author_lc == $filter_400_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300400_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 400AUTH';
+			$spamfree_error_code .= ' 300400AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_401_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300401_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 401AUTH';
+			$spamfree_error_code .= ' 300401AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_402_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300402_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 402AUTH';
+			$spamfree_error_code .= ' 300402AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_403_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300403_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 403AUTH';
+			$spamfree_error_code .= ' 300403AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_404_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300404_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 404AUTH';
+			$spamfree_error_code .= ' 300404AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_405_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300405_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 405AUTH';
+			$spamfree_error_code .= ' 300405AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_406_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300406_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 406AUTH';
+			$spamfree_error_code .= ' 300406AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_407_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300407_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 407AUTH';
+			$spamfree_error_code .= ' 300407AUTH';
 			}
-		if ( $commentdata_comment_author_lc == $filter_408_term ) {
+		if ( $commentdata_comment_author_lc == $filter_300408_term ) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' 408AUTH';
+			$spamfree_error_code .= ' 300408AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_300409_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 300409AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_300410_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 300410AUTH';
+			}
+		if ( $commentdata_comment_author_lc == $filter_300411_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 300411AUTH';
 			}
 		}
 	
@@ -4776,6 +5767,7 @@ if (!class_exists('wpSpamFree')) {
 						'use_trackback_verification' 			=> $spamfree_options['use_trackback_verification'],
 						'comment_logging'						=> $_REQUEST['comment_logging'],
 						'comment_logging_start_date'			=> $CommentLoggingStartDate,
+						'comment_logging_all'					=> $_REQUEST['comment_logging_all'],
 						'form_include_website' 					=> $spamfree_options['form_include_website'],
 						'form_require_website' 					=> $spamfree_options['form_require_website'],
 						'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -4824,6 +5816,7 @@ if (!class_exists('wpSpamFree')) {
 						'use_trackback_verification' 			=> $spamfree_options['use_trackback_verification'],
 						'comment_logging'						=> $spamfree_options['comment_logging'],
 						'comment_logging_start_date'			=> $spamfree_options['comment_logging_start_date'],
+						'comment_logging_all'					=> $spamfree_options['comment_logging_all'],
 						'form_include_website' 					=> $_REQUEST['form_include_website'],
 						'form_require_website' 					=> $_REQUEST['form_require_website'],
 						'form_include_phone' 					=> $_REQUEST['form_include_phone'],
@@ -4865,6 +5858,7 @@ if (!class_exists('wpSpamFree')) {
 				<li><a href="#wpsf_installation_instructions">Installation Instructions</a></li>
 				<li><a href="#wpsf_displaying_stats">Displaying Spam Stats on Your Blog</a></li>
 				<li><a href="#wpsf_adding_contact_form">Adding a Contact Form to Your Blog</a></li>
+				<li><a href="#wpsf_configuration">Configuration Information</a></li>
 				<li><a href="#wpsf_known_conflicts">Known Plugin Conflicts</a></li>
 				<li><a href="#wpsf_troubleshooting">Troubleshooting Guide / Support</a></li>
 				<li><a href="#wpsf_let_others_know">Let Others Know About WP-SpamFree</a></li>
@@ -4973,6 +5967,13 @@ if (!class_exists('wpSpamFree')) {
 						}
 					?>
 					<br /><strong>Download <a href="<?php echo $wpsf_plugin_url; ?>/data/temp-comments-log.txt" target="_blank">Comment Log File</a> - Right-click, and select "Save Link As"</strong><br />&nbsp;
+					</li>
+					<li>
+					<label for="comment_logging_all">
+						<input type="checkbox" id="comment_logging_all" name="comment_logging_all" <?php echo ($spamfree_options['comment_logging_all']==true?"checked=\"checked\"":"") ?> />
+						<strong>Log All Comments</strong><br />Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture all comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin.<br/>If you plan on submitting spam samples to our us for analysis, it's helpful for you to turn this on, otherwise it's not necessary.</label>
+					<br/>For more about this, see <a href="#wpsf_configuration_log_all_comments">below</a>.<br />&nbsp;
+					
 					</li>
 					<li>
 					<label for="block_all_trackbacks">
@@ -5203,7 +6204,7 @@ if (!class_exists('wpSpamFree')) {
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
 			<p>&nbsp;</p>
-
+			
 			<p><a name="wpsf_displaying_stats"><strong>Displaying Spam Stats on Your Blog</strong></a></p>
 
 			<p>Want to show off your spam stats on your blog and tell others about WP-SpamFree? Simply add the following code to your WordPress theme where you'd like the stats displayed: <br />&nbsp;<br /><code>&lt;?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?&gt;</code><br />&nbsp;<br /> where '1' is the style. Replace the '1' with a number from 1-9 that corresponds to one of the following sample styles you'd like to use. To simply display text stats on your site (no graphic), replace the '1' with '0'.</code></p>
@@ -5262,6 +6263,31 @@ if (!class_exists('wpSpamFree')) {
 			<strong>What the Contact Form feature is NOT:</strong> A configurable and full-featured plugin like some other contact form plugins out there.<br />
 			<strong>Note:</strong> Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you.</p>
 			
+			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
+
+			<p>&nbsp;</p>
+			
+			<p><a name="wpsf_configuration"><strong>Configuration Information</strong></a></p>
+			
+			<p><a name="wpsf_configuration_spam_options"><strong>Spam Options</strong></a>
+			
+			<p><a name="wpsf_configuration_m2"><strong>M2 - Use two methods to set cookies.</strong></a><br />This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.</p>
+
+			<p><a name="wpsf_configuration_blocked_comment_logging_mode"><strong>Blocked Comment Logging Mode</strong></a><br />This is a temporary diagnostic mode that logs blocked comment submissions for 3 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">support request</a>, and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. <em>This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)</em> </p>
+
+			<p><a name="wpsf_configuration_log_all_comments"><strong>Log All Comments</strong></a><br />Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture <em>all</em> comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to our us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">support request</a>. When we email you back we will ask you to forward the data to us by email.</p>
+			
+			<p>This extra data will be extremely valuable in helping us improve the spam protection capabilites of the plugin.</p>
+			
+			<p><a name="wpsf_configuration_disable_trackbacks"><strong>Disable trackbacks.</strong></a><br />Use if trackback spam is excessive. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.</p>
+
+			<p><a name="wpsf_configuration_disable_pingbacks"><strong>Disable pingbacks.</strong></a><br />Use if pingback spam is excessive. The disadvantage is a reduction of communication between blogs. When blogs ping each other, it's like saying "Hi, I just wrote about you" and disabling these pingbacks eliminates that ability. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.</p>
+
+			<p><a name="wpsf_configuration_help_promote_plugin"><strong>Help promote WP-SpamFree?</strong></a><br />This places a small link under the comments and contact form, letting others know what's blocking spam on your blog. This plugin is provided for free, so this is much appreciated. It's a small way you can give back and let others know about WP-SpamFree.</p>
+			
+			<p><a name="wpsf_configuration_contact_form_options"><strong>Contact Form Options</strong></a><br />
+			These are self-explanatory.</p>
+					
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
 			<p>&nbsp;</p>	
@@ -5381,7 +6407,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.1";
+			$plugin_db_version = "2.0.1.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -5430,6 +6456,7 @@ if (!class_exists('wpSpamFree')) {
 					'use_trackback_verification'		 	=> 0,
 					'comment_logging'						=> 0,
 					'comment_logging_start_date'			=> 0,
+					'comment_logging_all'					=> 0,
 					'form_include_website' 					=> 1,
 					'form_require_website' 					=> 0,
 					'form_include_phone' 					=> 1,
