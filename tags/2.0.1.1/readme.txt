@@ -93,34 +93,6 @@ If you want to modify the style of the form using CSS, all the form elements hav
 
 **Note:** Please do not request new features for the contact form, as the main focus of the plugin is spam protection. Thank you. 
 
-= Configuration Information =
-
-**Spam Options**
-
-**M2 - Use two methods to set cookies.**
-This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.
-
-**Blocked Comment Logging Mode**
-This is a temporary diagnostic mode that logs blocked comment submissions for 3 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a [support request](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support), and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)
-
-**Log All Comments**
-Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture *all* comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to our us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a [support request](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support). When we email you back we will ask you to forward the data to us by email.
-
-This extra data will be extremely valuable in helping us improve the spam protection capabilites of the plugin.
-
-**Disable trackbacks.**
-Use if trackback spam is excessive. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.
-
-**Disable pingbacks.**
-Use if pingback spam is excessive. The disadvantage is a reduction of communication between blogs. When blogs ping each other, it's like saying "Hi, I just wrote about you" and disabling these pingbacks eliminates that ability. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.
-
-**Help promote WP-SpamFree?**
-This places a small link under the comments and contact form, letting others know what's blocking spam on your blog. This plugin is provided for free, so this is much appreciated. It's a small way you can give back and let others know about WP-SpamFree.
-
-**Contact Form Options**
-These are self-explanatory.
-
-
 == Other Notes ==
 
 [Troubleshooting Guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting) | [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
