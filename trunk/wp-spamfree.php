@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.2
+Version: 2.0.1.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.2';
+	$wpSpamFreeVer='2.0.1.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1026,7 +1026,7 @@ function spamfree_contact_form($content) {
 			// Check following variables to make sure not repeating										
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
 			$commentdata_remote_host_lc = strtolower($_SERVER['REMOTE_HOST']);
-			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116.71.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) || eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) || eregi( "clients.your-server.de$", $ReverseDNS ) || eregi( "^rover-host.com$", $commentdata_remote_host_lc ) || eregi( "^rover-host.com$", $ReverseDNS ) || eregi( "^host.lotosus.com$", $commentdata_remote_host_lc ) || eregi( "^host.lotosus.com$", $ReverseDNS ) || ( eregi( "^192.168.", $commentdata_remote_addr_lc ) && !eregi( "^192.168.", $_SERVER['SERVER_ADDR'] ) && !eregi( 'localhost', $_SERVER['SERVER_NAME'] ) ) ) {
+			if ( in_array( $commentdata_remote_addr_lc, $spamfree_contact_form_ip_bans ) || eregi( "^78\.129\.202\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.144\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.147\.", $commentdata_remote_addr_lc ) || eregi( "^194\.8\.7([45])\.", $commentdata_remote_addr_lc ) || eregi( "^193\.37\.152\.", $commentdata_remote_addr_lc ) || eregi( "^193\.46\.236\.", $commentdata_remote_addr_lc ) || eregi( "^92\.48\.122\.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116\.71\.", $commentdata_remote_addr_lc ) || eregi( 'keywordspy.com', $commentdata_remote_host_lc ) || eregi( 'keywordspy.com', $ReverseDNS ) || eregi( "clients\.your-server\.de$", $commentdata_remote_host_lc ) || eregi( "clients\.your-server\.de$", $ReverseDNS ) || eregi( "^rover\-host\.com$", $commentdata_remote_host_lc ) || eregi( "^rover-host\.com$", $ReverseDNS ) || eregi( "^host\.lotosus\.com$", $commentdata_remote_host_lc ) || eregi( "^host\.lotosus\.com$", $ReverseDNS ) || ( eregi( "^192\.168\.", $commentdata_remote_addr_lc ) && !eregi( "^192\.168\.", $_SERVER['SERVER_ADDR'] ) && !eregi( 'localhost', $_SERVER['SERVER_NAME'] ) ) ) {
 				// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
 				// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
 				// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
@@ -4137,8 +4137,8 @@ function spamfree_content_filter($commentdata) {
 			$spamfree_error_code .= ' UA1001.1-'.$commentdata_user_agent_lc;
 			}
 		}
-	if ( eregi( 'libwww-perl', $commentdata_user_agent_lc ) ) {
-		// There is no reason for a human to use a libwww-perl UA String.
+	if ( eregi( 'libwww-perl', $commentdata_user_agent_lc ) || eregi( "^(nutch|larbin|jakarta)", $commentdata_user_agent_lc ) ) {
+		// There is no reason for a human to use one of these UA strings. Commonly used to attack/spam WP.
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1002';
 		}
@@ -4174,7 +4174,7 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.152',
 								'193.46.236.234',
 								);
-	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) || eregi( "^194.8.7([45]).", $commentdata_remote_addr_lc ) || eregi( "^193.37.152.", $commentdata_remote_addr_lc ) || eregi( "^193.46.236.", $commentdata_remote_addr_lc ) || eregi( "^92.48.122.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116.71.", $commentdata_remote_addr_lc ) ) {
+	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78\.129\.202\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.144\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.147.", $commentdata_remote_addr_lc ) || eregi( "^194\.8\.7([45])\.", $commentdata_remote_addr_lc ) || eregi( "^193\.37\.152.", $commentdata_remote_addr_lc ) || eregi( "^193\.46\.236\.", $commentdata_remote_addr_lc ) || eregi( "^92\.48\.122\.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116\.71\.", $commentdata_remote_addr_lc ) ) {
 		// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
 		// 193.37.152.0 - 193.37.152.255 SPAM NETWORK - WEB HOST, NOT ISP - GERMANY
 		// 193.46.236.0 - 193.46.236.255 SPAM NETWORK - WEB HOST, NOT ISP - LATVIA
@@ -4191,7 +4191,7 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
 		}
-	if ( eregi( "^192.168.", $commentdata_remote_addr_lc ) && !eregi( "^192.168.", $BlogServerIP ) && !eregi( 'localhost', $BlogServerName ) ) {
+	if ( eregi( "^192\.168\.", $commentdata_remote_addr_lc ) && !eregi( "^192\.168\.", $BlogServerIP ) && !eregi( 'localhost', $BlogServerName ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1003-'.$commentdata_remote_addr_lc;
 		}
@@ -4200,31 +4200,32 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1003-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "clients.your-server.de$", $commentdata_remote_host_lc ) ) {
+	if ( eregi( "clients\.your\-server\.de$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1004-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "^rover-host.com$", $commentdata_remote_host_lc ) ) {
+	if ( eregi( "^rover\-host\.com$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1005-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "^host.lotosus.com$", $commentdata_remote_host_lc ) ) {
+	if ( eregi( "^host\.lotosus\.com$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1006-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "^rdns.softwiseonline.com$", $commentdata_remote_host_lc ) ) {
+	if ( eregi( "^rdns\.softwiseonline\.com$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1007-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "s([a-z0-9]+).websitehome.co.uk$", $commentdata_remote_host_lc ) ) {
+	if ( eregi( "s([a-z0-9]+)\.websitehome\.co\.uk$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1008-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "^host.", $commentdata_remote_host_lc ) ) {
+	/*	
+	if ( eregi( "^host\.", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1009-'.$commentdata_remote_host_lc;
 		}
-
+	*/
 
 	/*
 	// Following is causing errors on some systems. - 06/17/08
@@ -4239,30 +4240,32 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1023-'.$ReverseDNS;
 		}
-	if ( eregi( "clients.your-server.de$", $ReverseDNS ) ) {
+	if ( eregi( "clients\.your\-server\.de$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1024-'.$ReverseDNS;
 		}
-	if ( eregi( "^rover-host.com$", $ReverseDNS ) ) {
+	if ( eregi( "^rover\-host\.com$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1025-'.$ReverseDNS;
 		}
-	if ( eregi( "^host.lotosus.com$", $ReverseDNS ) ) {
+	if ( eregi( "^host\.lotosus\.com$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1026-'.$ReverseDNS;
 		}
-	if ( eregi( "^rdns.softwiseonline.com$", $ReverseDNS ) ) {
+	if ( eregi( "^rdns\.softwiseonline\.com$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1027-'.$ReverseDNS;
 		}
-	if ( eregi( "^s([a-z0-9]+).websitehome.co.uk$", $ReverseDNS ) ) {
+	if ( eregi( "^s([a-z0-9]+)\.websitehome\.co\.uk$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1028-'.$ReverseDNS;
 		}
-	if ( eregi( "^host.", $ReverseDNS ) ) {
+	/*	
+	if ( eregi( "^host\.", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1029-'.$ReverseDNS;
 		}
+	*/
 
 
 	// Test Reverse DNS IP's
@@ -6407,7 +6410,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.2";
+			$plugin_db_version = "2.0.1.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
