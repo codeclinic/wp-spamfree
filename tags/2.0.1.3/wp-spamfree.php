@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.4
+Version: 2.0.1.3
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.4';
+	$wpSpamFreeVer='2.0.1.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -5607,95 +5607,6 @@ function spamfree_filter_plugin_actions( $links, $file ){
 	return $links;
 	}
 
-function add_technical_data( $post_id ) {
-	global $current_user;
-	?>
-	<script type='text/javascript'>
-	<!--
-	refJS = escape( document[ 'referrer' ] );
-	document.write("<input type='hidden' name='refJS' value='"+refJS+"'>");
-	// -->
-	</script>
-	<?php
-	}
-
-function add_technical_data_to_notification( $text, $comment_id ) {
-
-	// IP / PROXY INFO :: BEGIN
-	$ip = $_SERVER['REMOTE_ADDR'];
-	$ipBlock=explode('.',$ip);
-	$ipProxyVIA=$_SERVER['HTTP_VIA'];
-	$MaskedIP=$_SERVER['HTTP_X_FORWARDED_FOR']; // Stated Original IP - Can be faked
-	$MaskedIPBlock=explode('.',$MaskedIP);
-	if (eregi("^([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])",$MaskedIP)&&$MaskedIP!=""&&$MaskedIP!="unknown"&&!eregi("^192.168.",$MaskedIP)) {
-		$MaskedIPValid=true;
-		$MaskedIPCore=rtrim($MaskedIP,' unknown;,');
-		}
-	$ReverseDNS = gethostbyaddr($ip);
-	$ReverseDNSIP = gethostbyname($ReverseDNS);
-	
-	if ( $ReverseDNSIP != $ip || $ip == $ReverseDNS ) {
-		$ReverseDNSAuthenticity = '[Possibly Forged]';
-		} 
-	else {
-		$ReverseDNSAuthenticity = '[Verified]';
-		}
-	// Detect Use of Proxy
-	if ($_SERVER['HTTP_VIA']||$_SERVER['HTTP_X_FORWARDED_FOR']) {
-		$ipProxy='PROXY DETECTED';
-		$ipProxyShort='PROXY';
-		$ipProxyData=$ip.' | MASKED IP: '.$MaskedIP;
-		$ProxyStatus='TRUE';
-		}
-	else {
-		$ipProxy='No Proxy';
-		$ipProxyShort=$ipProxy;
-		$ipProxyData=$ip;
-		$ProxyStatus='FALSE';
-		}
-	// IP / PROXY INFO :: END
-
-
-	$text .= "\r\n----------------------------------------------------";
-	$text .= "\r\n:: Additional Technical Data Added by WP-SpamFree ::";
-	$text .= "\r\n----------------------------------------------------";
-	$text .= "\r\n";
-
-	if( $_POST[ 'refJS' ] && $_POST[ 'refJS' ] != '' ) {
-		$refJS = addslashes( urldecode( $_POST[ 'refJS' ] ) );
-		$refJS = str_replace( '%3A', ':', $refJS );
-		$text .= "\r\nPage Referrer: $refJS\r\n";
-		}
-	$text .= "\r\nComment Processor Referrer: ".$_SERVER['HTTP_REFERER'];
-	$text .= "\r\n";
-	$text .= "\r\nUser-Agent: ".$_SERVER['HTTP_USER_AGENT'];
-	$text .= "\r\n";
-	$text .= "\r\nIP Address               : ".$ip;
-	$text .= "\r\nRemote Host              : ".$_SERVER['REMOTE_HOST'];
-	$text .= "\r\nReverse DNS              : ".$ReverseDNS;
-	$text .= "\r\nReverse DNS IP           : ".$ReverseDNSIP;
-	$text .= "\r\nReverse DNS Authenticity : ".$ReverseDNSAuthenticity;
-	$text .= "\r\nProxy Info               : ".$ipProxy;
-	$text .= "\r\nProxy Data               : ".$ipProxyData;
-	$text .= "\r\nProxy Status             : ".$ProxyStatus;
-	if ( $_SERVER['HTTP_VIA'] ) {
-		$text .= "\r\nHTTP_VIA                 : ".$_SERVER['HTTP_VIA'];
-		}
-	if ( $_SERVER['HTTP_X_FORWARDED_FOR'] ) {
-		$text .= "\r\nHTTP_X_FORWARDED_FOR     : ".$_SERVER['HTTP_X_FORWARDED_FOR'];
-		}
-	$text .= "\r\nHTTP_ACCEPT_LANGUAGE     : ".$_SERVER['HTTP_ACCEPT_LANGUAGE'];
-	$text .= "\r\n";
-	$text .= "\r\nHTTP_ACCEPT: ".$_SERVER['HTTP_ACCEPT'];
-	$text .= "\r\n";
-	$text .= "\r\nIP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$ip;
-	$text .= "\r\n";
-	$text .= "\r\n(This data is helpful if you need to submit a spam sample.)";
-	$text .= "\r\n";
-
-	return $text;
-	}
-
 if (!class_exists('wpSpamFree')) {
     class wpSpamFree {
 	
@@ -5734,10 +5645,7 @@ if (!class_exists('wpSpamFree')) {
 			add_filter('the_content', 'spamfree_contact_form', 10);
 			add_filter('the_content', 'spamfree_content_addendum', 999);
 			add_action('comment_form', 'spamfree_comment_form');
-			add_action('comment_form', 'add_technical_data');
 			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
-			add_filter('comment_notification_text', 'add_technical_data_to_notification', 10, 2);
-			add_filter('comment_moderation_text', 'add_technical_data_to_notification', 10, 2);
 			add_action('activity_box_end', 'spamfree_stats');
 			add_filter('plugin_action_links', 'spamfree_filter_plugin_actions', 10, 2 );
         	}
@@ -6502,7 +6410,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.4";
+			$plugin_db_version = "2.0.1.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
