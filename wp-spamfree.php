@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.5
+Version: 2.0.1.6
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.5';
+	$wpSpamFreeVer='2.0.1.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -469,6 +469,42 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 		$submitter_ip_address_short_l = trim( substr( $submitter_ip_address, 0, 6) );
 		$submitter_ip_address_short_r = trim( substr( $submitter_ip_address, -6, 2) );
 		$submitter_ip_address_obfuscated = $submitter_ip_address_short_l.'****'.$submitter_ip_address_short_r.'.***';
+		$submitter_remote_host = $_SERVER['REMOTE_HOST'];
+
+		// IP / PROXY INFO :: BEGIN
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$ipBlock=explode('.',$ip);
+		$ipProxyVIA=$_SERVER['HTTP_VIA'];
+		$MaskedIP=$_SERVER['HTTP_X_FORWARDED_FOR']; // Stated Original IP - Can be faked
+		$MaskedIPBlock=explode('.',$MaskedIP);
+		if (eregi("^([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])",$MaskedIP)&&$MaskedIP!=""&&$MaskedIP!="unknown"&&!eregi("^192.168.",$MaskedIP)) {
+			$MaskedIPValid=true;
+			$MaskedIPCore=rtrim($MaskedIP," unknown;,");
+			}
+		if ( !$MaskedIP ) { $MaskedIP='[no data]'; }
+		$ReverseDNS = gethostbyaddr($ip);
+		$ReverseDNSIP = gethostbyname($ReverseDNS);
+		
+		if ( $ReverseDNSIP != $ip || $ip == $ReverseDNS ) {
+			$ReverseDNSAuthenticity = '[Possibly Forged]';
+			} 
+		else {
+			$ReverseDNSAuthenticity = '[Verified]';
+			}
+		// Detect Use of Proxy
+		if ($_SERVER['HTTP_VIA']||$_SERVER['HTTP_X_FORWARDED_FOR']) {
+			$ipProxy='PROXY DETECTED';
+			$ipProxyShort='PROXY';
+			$ipProxyData=$ip.' | MASKED IP: '.$MaskedIP;
+			$ProxyStatus='TRUE';
+			}
+		else {
+			$ipProxy='No Proxy';
+			$ipProxyShort=$ipProxy;
+			$ipProxyData=$ip;
+			$ProxyStatus='FALSE';
+			}
+		// IP / PROXY INFO :: END
 		
 		if ( $wpsf_log_comment_type == 'comment' ) {
 			$comment_author_email = $wpsf_log_comment_data_array['comment_author_email'];
@@ -502,13 +538,21 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 		$wpsf_log_comment_data .= "\n";
 		//$wpsf_log_comment_data .= "IP Address: ".$submitter_ip_address_obfuscated." [Obfuscated for Privacy]\n";
 		$wpsf_log_comment_data .= "IP Address: ".$submitter_ip_address."\n";
-		
-		$comment_author_server = $_SERVER['REMOTE_HOST'];
-		if ( !$comment_author_server ) {
-			$ReverseDNS = gethostbyaddr($submitter_ip_address);
-			$comment_author_server = $ReverseDNS;
+		$wpsf_log_comment_data .= "Remost Host: ".$submitter_remote_host."\n";
+		$wpsf_log_comment_data .= "Reverse DNS: ".$ReverseDNS."\n";
+		$wpsf_log_comment_data .= "Reverse DNS IP: ".$ReverseDNSIP."\n";
+		$wpsf_log_comment_data .= "Reverse DNS Authenticity: ".$ReverseDNSAuthenticity."\n";
+		$wpsf_log_comment_data .= "Proxy Info: ".$ipProxy."\n";
+		$wpsf_log_comment_data .= "Proxy Data: ".$ipProxyData."\n";
+		$wpsf_log_comment_data .= "Proxy Status: ".$ProxyStatus."\n";
+		if ( $_SERVER['HTTP_VIA'] ) {
+			$wpsf_log_comment_data .= "HTTP_VIA: ".$_SERVER['HTTP_VIA']."\n";
 			}
-		$wpsf_log_comment_data .= "Server: ".$comment_author_server."\n";
+		if ( $_SERVER['HTTP_X_FORWARDED_FOR'] ) {
+			$wpsf_log_comment_data .= "HTTP_X_FORWARDED_FOR: ".$_SERVER['HTTP_X_FORWARDED_FOR']."\n";
+			}
+		$wpsf_log_comment_data .= "HTTP_ACCEPT_LANGUAGE: ".$_SERVER['HTTP_ACCEPT_LANGUAGE']."\n";
+		$wpsf_log_comment_data .= "HTTP_HTTP_ACCEPT: ".$_SERVER['HTTP_ACCEPT']."\n";
 		$wpsf_log_comment_data .= "User-Agent: ".$_SERVER['HTTP_USER_AGENT']."\n";
 		$wpsf_log_comment_data .= "Referrer: ";
 		if ( $_SERVER['HTTP_REFERER'] ) {
@@ -992,7 +1036,7 @@ function spamfree_contact_form($content) {
 				$spamfree_contact_form_content .=  '<span'.$wpsf_img_p_disp.'><img src="'.$wpsf_plugin_url.'/img/wpsf-img.php" width="0" height="0" alt="" style="border-style:none;width:0px;height:0px;'.$wpsf_img_disp.'" /></span>';
 				}	
 			
-			
+			$contact_form_blacklist_status = '';
 			$spamfree_contact_form_ip_bans = array(
 													'66.60.98.1',
 													'67.227.135.200',
@@ -1040,8 +1084,29 @@ function spamfree_contact_form($content) {
 				// 67.227.135.200 SPAM NETWORK - WEB HOST, NOT ISP (host.lotosus.com)
 				// 66.60.98.1 SPAM NETWORK - WEB SITE/HOST, NOT ISP - (rdns.softwiseonline.com)
 				// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
-				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
+				$contact_form_blacklist_status = '2';
 				}
+			$user_agent_lc = strtolower($_SERVER['HTTP_USER_AGENT']);
+			$user_agent_lc_word_count = count( explode( " ", $user_agent_lc ) );
+			if ( $user_agent_lc_word_count < 3 ) {
+				$contact_form_blacklist_status = '2';
+				$spamfree_error_code .= ' CF-UA1001.1-'.$user_agent_lc;
+				}
+			if ( eregi( 'libwww-perl', $user_agent_lc ) || eregi( "^(nutch|larbin|jakarta|java)", $user_agent_lc ) ) {
+				$contact_form_blacklist_status = '2';
+				$spamfree_error_code .= ' CF-UA1002';
+				}
+			if ( eregi( 'iopus-', $user_agent_lc ) ) {
+				$contact_form_blacklist_status = '2';
+				$spamfree_error_code .= ' CF-UA1003';
+				}
+			if ( substr_count( $user_agent_lc, 'Mozilla/4.0 (compatible;' ) > 1 ) {
+				$contact_form_blacklist_status = '2';
+				$spamfree_error_code .= ' CF-UA1004';
+				}
+			if ( $contact_form_blacklist_status ) {
+				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
+				}				
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
 			}
 
@@ -1364,6 +1429,7 @@ function spamfree_content_filter($commentdata) {
 		$MaskedIPValid=true;
 		$MaskedIPCore=rtrim($MaskedIP," unknown;,");
 		}
+	if ( !$MaskedIP ) { $MaskedIP='[no data]'; }
 	$ReverseDNS = gethostbyaddr($commentdata_remote_addr);
 	$ReverseDNSIP = gethostbyname($ReverseDNS);
 	
@@ -4137,11 +4203,27 @@ function spamfree_content_filter($commentdata) {
 			$spamfree_error_code .= ' UA1001.1-'.$commentdata_user_agent_lc;
 			}
 		}
-	if ( eregi( 'libwww-perl', $commentdata_user_agent_lc ) || eregi( "^(nutch|larbin|jakarta)", $commentdata_user_agent_lc ) ) {
+	if ( eregi( 'libwww-perl', $commentdata_user_agent_lc ) || eregi( "^(nutch|larbin|jakarta|java)", $commentdata_user_agent_lc ) ) {
 		// There is no reason for a human to use one of these UA strings. Commonly used to attack/spam WP.
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1002';
 		}
+	if ( eregi( 'iopus-', $commentdata_user_agent_lc ) ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' UA1003';
+		}
+	if ( substr_count( $commentdata_user_agent_lc, 'Mozilla/4.0 (compatible;' ) > 1 ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' UA1004';
+		}
+	//Test HTTP_ACCEPT_LANGUAGE
+	/*
+	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' && !$_SERVER['HTTP_ACCEPT_LANGUAGE'] ) {
+		$content_filter_status = '2';
+		$spamfree_error_code .= ' HAL1001';
+		}
+	*/
+
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
 	$spamfree_ip_bans = array(
@@ -5631,6 +5713,7 @@ function spamfree_add_technical_data_to_notification( $text, $comment_id ) {
 		$MaskedIPValid=true;
 		$MaskedIPCore=rtrim($MaskedIP,' unknown;,');
 		}
+	if ( !$MaskedIP ) { $MaskedIP='[no data]'; }
 	$ReverseDNS = gethostbyaddr($ip);
 	$ReverseDNSIP = gethostbyname($ReverseDNS);
 	
@@ -6502,7 +6585,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.5";
+			$plugin_db_version = "2.0.1.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
