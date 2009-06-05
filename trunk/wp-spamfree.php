@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.6
+Version: 2.0.1.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.6';
+	$wpSpamFreeVer='2.0.1.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -4181,12 +4181,15 @@ function spamfree_content_filter($commentdata) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 1000';
 		}
+	/*
+	// Disabled temp because of IE8 Private Browsing
 	//if ( !$commentdata_referrer_lc ) {
 	if ( !eregi( $BlogServerName, $commentdata_referrer_lc ) ) {
 		// Often spammers send the referrer as blank. Only valid if equal to site domain.
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 1001';
 		}
+	*/
 
 	// Include in Blacklist :: BEGIN
 	// Test User-Agents
@@ -6585,7 +6588,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.6";
+			$plugin_db_version = "2.0.1.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
