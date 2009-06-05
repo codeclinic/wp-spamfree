@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.0.1.5
+Version: 2.0.1.4
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.0.1.5';
+	$wpSpamFreeVer='2.0.1.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -5607,7 +5607,7 @@ function spamfree_filter_plugin_actions( $links, $file ){
 	return $links;
 	}
 
-function spamfree_add_technical_data( $post_id ) {
+function add_technical_data( $post_id ) {
 	global $current_user;
 	?>
 	<script type='text/javascript'>
@@ -5619,7 +5619,7 @@ function spamfree_add_technical_data( $post_id ) {
 	<?php
 	}
 
-function spamfree_add_technical_data_to_notification( $text, $comment_id ) {
+function add_technical_data_to_notification( $text, $comment_id ) {
 
 	// IP / PROXY INFO :: BEGIN
 	$ip = $_SERVER['REMOTE_ADDR'];
@@ -5734,10 +5734,10 @@ if (!class_exists('wpSpamFree')) {
 			add_filter('the_content', 'spamfree_contact_form', 10);
 			add_filter('the_content', 'spamfree_content_addendum', 999);
 			add_action('comment_form', 'spamfree_comment_form');
-			add_action('comment_form', 'spamfree_add_technical_data');
+			add_action('comment_form', 'add_technical_data');
 			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
-			add_filter('comment_notification_text', 'spamfree_add_technical_data_to_notification', 10, 2);
-			add_filter('comment_moderation_text', 'spamfree_add_technical_data_to_notification', 10, 2);
+			add_filter('comment_notification_text', 'add_technical_data_to_notification', 10, 2);
+			add_filter('comment_moderation_text', 'add_technical_data_to_notification', 10, 2);
 			add_action('activity_box_end', 'spamfree_stats');
 			add_filter('plugin_action_links', 'spamfree_filter_plugin_actions', 10, 2 );
         	}
@@ -6502,7 +6502,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.0.1.5";
+			$plugin_db_version = "2.0.1.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
