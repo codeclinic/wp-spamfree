@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.1
+Version: 2.0.1.7
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1';
+	$wpSpamFreeVer='2.0.1.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -120,9 +120,6 @@ function spamfree_update_keys($reset_keys) {
 		'comment_logging'						=> $spamfree_options['comment_logging'],
 		'comment_logging_start_date'			=> $spamfree_options['comment_logging_start_date'],
 		'comment_logging_all'					=> $spamfree_options['comment_logging_all'],
-		'enhanced_comment_blacklist'			=> $spamfree_options['enhanced_comment_blacklist'],
-		'allow_proxy_users'						=> $spamfree_options['allow_proxy_users'],
-		'hide_extra_data'						=> $spamfree_options['hide_extra_data'],
 		'form_include_website' 					=> $spamfree_options['form_include_website'],
 		'form_require_website' 					=> $spamfree_options['form_require_website'],
 		'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -436,9 +433,6 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 			'comment_logging'						=> $CommentLogging,
 			'comment_logging_start_date'			=> $CommentLoggingStartDate,
 			'comment_logging_all'					=> $CommentLoggingAll,
-			'enhanced_comment_blacklist'			=> $spamfree_options['enhanced_comment_blacklist'],
-			'allow_proxy_users'						=> $spamfree_options['allow_proxy_users'],
-			'hide_extra_data'						=> $spamfree_options['hide_extra_data'],
 			'form_include_website' 					=> $spamfree_options['form_include_website'],
 			'form_require_website' 					=> $spamfree_options['form_require_website'],
 			'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -637,7 +631,6 @@ function spamfree_comment_form() {
 	if ( !$spamfree_options['use_alt_cookie_method'] && !$spamfree_options['use_alt_cookie_method_only'] ) {
 		echo '<noscript><p><strong>Currently you have JavaScript disabled. In order to post comments, please make sure JavaScript and Cookies are enabled, and reload the page.</strong> <a href="http://www.google.com/support/bin/answer.py?answer=23852" rel="nofollow external" >Click here for instructions</a> on how to enable JavaScript in your browser.</p></noscript>'."\n";	
 		}
-	// If need to add anything else to comment area, start here	
 
 	}
 	
@@ -1107,20 +1100,12 @@ function spamfree_contact_form($content) {
 				$contact_form_blacklist_status = '2';
 				$spamfree_error_code .= ' CF-UA1003';
 				}
-			if ( substr_count( $user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 ) {
+			if ( substr_count( $user_agent_lc, 'Mozilla/4.0 (compatible;' ) > 1 ) {
 				$contact_form_blacklist_status = '2';
 				$spamfree_error_code .= ' CF-UA1004';
 				}
-			$user_http_accept_language = trim($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			if ( !$user_http_accept_language ) {
-				$contact_form_blacklist_status = '2';
-				$spamfree_error_code .= ' CF-HAL1001';
-				}
-
-			// Add blacklist check - IP's only though.
-				
 			if ( $contact_form_blacklist_status ) {
-				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a reported spam network. Contact form has been disabled to prevent spam.</strong>';
+				$spamfree_contact_form_content = '<strong>Your location has been identified as part of a known spam network. Contact form has been disabled to prevent spam.</strong>';
 				}				
 			$content_new = str_replace('<!--spamfree-contact-->', $spamfree_contact_form_content, $content);
 			}
@@ -1146,22 +1131,29 @@ function spamfree_check_comment_type($commentdata) {
 		$BlockAllPingbacks 			= $spamfree_options['block_all_pingbacks'];
 	
 		$content_short_status		= spamfree_content_short($commentdata);
-			
+		
+		/*
 		if ( !$content_short_status ) {
+			$blacklist_filter_status= spamfree_blacklist_filter($commentdata);
+			}
+		
+		if ( !$content_short_status && !$blacklist_filter_status ) {
 			$content_filter_status 	= spamfree_content_filter($commentdata);
 			}
+		*/
+		
+		
+		
+		if ( !$content_short_status ) {
+			$content_filter_status 	= spamfree_content_filter($commentdata);
+			}		
 		
 		if ( $content_short_status ) {
 			add_filter('pre_comment_approved', 'spamfree_denied_post_short', 1);
 			}
+		//else if ( $blacklist_filter_status ) {
 		else if ( $content_filter_status == '2' ) {
-			add_filter('pre_comment_approved', 'spamfree_denied_post_content_filter', 1);
-			}
-		else if ( $content_filter_status == '10' ) {
-			add_filter('pre_comment_approved', 'spamfree_denied_post_proxy', 1);
-			}
-		else if ( $content_filter_status == '100' ) {
-			add_filter('pre_comment_approved', 'spamfree_denied_post_wp_blacklist', 1);
+			add_filter('pre_comment_approved', 'spamfree_denied_post_blacklist', 1);
 			}
 		else if ( $content_filter_status ) {
 			add_filter('pre_comment_approved', 'spamfree_denied_post', 1);
@@ -1325,8 +1317,8 @@ function spamfree_denied_post_short($approved) {
 	// REJECT SHORT COMMENTS :: END
 	}
 	
-function spamfree_denied_post_content_filter($approved) {
-	// REJECT BASED ON CONTENT FILTER :: BEGIN
+function spamfree_denied_post_blacklist($approved) {
+	// REJECT BLACKLISTED COMMENTERS :: BEGIN
 
 	// Update Count
 	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
@@ -1340,51 +1332,11 @@ function spamfree_denied_post_content_filter($approved) {
 		}
 	// Akismet Accuracy Fix :: END
 	
-	$spamfree_content_filter_error_message_detailed = '<span style="font-size:12px;"><strong>Your location has been identified as part of a reported spam network. Comments have been disabled to prevent spam.</strong><br /><br /></span>'."\n";
+	$spamfree_blacklist_error_message_detailed = '<span style="font-size:12px;"><strong>Your location has been identified as part of a known spam network. Comments have been disabled to prevent spam.</strong><br /><br /></span>'."\n";
 	
 	//$spamfree_blacklist_error_message_detailed .= 'This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree?code=bl_error" rel="external nofollow" target="_blank" >WP-SpamFree</a>.<br /><br />'."\n";
 	//$spamfree_blacklist_error_message_detailed .= 'If you would like to be removed from the blacklist, you will need to contact the developers of WP-SpamFree.<br />'."\n";
 
-	wp_die( __($spamfree_content_filter_error_message_detailed) );
-	return false;
-	// REJECT BASED ON COMMENT FILTER :: END
-	}
-	
-function spamfree_denied_post_proxy($approved) {
-	// REJECT PROXY COMMENTERS :: BEGIN
-
-	// Update Count
-	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
-	// Akismet Accuracy Fix :: BEGIN
-	$ak_count_pre	= get_option('ak_count_pre');
-	$ak_count_post	= get_option('akismet_spam_count');
-	if ($ak_count_post > $ak_count_pre) {
-		update_option( 'akismet_spam_count', $ak_count_pre );
-		}
-	// Akismet Accuracy Fix :: END
-	
-	$spamfree_proxy_error_message_detailed = '<span style="font-size:12px;"><strong>Your comment has been blocked because the blog owner has set their spam filter to not allow comments from users behind proxies.</strong><br/><br/>If you are a regular commenter or you feel that your comment should not have been blocked, please contact the blog owner and ask them to modify this setting.<br /><br /></span>'."\n";
-	
-	wp_die( __($spamfree_proxy_error_message_detailed) );
-	return false;
-	// REJECT PROXY COMMENTERS :: END
-	}
-
-function spamfree_denied_post_wp_blacklist($approved) {
-	// REJECT BLACKLISTED COMMENTERS :: BEGIN
-
-	// Update Count
-	update_option( 'spamfree_count', get_option('spamfree_count') + 1 );
-	// Akismet Accuracy Fix :: BEGIN
-	$ak_count_pre	= get_option('ak_count_pre');
-	$ak_count_post	= get_option('akismet_spam_count');
-	if ($ak_count_post > $ak_count_pre) {
-		update_option( 'akismet_spam_count', $ak_count_pre );
-		}
-	// Akismet Accuracy Fix :: END
-	
-	$spamfree_blacklist_error_message_detailed = '<span style="font-size:12px;"><strong>Your comment has been blocked based on the blog owner\'s blacklist settings.</strong><br/><br/>If you feel this is in error, please contact the blog owner by some other method.<br /><br /></span>'."\n";
-	
 	wp_die( __($spamfree_blacklist_error_message_detailed) );
 	return false;
 	// REJECT BLACKLISTED COMMENTERS :: END
@@ -1423,13 +1375,13 @@ function spamfree_content_short($commentdata) {
 	}
 	
 function spamfree_content_filter($commentdata) {
-	// Supplementary Defense - Blocking the Obvious to Improve Human/Pingback/Trackback Defense
+	// Supplementary Defense - Blocking the Obvious to Improve Pingback/Trackback Defense
 	// FYI, Certain loops are unrolled because of a weird compatibility issue with certain servers. Works fine on most, but for some unforeseen reason, a few have issues. When I get more time to test, will try to figure it out. for now these have to stay unrolled. Won't require any more server resources, just more lines of code. Overall, still a tiny program for a server to run.
 
 	$spamfree_options = get_option('spamfree_options');
 	
 	// CONTENT FILTERING :: BEGIN
-	$CurrentWordPressVersionMaxCheck = '3.0';
+	$CurrentWordPressVersion = '2.9';
 	
 	$commentdata_comment_author						= $commentdata['comment_author'];
 	$commentdata_comment_author_lc					= strtolower($commentdata_comment_author);
@@ -4178,19 +4130,19 @@ function spamfree_content_filter($commentdata) {
 	
 	// Regular Expression Tests
 	
-	if ( eregi( "\<a\ href\=\"http\:\/\/([a-z0-9\.\-]+)\.com/\"\>([a-z0-9\.\-]+)\<\/a\>\,\ \[url\=http\:\/\/([a-z0-9\.\-]+)\.com\/\]([a-z0-9\.\-]+)\[\/url\]\,\ \[link\=http\:\/\/([a-z0-9\.\-]+)\.com\/\]([a-z0-9\.\-]+)\[\/link\]\,\ http\:\/\/([a-z0-9\.\-]+)\.com\/", $commentdata_comment_content_lc ) ) {
+	if ( eregi( "<a href=\"http://([a-z0-9.-]+).com/\">([a-z0-9.-]+)</a>, \[url=http://([a-z0-9.-]+).com/\]([a-z0-9.-]+)\[/url\], \[link=http://([a-z0-9.-]+).com/\]([a-z0-9.-]+)\[/link\], http://([a-z0-9.-]+).com/", $commentdata_comment_content_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' RE10001';
 		}
-	if ( eregi( "\<a\ href\=\\\"http\:\/\/([a-z0-9\.\-]+)\.com\/\\\"\>([a-z0-9\.\-]+)\<\/a\>\,\ \[url\=http\:\/\/([a-z0-9\.\-]+)\.com\/\]([a-z0-9\.\-]+)\[\/url\]\,\ \[link\=http\:\/\/([a-z0-9\.\-]+)\.com\/\]([a-z0-9\.\-]+)\[\/link\]\,\ http\:\/\/([a-z0-9\.\-]+)\.com\/", $commentdata_comment_content_lc ) ) {
+	if ( eregi( "<a href=\\\"http://([a-z0-9.-]+).com/\\\">([a-z0-9.-]+)</a>, \[url=http://([a-z0-9.-]+).com/\]([a-z0-9.-]+)\[/url\], \[link=http://([a-z0-9.-]+).com/\]([a-z0-9.-]+)\[/link\], http://([a-z0-9.-]+).com/", $commentdata_comment_content_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' RE10001';
 		}
-	if ( eregi( "\<a\ href\=\\\"http\:\/\/([a-z0-9\.\-]+)\.com\/\\\"\>([a-z0-9\.\-]+)\<\/a\>\,\ \[url\=http\:\/\/([a-z0-9\.\-]+)\.com\/\]([a-z0-9\.\-]+)\[\/url\]\,\ \[link\=http\:\/\/([a-z0-9\.\-]+)\.\com\/]([a-z0-9\.\-\ ]+)\[\/link\]\,\ http\:\/\/([a-z0-9\.\-]+)\.com\/", $commentdata_comment_content_lc ) ) {
+	if ( eregi( "<a href=\\\"http://([a-z0-9.-]+).com/\\\">([a-z0-9.-]+)</a>, \[url=http://([a-z0-9.-]+).com/\]([a-z0-9.-]+)\[/url\], \[link=http://([a-z0-9.-]+).com/]([a-z0-9.-\ ]+)\[/link\], http://([a-z0-9.-]+).com/", $commentdata_comment_content_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' RE10002';
 		}
-	if ( eregi( "\<a\ href\=", $commentdata_comment_content_lc ) && eregi( "\<\/a\>,", $commentdata_comment_content_lc ) && eregi( "\[url\=http\:\/\/", $commentdata_comment_content_lc ) && eregi( "\.com\/\]", $commentdata_comment_content_lc ) && eregi( "\[\/url\]\,", $commentdata_comment_content_lc ) && eregi( "\[link\=http\:\/\/", $commentdata_comment_content_lc )  && eregi( "\[\/link\]\,", $commentdata_comment_content_lc ) && substr_count(  $commentdata_comment_content_lc, "http\:\/\/" ) > 2 ) {
+	if ( eregi( "<a href=", $commentdata_comment_content_lc ) && eregi( "</a>,", $commentdata_comment_content_lc ) && eregi( "\[url=http://", $commentdata_comment_content_lc ) && eregi( ".com/\]", $commentdata_comment_content_lc ) && eregi( "\[/url\],", $commentdata_comment_content_lc ) && eregi( "\[link=http://", $commentdata_comment_content_lc )  && eregi( "\[/link\],", $commentdata_comment_content_lc ) && substr_count(  $commentdata_comment_content_lc, "http://" ) > 2 ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' RE10003';
 		}
@@ -4219,17 +4171,6 @@ function spamfree_content_filter($commentdata) {
 			}
 		$i++;
 		}
-	// Comment Author and Comment Author URL appearing in Content
-	
-	$commentdata_comment_author_lc_inhref = '>'.$commentdata_comment_author_lc.'</a>';
-	$commentdata_comment_author_url_lc_insquote = "\'".$commentdata_comment_author_url_lc."\'";
-	$commentdata_comment_author_url_lc_indquote = "\"".$commentdata_comment_author_url_lc."\"";
-	
-	if ( ( eregi($commentdata_comment_author_url_lc,$commentdata_comment_content_lc) && eregi($commentdata_comment_author_lc_inhref,$commentdata_comment_content_lc) )|| eregi( $commentdata_comment_author_url_lc_insquote, $commentdata_comment_content_lc ) || eregi( $commentdata_comment_author_url_lc_indquote, $commentdata_comment_content_lc ) ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 9100';
-		}
-	// Emails
 	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || 	$commentdata_comment_author_email_lc == 'poster78@gmail.com' || $commentdata_comment_author_email_lc == 'ycp_m23@hotmail.com' || $commentdata_comment_author_email_lc == 'grey_dave@yahoo.com' || $commentdata_comment_author_email_lc == 'grren_dave55@hotmail.com' || $commentdata_comment_author_email_lc == 'dave_morales@hotmail.com' || $commentdata_comment_author_email_lc == 'tbs_guy@hotmail.com' || eregi( '.seo@gmail.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) || eregi( 'anonymous@', $commentdata_comment_author_email_lc ) || eregi( 'root@', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
@@ -4238,20 +4179,8 @@ function spamfree_content_filter($commentdata) {
 	if ( eregi( $commentdata_php_self_lc, $WPCommentsPostURL ) && $commentdata_referrer_lc == $WPCommentsPostURL ) {
 		// Often spammers send the referrer as the URL for the wp-comments-post.php page. Nimrods.
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' REF1000';
+		$spamfree_error_code .= ' 1000';
 		}
-
-	if( $_POST[ 'refJS' ] && $_POST[ 'refJS' ] != '' ) {
-		$refJS = addslashes( urldecode( $_POST[ 'refJS' ] ) );
-		$refJS = str_replace( '%3A', ':', $refJS );
-		if ( eregi( "\.google\.co(m|\.[a-z]{2})", $refJS ) && eregi( "leave a comment", $refJS ) ) { 
-			// make test more robust for other versions of google & search query
-			if ( !$content_filter_status ) { $content_filter_status = '1'; }
-			$spamfree_error_code .= ' REF1001';
-			}
-		// add Keyword Script Here
-		}
-
 	/*
 	// Disabled temp because of IE8 Private Browsing
 	//if ( !$commentdata_referrer_lc ) {
@@ -4261,9 +4190,8 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1001';
 		}
 	*/
-	
-	// Spam Network :: BEGIN
 
+	// Include in Blacklist :: BEGIN
 	// Test User-Agents
 	if ( !$commentdata_user_agent_lc  ) {
 		// There is no reason for a blank UA String, unless it's been altered.
@@ -4287,46 +4215,17 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1003';
 		}
-	if ( eregi( 'http://bsalsa.com', $commentdata_user_agent_lc ) ) {
+	if ( substr_count( $commentdata_user_agent_lc, 'Mozilla/4.0 (compatible;' ) > 1 ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1004';
 		}
-	if ( substr_count( $commentdata_user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 || substr_count( $commentdata_user_agent_lc, ' msie ' ) > 1 ) {
+	//Test HTTP_ACCEPT_LANGUAGE
+	/*
+	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' && !$_SERVER['HTTP_ACCEPT_LANGUAGE'] ) {
 		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1005';
+		$spamfree_error_code .= ' HAL1001';
 		}
-	if ( eregi( ' msie ', $commentdata_user_agent_lc ) && eregi( 'firefox/', $commentdata_user_agent_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1006';
-		}
-	if ( eregi( 'user-agent: ', $commentdata_user_agent_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1007';
-		}
-
-	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
-	
-		//Test HTTP_ACCEPT_LANGUAGE
-		$user_http_accept_language = trim($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		if ( !$user_http_accept_language ) {
-			$content_filter_status = '2';
-			$spamfree_error_code .= ' HAL1001';
-			}
-
-		//Test HTTP_ACCEPT and Rev DNS Authenticity
-		if ( trim($_SERVER['HTTP_ACCEPT']) == '*/*' && $ReverseDNSAuthenticity == '[Possibly Forged]' ) {
-			$content_filter_status = '2';
-			$spamfree_error_code .= ' HA-REVD-1001';
-			}
-
-		//Test PROXY STATUS if option
-		if ( $ipProxy == 'PROXY DETECTED' && !$spamfree_options['allow_proxy_users'] ) {
-			$content_filter_status = '10';
-			$spamfree_error_code .= ' PROXY1001';
-			}
-	
-		}
-
+	*/
 
 	// Test IPs
 	//if ( $commentdata_remote_addr_lc == '64.20.49.178' || $commentdata_remote_addr_lc == '206.123.92.245' || $commentdata_remote_addr_lc == '72.249.100.188' || $commentdata_remote_addr_lc == '61.24.158.174' || $commentdata_remote_addr_lc == '77.92.88.27' || $commentdata_remote_addr_lc == '89.113.78.6' || $commentdata_remote_addr_lc == '92.48.65.27' || $commentdata_remote_addr_lc == '92.48.122.2' || $commentdata_remote_addr_lc == '92.241.176.200' || $commentdata_remote_addr_lc == '78.129.202.2' || $commentdata_remote_addr_lc == '78.129.202.15' || eregi( "^78.129.202.", $commentdata_remote_addr_lc ) || eregi( "^123.237.144.", $commentdata_remote_addr_lc ) || eregi( "^123.237.147.", $commentdata_remote_addr_lc ) ) {
@@ -4406,12 +4305,6 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1008-'.$commentdata_remote_host_lc;
 		}
-	if ( eregi( "\.opentransfer\.com$", $commentdata_remote_host_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' RH1009-'.$commentdata_remote_host_lc;
-		}
-
-		
 	/*	
 	if ( eregi( "^host\.", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
@@ -4422,6 +4315,7 @@ function spamfree_content_filter($commentdata) {
 	/*
 	// Following is causing errors on some systems. - 06/17/08
 	if ( $commentdata_remote_host_lc == 'blank' && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
+		// Experimental - However, have never seen a human comment where this occurs.
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' 1004';
 		}
@@ -4451,11 +4345,6 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1028-'.$ReverseDNS;
 		}
-	if ( eregi( "\.opentransfer\.com$", $ReverseDNS ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' REVD1029-'.$ReverseDNS;
-		}		
-		
 	/*	
 	if ( eregi( "^host\.", $ReverseDNS ) ) {
 		$content_filter_status = '2';
@@ -4480,7 +4369,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' 1032';
 		}
 	*/	
-	// Spam Network :: END	
+	// Include in Blacklist :: END	
 	// Test Pingbacks and Trackbacks
 	if ( $commentdata_comment_type == 'pingback' || $commentdata_comment_type == 'trackback' ) {
 	
@@ -4500,14 +4389,14 @@ function spamfree_content_filter($commentdata) {
 		// Check History of WordPress User-Agents and Keep up to Date
 		if ( eregi( 'Incutio XML-RPC -- WordPress/', $commentdata_user_agent_lc ) ) {
 			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
-			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersionMaxCheck && $commentdata_user_agent_lc_explode[1] !='MU' ) {
+			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion && $commentdata_user_agent_lc_explode[1] !='MU' ) {
 				if ( !$content_filter_status ) { $content_filter_status = '1'; }
 				$spamfree_error_code .= ' T1001';
 				}
 			}
 		if ( eregi( 'The Incutio XML-RPC PHP Library -- WordPress/', $commentdata_user_agent_lc ) ) {
 			$commentdata_user_agent_lc_explode = explode( '/', $commentdata_user_agent_lc );
-			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersionMaxCheck && $commentdata_user_agent_lc_explode[1] !='MU' ) {
+			if ( $commentdata_user_agent_lc_explode[1] > $CurrentWordPressVersion && $commentdata_user_agent_lc_explode[1] !='MU' ) {
 				if ( !$content_filter_status ) { $content_filter_status = '1'; }
 				$spamfree_error_code .= ' T1002';
 				}
@@ -5759,20 +5648,6 @@ function spamfree_content_filter($commentdata) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' BLC1010';
 		}
-
-
-	// WP Blacklist Check :: BEGIN
-	
-	// Test WP Blacklist if option set
-	
-	// Before long make own blacklist function - WP's is flawed with IP's
-	if ( $spamfree_options['enhanced_comment_blacklist'] && !$content_filter_status ) {
-		if ( wp_blacklist_check($commentdata_comment_author, $commentdata_comment_author_email, $commentdata_comment_author_url, $commentdata_comment_content, $commentdata_remote_addr, $commentdata_user_agent) ) {
-			if ( !$content_filter_status ) { $content_filter_status = '100'; }
-			$spamfree_error_code .= ' WP-BLACKLIST';
-			}
-		}
-	// WP Blacklist Check :: END
 	
 	if ( !$spamfree_error_code ) {
 		$spamfree_error_code = 'No Error';
@@ -5783,7 +5658,7 @@ function spamfree_content_filter($commentdata) {
 			spamfree_log_data( $commentdata, $spamfree_error_code );
 			}
 		}
-
+	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
 	return $content_filter_status;
@@ -5804,7 +5679,7 @@ function spamfree_stats() {
 		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree/',  number_format($spamfree_count) ).'</p>';
 		}
 	}
-
+	
 function spamfree_filter_plugin_actions( $links, $file ){
 	//Static so we don't call plugin_basename on every plugin row.
 	static $this_plugin;
@@ -5817,7 +5692,8 @@ function spamfree_filter_plugin_actions( $links, $file ){
 	return $links;
 	}
 
-function spamfree_comment_add_referrer_js($post_id) {
+function spamfree_add_technical_data( $post_id ) {
+	global $current_user;
 	?>
 	<script type='text/javascript'>
 	<!--
@@ -5828,11 +5704,8 @@ function spamfree_comment_add_referrer_js($post_id) {
 	<?php
 	}
 
-function spamfree_modify_notification( $text, $comment_id ) {
+function spamfree_add_technical_data_to_notification( $text, $comment_id ) {
 
-	$spamfree_options = get_option('spamfree_options');
-	$wpsf_siteurl = get_option('siteurl');
-	
 	// IP / PROXY INFO :: BEGIN
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$ipBlock=explode('.',$ip);
@@ -5868,55 +5741,45 @@ function spamfree_modify_notification( $text, $comment_id ) {
 		}
 	// IP / PROXY INFO :: END
 
-	$text .= "\r\nBlacklist the IP Address: ".$wpsf_siteurl.'/wp-admin/options-general.php?page=wp-spamfree/wp-spamfree.php&wpsf_action=blacklist_ip&comment_ip='.$ip;
+
+	$text .= "\r\n----------------------------------------------------";
+	$text .= "\r\n:: Additional Technical Data Added by WP-SpamFree ::";
+	$text .= "\r\n----------------------------------------------------";
 	$text .= "\r\n";
 
-	if ( !$spamfree_options['hide_extra_data'] ) {
-
-		$text .= "\r\n----------------------------------------------------";
-		$text .= "\r\n:: Additional Technical Data Added by WP-SpamFree ::";
-		$text .= "\r\n----------------------------------------------------";
-		$text .= "\r\n";
-	
-		if( $_POST[ 'refJS' ] && $_POST[ 'refJS' ] != '' ) {
-			$refJS = addslashes( urldecode( $_POST[ 'refJS' ] ) );
-			$refJS = str_replace( '%3A', ':', $refJS );
-			$text .= "\r\nPage Referrer: $refJS\r\n";
-			}
-		$text .= "\r\nComment Processor Referrer: ".$_SERVER['HTTP_REFERER'];
-		$text .= "\r\n";
-		$text .= "\r\nUser-Agent: ".$_SERVER['HTTP_USER_AGENT'];
-		$text .= "\r\n";
-		$text .= "\r\nIP Address               : ".$ip;
-		$text .= "\r\nRemote Host              : ".$_SERVER['REMOTE_HOST'];
-		$text .= "\r\nReverse DNS              : ".$ReverseDNS;
-		$text .= "\r\nReverse DNS IP           : ".$ReverseDNSIP;
-		$text .= "\r\nReverse DNS Authenticity : ".$ReverseDNSAuthenticity;
-		$text .= "\r\nProxy Info               : ".$ipProxy;
-		$text .= "\r\nProxy Data               : ".$ipProxyData;
-		$text .= "\r\nProxy Status             : ".$ProxyStatus;
-		if ( $_SERVER['HTTP_VIA'] ) {
-			$text .= "\r\nHTTP_VIA                 : ".$_SERVER['HTTP_VIA'];
-			}
-		if ( $_SERVER['HTTP_X_FORWARDED_FOR'] ) {
-			$text .= "\r\nHTTP_X_FORWARDED_FOR     : ".$_SERVER['HTTP_X_FORWARDED_FOR'];
-			}
-		$text .= "\r\nHTTP_ACCEPT_LANGUAGE     : ".$_SERVER['HTTP_ACCEPT_LANGUAGE'];
-		$text .= "\r\n";
-		$text .= "\r\nHTTP_ACCEPT: ".$_SERVER['HTTP_ACCEPT'];
-		$text .= "\r\n";
-		$text .= "\r\nIP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$ip;
-		$text .= "\r\n";
-		$text .= "\r\n(This data is helpful if you need to submit a spam sample.)";
-		$text .= "\r\n";
+	if( $_POST[ 'refJS' ] && $_POST[ 'refJS' ] != '' ) {
+		$refJS = addslashes( urldecode( $_POST[ 'refJS' ] ) );
+		$refJS = str_replace( '%3A', ':', $refJS );
+		$text .= "\r\nPage Referrer: $refJS\r\n";
 		}
+	$text .= "\r\nComment Processor Referrer: ".$_SERVER['HTTP_REFERER'];
+	$text .= "\r\n";
+	$text .= "\r\nUser-Agent: ".$_SERVER['HTTP_USER_AGENT'];
+	$text .= "\r\n";
+	$text .= "\r\nIP Address               : ".$ip;
+	$text .= "\r\nRemote Host              : ".$_SERVER['REMOTE_HOST'];
+	$text .= "\r\nReverse DNS              : ".$ReverseDNS;
+	$text .= "\r\nReverse DNS IP           : ".$ReverseDNSIP;
+	$text .= "\r\nReverse DNS Authenticity : ".$ReverseDNSAuthenticity;
+	$text .= "\r\nProxy Info               : ".$ipProxy;
+	$text .= "\r\nProxy Data               : ".$ipProxyData;
+	$text .= "\r\nProxy Status             : ".$ProxyStatus;
+	if ( $_SERVER['HTTP_VIA'] ) {
+		$text .= "\r\nHTTP_VIA                 : ".$_SERVER['HTTP_VIA'];
+		}
+	if ( $_SERVER['HTTP_X_FORWARDED_FOR'] ) {
+		$text .= "\r\nHTTP_X_FORWARDED_FOR     : ".$_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+	$text .= "\r\nHTTP_ACCEPT_LANGUAGE     : ".$_SERVER['HTTP_ACCEPT_LANGUAGE'];
+	$text .= "\r\n";
+	$text .= "\r\nHTTP_ACCEPT: ".$_SERVER['HTTP_ACCEPT'];
+	$text .= "\r\n";
+	$text .= "\r\nIP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$ip;
+	$text .= "\r\n";
+	$text .= "\r\n(This data is helpful if you need to submit a spam sample.)";
+	$text .= "\r\n";
+
 	return $text;
-	}
-	
-function spamfree_add_ip_to_blacklist($ip_to_blacklist) {
-	$blacklist_keys = trim(stripslashes(get_option('blacklist_keys')));
-	$blacklist_keys_update = $blacklist_keys."\n".$ip_to_blacklist;
-	update_option('blacklist_keys', $blacklist_keys_update);
 	}
 
 if (!class_exists('wpSpamFree')) {
@@ -5956,11 +5819,11 @@ if (!class_exists('wpSpamFree')) {
 			add_action('wp_head', array(&$this, 'wp_head_intercept'));
 			add_filter('the_content', 'spamfree_contact_form', 10);
 			add_filter('the_content', 'spamfree_content_addendum', 999);
-			add_action('comment_form', 'spamfree_comment_form',10);
-			add_action('comment_form', 'spamfree_comment_add_referrer_js',1);
+			add_action('comment_form', 'spamfree_comment_form');
+			add_action('comment_form', 'spamfree_add_technical_data');
 			add_action('preprocess_comment', 'spamfree_check_comment_type',1);
-			add_filter('comment_notification_text', 'spamfree_modify_notification', 10, 2);
-			add_filter('comment_moderation_text', 'spamfree_modify_notification', 10, 2);
+			add_filter('comment_notification_text', 'spamfree_add_technical_data_to_notification', 10, 2);
+			add_filter('comment_moderation_text', 'spamfree_add_technical_data_to_notification', 10, 2);
 			add_action('activity_box_end', 'spamfree_stats');
 			add_filter('plugin_action_links', 'spamfree_filter_plugin_actions', 10, 2 );
         	}
@@ -5981,7 +5844,6 @@ if (!class_exists('wpSpamFree')) {
 				$wpSpamFreeVerAdmin='Version '.$wpSpamFreeVer;
 				}
 			$spamCount=spamfree_count();
-			$SiteURL = get_option('siteurl');
 			?>
 			<div class="wrap">
 			<h2>WP-SpamFree</h2>
@@ -6040,25 +5902,6 @@ if (!class_exists('wpSpamFree')) {
 				$wp_installation_status_msg_main = 'Not Installed Correctly';
 				$wp_installation_status_msg_text = strtolower($wp_installation_status_msg_main);
 				}
-
-			if ( $_REQUEST['submit_wpsf_general_options'] ) {
-				echo '<div class="updated fade"><p>Plugin Spam settings saved.</p></div>';
-				}
-			if ( $_REQUEST['submit_wpsf_contact_options'] ) {
-				echo '<div class="updated fade"><p>Plugin Contact Form settings saved.</p></div>';
-				}
-			if ( $_REQUEST['wpsf_action'] == 'blacklist_ip' && $_REQUEST['comment_ip'] && !$_REQUEST['submit_wpsf_general_options'] && !$_REQUEST['submit_wpsf_contact_options'] ) {
-				$ip_to_blacklist = trim(stripslashes($_REQUEST['comment_ip']));
-				if (ereg("^([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$",$ip_to_blacklist)) {
-					$$ip_to_blacklist_valid='1';
-					spamfree_add_ip_to_blacklist($ip_to_blacklist);
-					echo '<div class="updated fade"><p>IP Address added to Comment Blacklist.</p></div>';
-					}
-				else {
-					echo '<div class="updated fade"><p>Invalid IP Address - not added to Comment Blacklist.</p></div>';
-					}
-				}
-
 			?>
 			<div style='width:600px;border-style:solid;border-width:1px;border-color:<?php echo $wp_installation_status_color; ?>;background-color:<?php echo $wp_installation_status_bg_color; ?>;padding:0px 15px 0px 15px;margin-top:15px;'>
 			<p><strong><?php echo "<img src='".$wpsf_plugin_url."/img/".$wp_installation_status_image.".png' alt='' width='24' height='24' style='border-style:none;vertical-align:middle;padding-right:7px;' /> Installation Status: <span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong></p>
@@ -6106,9 +5949,6 @@ if (!class_exists('wpSpamFree')) {
 						'comment_logging'						=> $_REQUEST['comment_logging'],
 						'comment_logging_start_date'			=> $CommentLoggingStartDate,
 						'comment_logging_all'					=> $_REQUEST['comment_logging_all'],
-						'enhanced_comment_blacklist'			=> $_REQUEST['enhanced_comment_blacklist'],
-						'allow_proxy_users'						=> $_REQUEST['allow_proxy_users'],
-						'hide_extra_data'						=> $_REQUEST['hide_extra_data'],
 						'form_include_website' 					=> $spamfree_options['form_include_website'],
 						'form_require_website' 					=> $spamfree_options['form_require_website'],
 						'form_include_phone' 					=> $spamfree_options['form_include_phone'],
@@ -6135,9 +5975,6 @@ if (!class_exists('wpSpamFree')) {
 						'promote_plugin_link' 					=> $_REQUEST['promote_plugin_link'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
-				//$blacklist_keys = trim(stripslashes(get_option('blacklist_keys')));
-				$blacklist_keys_update = trim(stripslashes($_REQUEST['wordpress_comment_blacklist']));
-				update_option('blacklist_keys', $blacklist_keys_update);
 				}
 			if ($_REQUEST['submitted_wpsf_contact_options']) {
 				$spamfree_options_update = array (
@@ -6161,37 +5998,35 @@ if (!class_exists('wpSpamFree')) {
 						'comment_logging'						=> $spamfree_options['comment_logging'],
 						'comment_logging_start_date'			=> $spamfree_options['comment_logging_start_date'],
 						'comment_logging_all'					=> $spamfree_options['comment_logging_all'],
-						'enhanced_comment_blacklist'			=> $spamfree_options['enhanced_comment_blacklist'],
-						'allow_proxy_users'						=> $spamfree_options['allow_proxy_users'],
-						'hide_extra_data'						=> $spamfree_options['hide_extra_data'],
 						'form_include_website' 					=> $_REQUEST['form_include_website'],
 						'form_require_website' 					=> $_REQUEST['form_require_website'],
 						'form_include_phone' 					=> $_REQUEST['form_include_phone'],
 						'form_require_phone' 					=> $_REQUEST['form_require_phone'],
 						'form_include_drop_down_menu'			=> $_REQUEST['form_include_drop_down_menu'],
 						'form_require_drop_down_menu'			=> $_REQUEST['form_require_drop_down_menu'],
-						'form_drop_down_menu_title'				=> trim(stripslashes($_REQUEST['form_drop_down_menu_title'])),
-						'form_drop_down_menu_item_1'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_1'])),
-						'form_drop_down_menu_item_2'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_2'])),
-						'form_drop_down_menu_item_3'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_3'])),
-						'form_drop_down_menu_item_4'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_4'])),
-						'form_drop_down_menu_item_5'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_5'])),
-						'form_drop_down_menu_item_6'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_6'])),
-						'form_drop_down_menu_item_7'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_7'])),
-						'form_drop_down_menu_item_8'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_8'])),
-						'form_drop_down_menu_item_9'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_9'])),
-						'form_drop_down_menu_item_10'			=> trim(stripslashes($_REQUEST['form_drop_down_menu_item_10'])),
-						'form_message_width' 					=> trim(stripslashes($_REQUEST['form_message_width'])),
-						'form_message_height' 					=> trim(stripslashes($_REQUEST['form_message_height'])),
-						'form_message_min_length' 				=> trim(stripslashes($_REQUEST['form_message_min_length'])),
-						'form_message_recipient' 				=> trim(stripslashes($_REQUEST['form_message_recipient'])),
-						'form_response_thank_you_message' 		=> trim(stripslashes($_REQUEST['form_response_thank_you_message'])),
+						'form_drop_down_menu_title'				=> $_REQUEST['form_drop_down_menu_title'],
+						'form_drop_down_menu_item_1'			=> $_REQUEST['form_drop_down_menu_item_1'],
+						'form_drop_down_menu_item_2'			=> $_REQUEST['form_drop_down_menu_item_2'],
+						'form_drop_down_menu_item_3'			=> $_REQUEST['form_drop_down_menu_item_3'],
+						'form_drop_down_menu_item_4'			=> $_REQUEST['form_drop_down_menu_item_4'],
+						'form_drop_down_menu_item_5'			=> $_REQUEST['form_drop_down_menu_item_5'],
+						'form_drop_down_menu_item_6'			=> $_REQUEST['form_drop_down_menu_item_6'],
+						'form_drop_down_menu_item_7'			=> $_REQUEST['form_drop_down_menu_item_7'],
+						'form_drop_down_menu_item_8'			=> $_REQUEST['form_drop_down_menu_item_8'],
+						'form_drop_down_menu_item_9'			=> $_REQUEST['form_drop_down_menu_item_9'],
+						'form_drop_down_menu_item_10'			=> $_REQUEST['form_drop_down_menu_item_10'],
+						'form_message_width' 					=> $_REQUEST['form_message_width'],
+						'form_message_height' 					=> $_REQUEST['form_message_height'],
+						'form_message_min_length' 				=> $_REQUEST['form_message_min_length'],
+						'form_message_recipient' 				=> $_REQUEST['form_message_recipient'],
+						'form_response_thank_you_message' 		=> $_REQUEST['form_response_thank_you_message'],
 						'form_include_user_meta' 				=> $_REQUEST['form_include_user_meta'],
 						'promote_plugin_link' 					=> $spamfree_options['promote_plugin_link'],
 						);
 				update_option('spamfree_options', $spamfree_options_update);
 				}
-			$spamfree_options = get_option('spamfree_options');
+				$spamfree_options = get_option('spamfree_options');
+				$SiteURL = get_option('siteurl');
 			?>
 			
 			<div style="width:305px;height:250px;border-style:none;border-width:0px;border-color:#000000;padding:0px 15px 0px 15px;margin-top:15px;margin-right:15px;float:left;clear:left;">
@@ -6322,19 +6157,6 @@ if (!class_exists('wpSpamFree')) {
 					
 					</li>
 					<li>
-					<label for="enhanced_comment_blacklist">
-						<input type="checkbox" id="enhanced_comment_blacklist" name="enhanced_comment_blacklist" <?php echo ($spamfree_options['enhanced_comment_blacklist']==true?"checked=\"checked\"":"") ?> />
-						<strong>Enhanced Comment Blacklist</strong><br />Enhances WordPress's Comment Blacklist - instead of just sending comments to moderation, they will be completely blocked. Also adds a link in the comment notification emails that will let you blacklist a commenter's IP with one click.<br/>(Useful if you receive repetitive human spam or harassing comments from a particular commenter.)<br/>&nbsp;</label>					
-					</li>
-					<label for="wordpress_comment_blacklist">
-						<?php 
-						$WordPressCommentBlacklist = trim(get_option('blacklist_keys'));
-						?>
-						<strong>Your current WordPress Comment Blacklist</strong><br/>When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be completely blocked, not just marked as spam. One word or IP per line. It is not case-sensitive and will match included words, so "press" on your blacklist will block "WordPress" in a comment.<br />
-						<textarea id="wordpress_comment_blacklist" name="wordpress_comment_blacklist" cols="80" rows="8" /><?php echo $WordPressCommentBlacklist; ?></textarea><br/>
-					</label>
-					You can either update this list here or on the <a href="<?php echo $SiteURL; ?>/wp-admin/options-discussion.php">WordPress Discussion Settings page</a>.<br/>&nbsp;
-					<li>
 					<label for="block_all_trackbacks">
 						<input type="checkbox" id="block_all_trackbacks" name="block_all_trackbacks" <?php echo ($spamfree_options['block_all_trackbacks']==true?"checked=\"checked\"":"") ?> />
 						<strong>Disable trackbacks.</strong><br />Use if trackback spam is excessive. (Not recommended)<br />&nbsp;
@@ -6345,16 +6167,6 @@ if (!class_exists('wpSpamFree')) {
 						<input type="checkbox" id="block_all_pingbacks" name="block_all_pingbacks" <?php echo ($spamfree_options['block_all_pingbacks']==true?"checked=\"checked\"":"") ?> />
 						<strong>Disable pingbacks.</strong><br />Use if pingback spam is excessive. Disadvantage is reduction of communication between blogs. (Not recommended)<br />&nbsp;
 					</label>
-					</li>
-					<li>
-					<label for="allow_proxy_users">
-						<input type="checkbox" id="allow_proxy_users" name="allow_proxy_users" <?php echo ($spamfree_options['allow_proxy_users']==true?"checked=\"checked\"":"") ?> />
-						<strong>Allow users behind proxy servers to comment?</strong><br />Most users should leave this unchecked. Many human spammers hide behind proxies.<br/>&nbsp;</label>					
-					</li>
-					<li>
-					<label for="hide_extra_data">
-						<input type="checkbox" id="hide_extra_data" name="hide_extra_data" <?php echo ($spamfree_options['hide_extra_data']==true?"checked=\"checked\"":"") ?> />
-						<strong>Hide extra technical data in comment notifications.</strong><br />This data is helpful if you need to submit a spam sample. If you dislike seeing the extra info, you can use this option.<br/>&nbsp;</label>					
 					</li>
 					<li>
 					<label for="promote_plugin_link">
@@ -6423,105 +6235,105 @@ if (!class_exists('wpSpamFree')) {
 					</li>					
 					<li>
 					<label for="form_drop_down_menu_title">
-						<?php $FormDropDownMenuTitle = trim(stripslashes($spamfree_options['form_drop_down_menu_title'])); ?>
+						<?php $FormDropDownMenuTitle = $spamfree_options['form_drop_down_menu_title']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_title" name="form_drop_down_menu_title" value="<?php if ( $FormDropDownMenuTitle ) { echo $FormDropDownMenuTitle; } else { echo '';} ?>" />
 						<strong>Title of drop-down select menu. (Menu won't be shown if empty.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_1">
-						<?php $FormDropDownMenuItem1 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_1'])); ?>
+						<?php $FormDropDownMenuItem1 = $spamfree_options['form_drop_down_menu_item_1']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_1" name="form_drop_down_menu_item_1" value="<?php if ( $FormDropDownMenuItem1 ) { echo $FormDropDownMenuItem1; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 1. (Menu won't be shown if empty.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_2">
-						<?php $FormDropDownMenuItem2 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_2'])); ?>
+						<?php $FormDropDownMenuItem2 = $spamfree_options['form_drop_down_menu_item_2']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_2" name="form_drop_down_menu_item_2" value="<?php if ( $FormDropDownMenuItem2 ) { echo $FormDropDownMenuItem2; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 2. (Menu won't be shown if empty.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_3">
-						<?php $FormDropDownMenuItem3 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_3'])); ?>
+						<?php $FormDropDownMenuItem3 = $spamfree_options['form_drop_down_menu_item_3']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_3" name="form_drop_down_menu_item_3" value="<?php if ( $FormDropDownMenuItem3 ) { echo $FormDropDownMenuItem3; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 3. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_4">
-						<?php $FormDropDownMenuItem4 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_4'])); ?>
+						<?php $FormDropDownMenuItem4 = $spamfree_options['form_drop_down_menu_item_4']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_4" name="form_drop_down_menu_item_4" value="<?php if ( $FormDropDownMenuItem4 ) { echo $FormDropDownMenuItem4; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 4. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_5">
-						<?php $FormDropDownMenuItem5 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_5'])); ?>
+						<?php $FormDropDownMenuItem5 = $spamfree_options['form_drop_down_menu_item_5']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_5" name="form_drop_down_menu_item_5" value="<?php if ( $FormDropDownMenuItem5 ) { echo $FormDropDownMenuItem5; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 5. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_6">
-						<?php $FormDropDownMenuItem6 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_6'])); ?>
+						<?php $FormDropDownMenuItem6 = $spamfree_options['form_drop_down_menu_item_6']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_6" name="form_drop_down_menu_item_6" value="<?php if ( $FormDropDownMenuItem6 ) { echo $FormDropDownMenuItem6; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 6. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_7">
-						<?php $FormDropDownMenuItem7 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_7'])); ?>
+						<?php $FormDropDownMenuItem7 = $spamfree_options['form_drop_down_menu_item_7']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_7" name="form_drop_down_menu_item_7" value="<?php if ( $FormDropDownMenuItem7 ) { echo $FormDropDownMenuItem7; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 7. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_8">
-						<?php $FormDropDownMenuItem8 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_8'])); ?>
+						<?php $FormDropDownMenuItem8 = $spamfree_options['form_drop_down_menu_item_8']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_8" name="form_drop_down_menu_item_8" value="<?php if ( $FormDropDownMenuItem8 ) { echo $FormDropDownMenuItem8; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 8. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_9">
-						<?php $FormDropDownMenuItem9 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_9'])); ?>
+						<?php $FormDropDownMenuItem9 = $spamfree_options['form_drop_down_menu_item_9']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_9" name="form_drop_down_menu_item_9" value="<?php if ( $FormDropDownMenuItem9 ) { echo $FormDropDownMenuItem9; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 9. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_drop_down_menu_item_10">
-						<?php $FormDropDownMenuItem10 = trim(stripslashes($spamfree_options['form_drop_down_menu_item_10'])); ?>
+						<?php $FormDropDownMenuItem10 = $spamfree_options['form_drop_down_menu_item_10']; ?>
 						<input type="text" size="40" id="form_drop_down_menu_item_10" name="form_drop_down_menu_item_10" value="<?php if ( $FormDropDownMenuItem10 ) { echo $FormDropDownMenuItem10; } else { echo '';} ?>" />
 						<strong>Drop-down select menu item 10. (Leave blank if not using.)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_message_width">
-						<?php $FormMessageWidth = trim(stripslashes($spamfree_options['form_message_width'])); ?>
+						<?php $FormMessageWidth = $spamfree_options['form_message_width']; ?>
 						<input type="text" size="4" id="form_message_width" name="form_message_width" value="<?php if ( $FormMessageWidth && $FormMessageWidth >= 40 ) { echo $FormMessageWidth; } else { echo '40';} ?>" />
 						<strong>"Message" field width. (Minimum 40)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_message_height">
-						<?php $FormMessageHeight = trim(stripslashes($spamfree_options['form_message_height'])); ?>
+						<?php $FormMessageHeight = $spamfree_options['form_message_height']; ?>
 						<input type="text" size="4" id="form_message_height" name="form_message_height" value="<?php if ( $FormMessageHeight && $FormMessageHeight >= 5 ) { echo $FormMessageHeight; } else if ( !$FormMessageHeight ) { echo '10'; } else { echo '5';} ?>" />
 						<strong>"Message" field height. (Minimum 5, Default 10)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_message_min_length">
-						<?php $FormMessageMinLength = trim(stripslashes($spamfree_options['form_message_min_length'])); ?>
+						<?php $FormMessageMinLength = $spamfree_options['form_message_min_length']; ?>
 						<input type="text" size="4" id="form_message_min_length" name="form_message_min_length" value="<?php if ( $FormMessageMinLength && $FormMessageMinLength >= 15 ) { echo $FormMessageMinLength; } else if ( !$FormMessageWidth ) { echo '25'; } else { echo '15';} ?>" />
 						<strong>Minimum message length (# of characters). (Minimum 15, Default 25)</strong><br />&nbsp;
 					</label>
 					</li>
 					<li>
 					<label for="form_message_recipient">
-						<?php $FormMessageRecipient = trim(stripslashes($spamfree_options['form_message_recipient'])); ?>
+						<?php $FormMessageRecipient = $spamfree_options['form_message_recipient']; ?>
 						<input type="text" size="40" id="form_message_recipient" name="form_message_recipient" value="<?php if ( !$FormMessageRecipient ) { echo get_option('admin_email'); } else { echo $FormMessageRecipient; } ?>" />
 						<strong>Optional: Enter alternate form recipient. Default is blog admin email.</strong><br />&nbsp;
 					</label>
@@ -6529,10 +6341,11 @@ if (!class_exists('wpSpamFree')) {
 					<li>
 					<label for="form_response_thank_you_message">
 						<?php 
-						$FormResponseThankYouMessage = trim(stripslashes($spamfree_options['form_response_thank_you_message']));
+						$FormResponseThankYouMessage = $spamfree_options['form_response_thank_you_message'];
+						$FormResponseThankYouMessage = str_replace( "\\", "", $FormResponseThankYouMessage );
 						?>
 						<strong>Enter message to be displayed upon successful contact form submission.</strong><br/>Can be plain text, HTML, or an ad, etc.<br />
-						<textarea id="form_response_thank_you_message" name="form_response_thank_you_message" cols="80" rows="3" /><?php if ( !$FormResponseThankYouMessage ) { echo 'Your message was sent successfully. Thank you.'; } else { echo $FormResponseThankYouMessage; } ?></textarea><br/>&nbsp;
+						<textarea id="form_response_thank_you_message" name="form_response_thank_you_message" cols="80" rows="2" /><?php if ( !$FormResponseThankYouMessage ) { echo 'Your message was sent successfully. Thank you.'; } else { echo $FormResponseThankYouMessage; } ?></textarea><br/>&nbsp;
 					</label>
 					</li>
 					<li>
@@ -6647,18 +6460,10 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p>This extra data will be extremely valuable in helping us improve the spam protection capabilites of the plugin.</p>
 			
-			<p><a name="wpsf_configuration_enhanced_comment_blacklist"><strong>Enhanced Comment Blacklist</strong></a><br />Enhances WordPress's Comment Blacklist - instead of just sending comments to moderation, they will be completely blocked if this is enabled. (Useful if you receive repetitive human spam or harassing comments from a particular commenter.) Also adds <strong>one-click blacklisting</strong> - a link will now appear in the comment notification emails that you can click to blacklist a commenter's IP. This link appears whether or not the feature is enabled. If you click the link and this feature is diabled, it will add the commenter's IP to the blacklist but blacklisting will operate according to WordPress's default functionality.</p>
-			
-			<p>The WP-SpamFree blacklist shares the WordPress Comment Blacklist data, but the difference is that now when a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be completely blocked, not just marked as spam. One word or IP per line...add each new blacklist item on a new line. If you're not sure how to use it, start by just adding an IP address, or click on the link in one of the notification emails. It is not case-sensitive and will match included words, so "press" on your blacklist will block "WordPress" in a comment.</p>			
-
 			<p><a name="wpsf_configuration_disable_trackbacks"><strong>Disable trackbacks.</strong></a><br />Use if trackback spam is excessive. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.</p>
 
 			<p><a name="wpsf_configuration_disable_pingbacks"><strong>Disable pingbacks.</strong></a><br />Use if pingback spam is excessive. The disadvantage is a reduction of communication between blogs. When blogs ping each other, it's like saying "Hi, I just wrote about you" and disabling these pingbacks eliminates that ability. It is recomended that you don't use this option unless you are experiencing an extreme spam attack.</p>
 
-			<p><a name="wpsf_configuration_allow_proxy_users"><strong>Allow users behind proxy servers to comment?</strong></a><br />Most users should leave this unchecked. Many human spammers hide behind proxies. Leaving this unckecked adds an extra layer of spam protection. In the rare even that a non-spam commenter gets blocked by this, they will be notified what the situation is, and instructed to contact you to ask you to modify this setting.</p>
-			
-			<p><a name="wpsf_configuration_hide_extra_data"><strong>Hide extra technical data in comment notifications.</strong></a><br />The plugin now addes some extra technical data to the comment moderation and notification emails, including the referrer that brought the user to the page where they commented, the referrer that brought them to the WordPress comments processing page (helps with fighting spam), User-Agent, Remote Host, Reverse DNS, Proxy Info, Browser Language, and more. This data is helpful if you ever need to <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">submit a spam sample</a>. If you dislike seeing the extra info, you can use this option to prevent the info from being displayed in the emails. If you don't mind seeing it, please leave it this unchecked, because if you ever need to submit a spam sample, it helps us track spam patterns.</p>
-			
 			<p><a name="wpsf_configuration_help_promote_plugin"><strong>Help promote WP-SpamFree?</strong></a><br />This places a small link under the comments and contact form, letting others know what's blocking spam on your blog. This plugin is provided for free, so this is much appreciated. It's a small way you can give back and let others know about WP-SpamFree.</p>
 			
 			<p><a name="wpsf_configuration_contact_form_options"><strong>Contact Form Options</strong></a><br />
@@ -6783,7 +6588,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1";
+			$plugin_db_version = "2.0.1.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -6833,9 +6638,6 @@ if (!class_exists('wpSpamFree')) {
 					'comment_logging'						=> 0,
 					'comment_logging_start_date'			=> 0,
 					'comment_logging_all'					=> 0,
-					'enhanced_comment_blacklist'			=> 0,
-					'allow_proxy_users'						=> 0,
-					'hide_extra_data'						=> 0,
 					'form_include_website' 					=> 1,
 					'form_require_website' 					=> 0,
 					'form_include_phone' 					=> 1,

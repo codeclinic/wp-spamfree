@@ -2,7 +2,7 @@
 Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
-Requires at least: 2.1
+Requires at least: 2.0
 Tested up to: 2.8
 Stable tag: trunk
 
@@ -16,7 +16,6 @@ Powerful anti-spam plugin that eliminates blog comment spam. Finally, you can en
 Comment spam has been a huge problem for bloggers since the inception of blogs, and it just doesn't seem to go away. The worst kind, and most prolific, is automated spam that comes from bots. Well, finally there is an anti-spam plugin for WordPress that provides an effective solution, without CAPTCHA's, challenge questions, or other inconvenience to site visitors. **WP-SpamFree eliminates automated blog comment spam from bots, including trackback and pingback spam.**
 
 = New Features =
-* Now with Enhanced Comment Blacklist option! Instead of just sending comments to moderation as with WordPress's default Comment Blacklist functionality, with this turned on, anything that matchs a string in the blacklist will be completely blocked. Also adds a link in the comment notification emails that will let you blacklist a commenter's IP with one click.
 * See what's been blocked! Version 2.0 adds "Blocked Comment Logging Mode", a temporary diagnostic mode that logs blocked comments and contact form submissions for 3 days, then turns off automatically. If you want to see what's been blocked, or verify that everything is working, turn this on and see what WP-SpamFree is protecting your blog from.
 * Added option for smaller graphic counters to display spam stats, in addition to the existing normal-sized ones.
 * Added Widget for displaying spam counter. Shows small counter #1. Now you can show stats without knowing any code.
