@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.1
+Version: 2.1.0.1
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -29,7 +29,7 @@ Author URI: http://www.hybrid6.com/webgeek/
 // Begin the Plugin
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1';
+	$wpSpamFreeVer='2.1.0.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1093,9 +1093,13 @@ function spamfree_contact_form($content) {
 				// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
 				$contact_form_blacklist_status = '2';
 				}
-			$user_agent_lc = strtolower($_SERVER['HTTP_USER_AGENT']);
+			$user_agent_lc = strtolower(trim($_SERVER['HTTP_USER_AGENT']));
 			$user_agent_lc_word_count = count( explode( " ", $user_agent_lc ) );
-			if ( $user_agent_lc_word_count < 3 ) {
+			if ( !$user_agent_lc ) {
+				$contact_form_blacklist_status = '2';
+				$spamfree_error_code .= ' CF-UA1001';
+				}
+			if ( $user_agent_lc && $user_agent_lc_word_count < 3 ) {
 				$contact_form_blacklist_status = '2';
 				$spamfree_error_code .= ' CF-UA1001.1-'.$user_agent_lc;
 				}
@@ -1106,10 +1110,6 @@ function spamfree_contact_form($content) {
 			if ( eregi( 'iopus-', $user_agent_lc ) ) {
 				$contact_form_blacklist_status = '2';
 				$spamfree_error_code .= ' CF-UA1003';
-				}
-			if ( substr_count( $user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 ) {
-				$contact_form_blacklist_status = '2';
-				$spamfree_error_code .= ' CF-UA1004';
 				}
 			$user_http_accept_language = trim($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			if ( !$user_http_accept_language ) {
@@ -1396,13 +1396,13 @@ function spamfree_content_short($commentdata) {
 	$commentdata_comment_content_lc					= strtolower($commentdata_comment_content);
 	
 	$commentdata_comment_content_length 			= strlen($commentdata_comment_content_lc);
-	$commentdata_comment_content_min_length 		= 10;
+	$commentdata_comment_content_min_length 		= 15;
 	
 	$commentdata_comment_type						= $commentdata['comment_type'];
 	
 	if( $commentdata_comment_content_length < $commentdata_comment_content_min_length && $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 		$content_short_status = true;
-		$spamfree_error_code .= ' SHORT10';
+		$spamfree_error_code .= ' SHORT15';
 		}
 	
 	if ( !$spamfree_error_code ) {
@@ -4271,7 +4271,7 @@ function spamfree_content_filter($commentdata) {
 		$spamfree_error_code .= ' UA1001';
 		}
 	$commentdata_user_agent_lc_word_count = count( explode( " ", $commentdata_user_agent_lc ) );
-	if ( $commentdata_user_agent_lc_word_count < 3 ) {
+	if ( $commentdata_user_agent_lc && $commentdata_user_agent_lc_word_count < 3 ) {
 		if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' || ( !eregi( 'movabletype', $commentdata_user_agent_lc ) && ( $commentdata_comment_type == 'trackback' || $commentdata_comment_type == 'pingback' ) ) ) {
 			// Another test for altered UA's.
 			$content_filter_status = '2';
@@ -4291,6 +4291,8 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1004';
 		}
+	/*
+	// These mark bogus user agents. Need more testing.	
 	if ( substr_count( $commentdata_user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 || substr_count( $commentdata_user_agent_lc, ' msie ' ) > 1 ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1005';
@@ -4303,7 +4305,8 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1007';
 		}
-
+	*/
+	
 	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 	
 		//Test HTTP_ACCEPT_LANGUAGE
@@ -6783,7 +6786,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1";
+			$plugin_db_version = "2.1.0.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
