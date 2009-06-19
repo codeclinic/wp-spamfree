@@ -3,9 +3,9 @@
 Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
-Author: Scott Allen, aka WebGeek
+Author: Scott Allen
 Version: 2.1.0.2
-Author URI: http://www.hybrid6.com/webgeek/
+Author URI: http://www.hybrid6.com/
 */
 
 /*  Copyright 2007-2009    Scott Allen  (email : wp.spamfree [at] hybrid6 [dot] com)
