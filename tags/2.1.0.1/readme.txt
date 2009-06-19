@@ -3,7 +3,7 @@ Contributors: WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
 Requires at least: 2.1
-Tested up to: 2.9
+Tested up to: 2.8
 Stable tag: trunk
 
 Powerful anti-spam plugin that eliminates blog comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
@@ -52,7 +52,7 @@ Some would argue that using JS and cookies is too simplistic an approach. Tradit
 Even so, it's important to know that the particular JS and cookies solution used in the WP-SpamFree anti-spam plugin has evolved quite a bit, and is no longer simple at all. There are now two layers of protection, a JavaScript/Cookies Layer, and an Algorithmic Layer. Even if bot authors could engineer a way to break through the JavaScript/Cookies Layer, the Algorithmic Layer would still stop 95% of the spam that the JavaScript Layer blocks. (I'm working to make this 100% for fully redundant protection.) This JavaScript Layer utilizes randomly generated keys, and is algorithmically enhanced to ensure that spambots won't beat it. The powerful Algorithmic Layer is what eliminates trackback/pingback spam, and much human spam as well. And, it does all that without hindering legitimate comments and trackbacks. The bottom line, is that this plugin just plain works, and is a **powerful weapon against spam**.
 
 = WordPress Blogging Without Spam =
-How does it feel to blog without being bombarded by comment spam? If you're happy with the WP-SpamFree WordPress anti-spam plugin, please let others know by giving it a good rating!
+How does it feel to blog without being bombarded by comment spam? If you're happy with the WP-SpamFree WordPress anti-spam plugin, please let others know by giving it a rating!
 
 == Installation ==
 
