@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen, aka WebGeek
-Version: 2.1.0.1
+Version: 2.1.0.2
 Author URI: http://www.hybrid6.com/webgeek/
 */
 
@@ -28,8 +28,12 @@ Author URI: http://www.hybrid6.com/webgeek/
 
 // Begin the Plugin
 
+/* Note to any other PHP developers reading this:
+My use of the end curly braces "}" is a little funky in that I indent them, I know. IMO it's easier to debug. Just know it's on purpose even though it's not standard. One of my programming quirks, and how I roll. :)
+*/
+
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.1';
+	$wpSpamFreeVer='2.1.0.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -127,6 +131,8 @@ function spamfree_update_keys($reset_keys) {
 		'form_require_website' 					=> $spamfree_options['form_require_website'],
 		'form_include_phone' 					=> $spamfree_options['form_include_phone'],
 		'form_require_phone' 					=> $spamfree_options['form_require_phone'],
+		'form_include_company' 					=> $spamfree_options['form_include_company'],
+		'form_require_company' 					=> $spamfree_options['form_require_company'],
 		'form_include_drop_down_menu'			=> $spamfree_options['form_include_drop_down_menu'],
 		'form_require_drop_down_menu'			=> $spamfree_options['form_require_drop_down_menu'],
 		'form_drop_down_menu_title'				=> $spamfree_options['form_drop_down_menu_title'],
@@ -443,6 +449,8 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 			'form_require_website' 					=> $spamfree_options['form_require_website'],
 			'form_include_phone' 					=> $spamfree_options['form_include_phone'],
 			'form_require_phone' 					=> $spamfree_options['form_require_phone'],
+			'form_include_company' 					=> $spamfree_options['form_include_company'],
+			'form_require_company' 					=> $spamfree_options['form_require_company'],
 			'form_include_drop_down_menu'			=> $spamfree_options['form_include_drop_down_menu'],
 			'form_require_drop_down_menu'			=> $spamfree_options['form_require_drop_down_menu'],
 			'form_drop_down_menu_title'				=> $spamfree_options['form_drop_down_menu_title'],
@@ -664,6 +672,8 @@ function spamfree_contact_form($content) {
 		$FormRequireWebsite				= $spamfree_options['form_require_website'];
 		$FormIncludePhone				= $spamfree_options['form_include_phone'];
 		$FormRequirePhone				= $spamfree_options['form_require_phone'];
+		$FormIncludeCompany				= $spamfree_options['form_include_company'];
+		$FormRequireCompany				= $spamfree_options['form_require_company'];
 		$FormIncludeDropDownMenu		= $spamfree_options['form_include_drop_down_menu'];
 		$FormRequireDropDownMenu		= $spamfree_options['form_require_drop_down_menu'];
 		$FormDropDownMenuTitle			= $spamfree_options['form_drop_down_menu_title'];
@@ -710,6 +720,7 @@ function spamfree_contact_form($content) {
 			$wpsf_contact_email 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_email'])));
 			$wpsf_contact_website 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_website'])));
 			$wpsf_contact_phone 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_phone'])));
+			$wpsf_contact_company 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_company'])));
 			$wpsf_contact_drop_down_menu	= Trim(stripslashes(strip_tags($_POST['wpsf_contact_drop_down_menu'])));
 			$wpsf_contact_subject 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_subject'])));
 			$wpsf_contact_message 			= Trim(stripslashes(strip_tags($_POST['wpsf_contact_message'])));
@@ -739,6 +750,7 @@ function spamfree_contact_form($content) {
 			$wpsf_contact_form_subject 			= '[Website Contact] '.$wpsf_contact_subject;
 			//$wpsf_contact_form_cc_subject		= '[Website Contact CC] '.$wpsf_contact_subject;
 			$wpsf_contact_form_msg_headers 		= "From: $wpsf_contact_name <$wpsf_contact_email>" . "\r\n" . "Reply-To: $wpsf_contact_email" . "\r\n" . "Content-Type: text/plain\r\n";
+			$wpsf_contact_form_blog				= get_option('siteurl');
 			// Another option: "Content-Type: text/html"
 			
 			// FORM INFO :: END
@@ -795,7 +807,7 @@ function spamfree_contact_form($content) {
 				$contact_response_status_message_addendum .= '&bull; Message appears to be spam. Please note that link requests and link exchange requests will be automatically deleted, and are not an acceptable use of this contact form.<br />&nbsp;<br />';
 				}
 				
-			if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message || ( $FormIncludeWebsite && $FormRequireWebsite && !$wpsf_contact_website ) || ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone ) || ( $FormIncludeDropDownMenu && $FormRequireDropDownMenu && !$wpsf_contact_drop_down_menu ) ) {
+			if ( !$wpsf_contact_name || !$wpsf_contact_email || !$wpsf_contact_subject || !$wpsf_contact_message || ( $FormIncludeWebsite && $FormRequireWebsite && !$wpsf_contact_website ) || ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone ) || ( $FormIncludeCompany && $FormRequireCompany && !$wpsf_contact_company ) || ( $FormIncludeDropDownMenu && $FormRequireDropDownMenu && !$wpsf_contact_drop_down_menu ) ) {
 				$BlankField=1;
 				$spamfree_error_code .= ' CONTACTFORM-BLANKFIELD';
 				$contact_response_status_message_addendum .= '&bull; At least one required field was left blank.<br />&nbsp;<br />';
@@ -834,6 +846,9 @@ function spamfree_contact_form($content) {
 			if ( $FormIncludePhone ) {
 				$wpsf_contact_form_msg_1 .= "Phone: ".$wpsf_contact_phone."\n";
 				}
+			if ( $FormIncludeCompany ) {
+				$wpsf_contact_form_msg_1 .= "Company: ".$wpsf_contact_company."\n";
+				}
 			if ( $FormIncludeWebsite ) {
 				$wpsf_contact_form_msg_1 .= "Website: ".$wpsf_contact_website."\n";
 				}
@@ -844,14 +859,12 @@ function spamfree_contact_form($content) {
 			$wpsf_contact_form_msg_2 .= "\n";
 			//Check following variables tomake sure not repeating
 			if ( $FormIncludeUserMeta ) {
-				/*
 				$wpsf_contact_form_msg_2 .= "\n";
-				$wpsf_contact_form_msg_2 .= "CC Sender: ".$wpsf_contact_cc."\n";	
-				*/
+				$wpsf_contact_form_msg_2 .= "Website Generating This Email: ".$wpsf_contact_form_blog."\n";
 				$wpsf_contact_form_msg_2 .= "\n";					
-				$wpsf_contact_form_msg_2 .= "User-Agent (Browser/OS): ".$_SERVER['HTTP_USER_AGENT']."\n";
-				$wpsf_contact_form_msg_2 .= "\n";
 				$wpsf_contact_form_msg_2 .= "Referrer: ".$_SERVER['HTTP_REFERER']."\n";
+				$wpsf_contact_form_msg_2 .= "\n";
+				$wpsf_contact_form_msg_2 .= "User-Agent (Browser/OS): ".$_SERVER['HTTP_USER_AGENT']."\n";
 				$wpsf_contact_form_msg_2 .= "\n";
 				$wpsf_contact_form_msg_2 .= "IP Address: ".$_SERVER['REMOTE_ADDR']."\n";
 				$wpsf_contact_form_msg_2 .= "Server: ".$_SERVER['REMOTE_HOST']."\n";
@@ -954,6 +967,15 @@ function spamfree_contact_form($content) {
 					}
 				$spamfree_contact_form_content .= '<br />'."\n";
 				$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_phone" name="wpsf_contact_phone" value="" size="40" /> </label></p>'."\n";
+				}
+
+			if ( $FormIncludeCompany ) {
+				$spamfree_contact_form_content .= '<p><label><strong>Company</strong> ';
+				if ( $FormRequireCompany ) { 
+					$spamfree_contact_form_content .= '*'; 
+					}
+				$spamfree_contact_form_content .= '<br />'."\n";
+				$spamfree_contact_form_content .= '<input type="text" id="wpsf_contact_company" name="wpsf_contact_company" value="" size="40" /> </label></p>'."\n";
 				}
 
 			if ( $FormIncludeDropDownMenu && $FormDropDownMenuTitle && $FormDropDownMenuItem1 && $FormDropDownMenuItem2 ) {
@@ -1255,18 +1277,21 @@ function spamfree_allowed_post($approved) {
 		$spamfree_jsck_error_message_detailed .= '<noscript>Status: JavaScript is currently disabled.<br /><br /></noscript>'."\n";
 		$spamfree_jsck_error_message_detailed .= '<strong>Please be sure JavaScript and Cookies are enabled in your browser. Then, please hit the back button on your browser, and try posting your comment again. (You may need to reload the page)</strong><br /><br />'."\n";
 		$spamfree_jsck_error_message_detailed .= '<br /><hr noshade />'."\n";
-		$spamfree_jsck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if JavaScript and Cookies are in fact enabled</em> and you have tried to post several times), there is most likely a technical problem (could be a plugin conflict or misconfiguration). Please contact the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
-		$spamfree_jsck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
-		$spamfree_jsck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
+		if ( $spamfree_jsck_error_ck_test == 'CKON' ) {
+			$spamfree_jsck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if JavaScript and Cookies are in fact enabled</em> and you have tried to post several times), there is most likely a technical problem (could be a plugin conflict or misconfiguration). Please contact the author of this blog, and let them know they need to look into it.<br />'."\n";
+			$spamfree_jsck_error_message_detailed .= '<hr noshade /><br />'."\n";
+			}
+		$spamfree_jsck_error_message_detailed .= '</span>'."\n";
+		//$spamfree_jsck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by WP-SpamFree.</span><br /><br />'."\n";
 	
 		$spamfree_imgphpck_error_message_standard = 'Sorry, there was an error. Please enable Images and Cookies in your browser and try again.';
 		
 		$spamfree_imgphpck_error_message_detailed = '<span style="font-size:12px;"><strong>Sorry, there was an error. Images and Cookies are required in order to post a comment.<br/>You appear to have at least one of these disabled.</strong><br /><br />'."\n";
 		$spamfree_imgphpck_error_message_detailed .= '<strong>Please enable Images and Cookies in your browser. Then, please go back, reload the page, and try posting your comment again.</strong><br /><br />'."\n";
 		$spamfree_imgphpck_error_message_detailed .= '<br /><hr noshade />'."\n";
-		$spamfree_imgphpck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if Images and Cookies are in fact enabled</em> and you have tried to post several times), please alert the author of this blog, and let them know they need to view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting" rel="external nofollow" target="_blank" >Technical Support information</a>.<br />'."\n";
+		$spamfree_imgphpck_error_message_detailed .= 'If you feel you have received this message in error (for example <em>if Images and Cookies are in fact enabled</em> and you have tried to post several times), please alert the author of this blog, and let them know they need to look into it.<br />'."\n";
 		$spamfree_imgphpck_error_message_detailed .= '<hr noshade /><br /></span>'."\n";
-		$spamfree_imgphpck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" rel="external nofollow" target="_blank" >WP-SpamFree</a>.</span><br /><br />'."\n";
+		//$spamfree_imgphpck_error_message_detailed .= '<span style="font-size:9px;">This message was generated by WP-SpamFree.</span><br /><br />'."\n";
 
 		if( $spamfree_options['use_alt_cookie_method_only'] ) {
 			wp_die( __($spamfree_imgphpck_error_message_detailed) );
@@ -1342,9 +1367,6 @@ function spamfree_denied_post_content_filter($approved) {
 	
 	$spamfree_content_filter_error_message_detailed = '<span style="font-size:12px;"><strong>Your location has been identified as part of a reported spam network. Comments have been disabled to prevent spam.</strong><br /><br /></span>'."\n";
 	
-	//$spamfree_blacklist_error_message_detailed .= 'This message was generated by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree?code=bl_error" rel="external nofollow" target="_blank" >WP-SpamFree</a>.<br /><br />'."\n";
-	//$spamfree_blacklist_error_message_detailed .= 'If you would like to be removed from the blacklist, you will need to contact the developers of WP-SpamFree.<br />'."\n";
-
 	wp_die( __($spamfree_content_filter_error_message_detailed) );
 	return false;
 	// REJECT BASED ON COMMENT FILTER :: END
@@ -1394,6 +1416,7 @@ function spamfree_content_short($commentdata) {
 	// COMMENT LENGTH CHECK :: BEGIN
 	$commentdata_comment_content					= $commentdata['comment_content'];
 	$commentdata_comment_content_lc					= strtolower($commentdata_comment_content);
+	$commentdata_comment_content_lc_stripped		= stripslashes($commentdata_comment_content_lc);
 	
 	$commentdata_comment_content_length 			= strlen($commentdata_comment_content_lc);
 	$commentdata_comment_content_min_length 		= 15;
@@ -3044,6 +3067,7 @@ function spamfree_content_filter($commentdata) {
 	$filter_300409_term = 'guide';
 	$filter_300410_term = 'tips';
 	$filter_300411_term = 'reviews';
+	$filter_300412_term = 'test';
 	
 
 	// General Spam Terms
@@ -4220,17 +4244,28 @@ function spamfree_content_filter($commentdata) {
 		$i++;
 		}
 	// Comment Author and Comment Author URL appearing in Content
-	
-	$commentdata_comment_author_lc_inhref = '>'.$commentdata_comment_author_lc.'</a>';
-	$commentdata_comment_author_url_lc_insquote = "\'".$commentdata_comment_author_url_lc."\'";
-	$commentdata_comment_author_url_lc_indquote = "\"".$commentdata_comment_author_url_lc."\"";
-	
-	if ( ( eregi($commentdata_comment_author_url_lc,$commentdata_comment_content_lc) && eregi($commentdata_comment_author_lc_inhref,$commentdata_comment_content_lc) )|| eregi( $commentdata_comment_author_url_lc_insquote, $commentdata_comment_content_lc ) || eregi( $commentdata_comment_author_url_lc_indquote, $commentdata_comment_content_lc ) ) {
-		if ( !$content_filter_status ) { $content_filter_status = '1'; }
-		$spamfree_error_code .= ' 9100';
+	if ( $commentdata_comment_author_url_lc ) {
+		$commentdata_comment_author_lc_inhref = '>'.$commentdata_comment_author_lc.'</a>';
+		//$commentdata_comment_author_url_lc_insquote = "\\'".$commentdata_comment_author_url_lc."\\'";
+		//$commentdata_comment_author_url_lc_indquote = "\\\"".$commentdata_comment_author_url_lc."\\\"";
+		
+		if ( eregi($commentdata_comment_author_url_lc,$commentdata_comment_content_lc) && eregi($commentdata_comment_author_lc_inhref,$commentdata_comment_content_lc) ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 9100';
+			}
+		/* Not working
+		if ( eregi( $commentdata_comment_author_url_lc_insquote, $commentdata_comment_content_lc ) ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 9101';
+			}
+		if ( eregi( $commentdata_comment_author_url_lc_indquote, $commentdata_comment_content_lc ) ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 9102';
+			}
+		*/
 		}
 	// Emails
-	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || 	$commentdata_comment_author_email_lc == 'poster78@gmail.com' || $commentdata_comment_author_email_lc == 'ycp_m23@hotmail.com' || $commentdata_comment_author_email_lc == 'grey_dave@yahoo.com' || $commentdata_comment_author_email_lc == 'grren_dave55@hotmail.com' || $commentdata_comment_author_email_lc == 'dave_morales@hotmail.com' || $commentdata_comment_author_email_lc == 'tbs_guy@hotmail.com' || eregi( '.seo@gmail.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) || eregi( 'anonymous@', $commentdata_comment_author_email_lc ) || eregi( 'root@', $commentdata_comment_author_email_lc ) ) {
+	if ( $commentdata_comment_author_email_lc == 'aaron@yahoo.com' || $commentdata_comment_author_email_lc == 'asdf@yahoo.com' || $commentdata_comment_author_email_lc == 'a@a.com' || $commentdata_comment_author_email_lc == 'bill@berlin.com' || $commentdata_comment_author_email_lc == 'capricanrulz@hotmail.com' || $commentdata_comment_author_email_lc == 'dominic@mail.com' || $commentdata_comment_author_email_lc == 'fuck@you.com' || $commentdata_comment_author_email_lc == 'heel@mail.com' || $commentdata_comment_author_email_lc == 'jane@mail.com' || $commentdata_comment_author_email_lc == 'neo@hotmail.com' || $commentdata_comment_author_email_lc == 'nick76@mailbox.com' || $commentdata_comment_author_email_lc == '12345@yahoo.com' || 	$commentdata_comment_author_email_lc == 'poster78@gmail.com' || $commentdata_comment_author_email_lc == 'ycp_m23@hotmail.com' || $commentdata_comment_author_email_lc == 'grey_dave@yahoo.com' || $commentdata_comment_author_email_lc == 'grren_dave55@hotmail.com' || $commentdata_comment_author_email_lc == 'dave_morales@hotmail.com' || $commentdata_comment_author_email_lc == 'tbs_guy@hotmail.com' || $commentdata_comment_author_email_lc == 'test@test.com' || eregi( '.seo@gmail.com', $commentdata_comment_author_email_lc ) || eregi( '@keywordspy.com', $commentdata_comment_author_email_lc ) || eregi( '@fuckyou.com', $commentdata_comment_author_email_lc ) || eregi( 'fuckyou@', $commentdata_comment_author_email_lc ) || eregi( 'spammer@', $commentdata_comment_author_email_lc ) || eregi( 'spambot@', $commentdata_comment_author_email_lc ) || eregi( 'spam@', $commentdata_comment_author_email_lc ) || eregi( 'anonymous@', $commentdata_comment_author_email_lc ) || eregi( 'root@', $commentdata_comment_author_email_lc ) ) {
 		if ( !$content_filter_status ) { $content_filter_status = '1'; }
 		$spamfree_error_code .= ' 9200';
 		}
@@ -5751,6 +5786,10 @@ function spamfree_content_filter($commentdata) {
 			if ( !$content_filter_status ) { $content_filter_status = '1'; }
 			$spamfree_error_code .= ' 300411AUTH';
 			}
+		if ( $commentdata_comment_author_lc == $filter_300412_term ) {
+			if ( !$content_filter_status ) { $content_filter_status = '1'; }
+			$spamfree_error_code .= ' 300412AUTH';
+			}
 		}
 	
 	// Blacklist Word Combinations
@@ -6116,6 +6155,8 @@ if (!class_exists('wpSpamFree')) {
 						'form_require_website' 					=> $spamfree_options['form_require_website'],
 						'form_include_phone' 					=> $spamfree_options['form_include_phone'],
 						'form_require_phone' 					=> $spamfree_options['form_require_phone'],
+						'form_include_company' 					=> $spamfree_options['form_include_company'],
+						'form_require_company' 					=> $spamfree_options['form_require_company'],
 						'form_include_drop_down_menu'			=> $spamfree_options['form_include_drop_down_menu'],
 						'form_require_drop_down_menu'			=> $spamfree_options['form_require_drop_down_menu'],
 						'form_drop_down_menu_title'				=> $spamfree_options['form_drop_down_menu_title'],
@@ -6171,6 +6212,8 @@ if (!class_exists('wpSpamFree')) {
 						'form_require_website' 					=> $_REQUEST['form_require_website'],
 						'form_include_phone' 					=> $_REQUEST['form_include_phone'],
 						'form_require_phone' 					=> $_REQUEST['form_require_phone'],
+						'form_include_company' 					=> $_REQUEST['form_include_company'],
+						'form_require_company' 					=> $_REQUEST['form_require_company'],
 						'form_include_drop_down_menu'			=> $_REQUEST['form_include_drop_down_menu'],
 						'form_require_drop_down_menu'			=> $_REQUEST['form_require_drop_down_menu'],
 						'form_drop_down_menu_title'				=> trim(stripslashes($_REQUEST['form_drop_down_menu_title'])),
@@ -6411,8 +6454,18 @@ if (!class_exists('wpSpamFree')) {
 						<strong>Require "Phone" field.</strong><br />&nbsp;
 					</label>
 					</li>
-
 					<li>
+					<label for="form_include_company">
+						<input type="checkbox" id="form_include_company" name="form_include_company" <?php echo ($spamfree_options['form_include_company']==true?"checked=\"checked\"":"") ?> />
+						<strong>Include "Company" field.</strong><br />&nbsp;
+					</label>
+					</li>
+					<li>
+					<label for="form_require_company">
+						<input type="checkbox" id="form_require_company" name="form_require_company" <?php echo ($spamfree_options['form_require_company']==true?"checked=\"checked\"":"") ?> />
+						<strong>Require "Company" field.</strong><br />&nbsp;
+					</label>
+					</li>					<li>
 					<label for="form_include_drop_down_menu">
 						<input type="checkbox" id="form_include_drop_down_menu" name="form_include_drop_down_menu" <?php echo ($spamfree_options['form_include_drop_down_menu']==true?"checked=\"checked\"":"") ?> />
 						<strong>Include drop-down menu select field.</strong><br />&nbsp;
@@ -6786,7 +6839,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.1";
+			$plugin_db_version = "2.1.0.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -6837,12 +6890,14 @@ if (!class_exists('wpSpamFree')) {
 					'comment_logging_start_date'			=> 0,
 					'comment_logging_all'					=> 0,
 					'enhanced_comment_blacklist'			=> 0,
-					'allow_proxy_users'						=> 0,
+					'allow_proxy_users'						=> 1,
 					'hide_extra_data'						=> 0,
 					'form_include_website' 					=> 1,
 					'form_require_website' 					=> 0,
 					'form_include_phone' 					=> 1,
 					'form_require_phone' 					=> 0,
+					'form_include_company' 					=> 0,
+					'form_require_company' 					=> 0,
 					'form_include_drop_down_menu'			=> 0,
 					'form_require_drop_down_menu'			=> 0,
 					'form_drop_down_menu_title'				=> '',
