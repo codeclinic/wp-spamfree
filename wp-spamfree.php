@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.0.2
+Version: 2.1.0.3
 Author URI: http://www.hybrid6.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.2';
+	$wpSpamFreeVer='2.1.0.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -820,8 +820,12 @@ function spamfree_contact_form($content) {
 				$contact_response_status_message_addendum .= '&bull; Please enter a valid email address.<br />&nbsp;<br />';
 				}
 			
+			$wpsf_contact_phone_zerofake1 = str_replace( '000-000-0000', '', $wpsf_contact_phone );
+			$wpsf_contact_phone_zerofake2 = str_replace( '(000) 000-0000', '', $wpsf_contact_phone );
 			$wpsf_contact_phone_zero = str_replace( '0', '', $wpsf_contact_phone );
-			if ( $FormIncludePhone && $FormRequirePhone && !$wpsf_contact_phone_zero ) {
+			$wpsf_contact_phone_na1 = str_replace( 'N/A', '', $wpsf_contact_phone );
+			$wpsf_contact_phone_na2 = str_replace( 'NA', '', $wpsf_contact_phone );
+			if ( $FormIncludePhone && $FormRequirePhone && ( !$wpsf_contact_phone_zerofake1 || !$wpsf_contact_phone_zerofake2 || !$wpsf_contact_phone_zero || !$wpsf_contact_phone_na1 || !$wpsf_contact_phone_na2 ) ) {
 				$InvalidValue=1;
 				$BadPhone=1;
 				$spamfree_error_code .= ' CONTACTFORM-INVALIDVALUE-PHONE';
@@ -869,7 +873,7 @@ function spamfree_contact_form($content) {
 				$wpsf_contact_form_msg_2 .= "IP Address: ".$_SERVER['REMOTE_ADDR']."\n";
 				$wpsf_contact_form_msg_2 .= "Server: ".$_SERVER['REMOTE_HOST']."\n";
 				$wpsf_contact_form_msg_2 .= "Reverse DNS: ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\n";
-				$wpsf_contact_form_msg_2 .= "IP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$_SERVER['REMOTE_ADDR']."\n";
+				$wpsf_contact_form_msg_2 .= "IP Address Lookup: http://www.dnsstuff.com/tools/ipall/?ip=".$_SERVER['REMOTE_ADDR']."\n";
 				}
 				
 			$wpsf_contact_form_msg_3 .= "\n";
@@ -4322,10 +4326,12 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1003';
 		}
+	/*
 	if ( eregi( 'http://bsalsa.com', $commentdata_user_agent_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1004';
 		}
+	*/
 	/*
 	// These mark bogus user agents. Need more testing.	
 	if ( substr_count( $commentdata_user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 || substr_count( $commentdata_user_agent_lc, ' msie ' ) > 1 ) {
@@ -5947,7 +5953,7 @@ function spamfree_modify_notification( $text, $comment_id ) {
 		$text .= "\r\n";
 		$text .= "\r\nHTTP_ACCEPT: ".$_SERVER['HTTP_ACCEPT'];
 		$text .= "\r\n";
-		$text .= "\r\nIP Address Lookup: http://www.dnsstuff.com/tools/ipall.ch?ip=".$ip;
+		$text .= "\r\nIP Address Lookup: http://www.dnsstuff.com/tools/ipall/?ip=".$ip;
 		$text .= "\r\n";
 		$text .= "\r\n(This data is helpful if you need to submit a spam sample.)";
 		$text .= "\r\n";
@@ -6839,7 +6845,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.2";
+			$plugin_db_version = "2.1.0.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
