@@ -36,7 +36,6 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 12. Display your blocked spam stats on your blog.
 13. Helps keep your database slimmer and more efficient.
 14. Works in WordPress MU as well.
-15. No cost, no hidden fees. **Free** for **both Commercial and Personal** use.
 
 = Background =
 Before I developed this plugin, our team and clients experienced the same frustration you do with comment spam on your WordPress blog. Every blog we manage had comment moderation enabled and various other anti-spam plugins installed, but we still had a ton of comments tagged as spam in the spam queue that we had to sort through. This wasted a lot of valuable time, and we all know, time is money. We needed a solution.
