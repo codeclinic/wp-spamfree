@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.0.4
+Version: 2.1.0.3
 Author URI: http://www.hybrid6.com/
 */
 
@@ -29,11 +29,11 @@ Author URI: http://www.hybrid6.com/
 // Begin the Plugin
 
 /* Note to any other PHP developers reading this:
-My use of the end curly braces "}" is a little funky in that I indent them, I know. IMO it's easier to debug. Just know that it's on purpose even though it's not standard. One of my programming quirks, and just how I roll. :)
+My use of the end curly braces "}" is a little funky in that I indent them, I know. IMO it's easier to debug. Just know it's on purpose even though it's not standard. One of my programming quirks, and how I roll. :)
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.4';
+	$wpSpamFreeVer='2.1.0.3';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1165,8 +1165,8 @@ function spamfree_check_comment_type($commentdata) {
 	global $userdata, $user_login, $user_level, $user_ID, $user_email, $user_url, $user_identity;
 	get_currentuserinfo();
 	
-	if ( $user_level < 4 ) {
-		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: BEGIN
+	if ( $user_level < 9 ) {
+		// ONLY IF NOT ADMINS :: BEGIN
 		$spamfree_options			= get_option('spamfree_options');
 		$BlockAllTrackbacks 		= $spamfree_options['block_all_trackbacks'];
 		$BlockAllPingbacks 			= $spamfree_options['block_all_pingbacks'];
@@ -1218,12 +1218,7 @@ function spamfree_check_comment_type($commentdata) {
 			// LOG DATA :: END
 			}
 			
-		if (get_option('wp_debug_mode')) {
-			wp_debug_section_2($commentdata,$wp_debug_var_2,$wp_debug_var_3);
-			update_option( 'spamfree_debug_last_comment', $commentdata );
-			}
-
-		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: END
+		// ONLY IF NOT ADMINS :: END
 		}
 			
 	return $commentdata;
@@ -1449,10 +1444,6 @@ function spamfree_content_short($commentdata) {
 		}
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
-	
-	// DEBUG DATA :: BEGIN
-	update_option( 'spamfree_error_data', $spamfree_error_data );
-	// DEBUG DATA :: END
 	
 	return $content_short_status;
 	// COMMENT LENGTH CHECK :: END
@@ -5843,10 +5834,6 @@ function spamfree_content_filter($commentdata) {
 
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
-	// DEBUG DATA :: BEGIN
-	update_option( 'spamfree_error_data', $spamfree_error_data );
-	// DEBUG DATA :: END
-	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -5862,7 +5849,7 @@ function spamfree_stats() {
 		echo '<p>No comment spam attempts have been detected yet.</p>';
 		}
 	else {
-		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree',  number_format($spamfree_count) ).'</p>';
+		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree/',  number_format($spamfree_count) ).'</p>';
 		}
 	}
 
@@ -6033,6 +6020,7 @@ if (!class_exists('wpSpamFree')) {
 			if ( $user_level >= 9 ) {
 				add_submenu_page("options-general.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 				}
+			//add_submenu_page("index.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 			}
 		
 		function output_existing_menu_sub_admin_page(){
@@ -6857,7 +6845,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.4";
+			$plugin_db_version = "2.1.0.3";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
