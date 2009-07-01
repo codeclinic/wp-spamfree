@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.0.5
+Version: 2.1.0.4
 Author URI: http://www.hybrid6.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.5';
+	$wpSpamFreeVer='2.1.0.4';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -405,7 +405,7 @@ function spamfree_log_data($wpsf_log_comment_data_array,$wpsf_log_comment_data_e
 	$CommentLoggingAll 			= $spamfree_options['comment_logging_all'];
 	
 	$GetCurrentTime = time();
-	$ResetIntervalHours = 24 * 7; // Reset interval in hours
+	$ResetIntervalHours = 24 * 3; // Reset interval in hours
 	$ResetIntervalMinutes = 60; // Reset interval minutes default
 	$ResetIntervalMinutesOverride = $ResetIntervalMinutes; // Use as override for testing; leave = $ResetIntervalMinutes when not testing
 
@@ -1218,6 +1218,11 @@ function spamfree_check_comment_type($commentdata) {
 			// LOG DATA :: END
 			}
 			
+		if (get_option('wp_debug_mode')) {
+			wp_debug_section_2($commentdata,$wp_debug_var_2,$wp_debug_var_3);
+			update_option( 'spamfree_debug_last_comment', $commentdata );
+			}
+
 		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: END
 		}
 			
@@ -1444,6 +1449,10 @@ function spamfree_content_short($commentdata) {
 		}
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
+	
+	// DEBUG DATA :: BEGIN
+	update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: END
 	
 	return $content_short_status;
 	// COMMENT LENGTH CHECK :: END
@@ -5834,6 +5843,10 @@ function spamfree_content_filter($commentdata) {
 
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
 	
+	// DEBUG DATA :: BEGIN
+	update_option( 'spamfree_error_data', $spamfree_error_data );
+	// DEBUG DATA :: END
+	
 	return $content_filter_status;
 	// CONTENT FILTERING :: END
 	}
@@ -6065,9 +6078,9 @@ if (!class_exists('wpSpamFree')) {
 			clearstatcache();
 			$installation_file_test_2_perm = substr(sprintf('%o', fileperms($installation_file_test_2)), -4);
 			$installation_file_test_3_perm = substr(sprintf('%o', fileperms($installation_file_test_3)), -4);
-			if ( $installation_file_test_2_perm < '0755' || $installation_file_test_3_perm < '0755' || !is_readable($installation_file_test_2) || !is_executable($installation_file_test_2) || !is_readable($installation_file_test_3) || !is_executable($installation_file_test_3) ) {
-				@chmod( $installation_file_test_2, 0755 );
-				@chmod( $installation_file_test_3, 0755 );
+			if ( $installation_file_test_2_perm < '0644' || $installation_file_test_3_perm < '0644' ) {
+				@chmod( $installation_file_test_2, 0644 );
+				@chmod( $installation_file_test_3, 0644 );
 				}
 			clearstatcache();
 			if ( $installation_plugins_get_test_1 == $_GET['page'] && file_exists($installation_file_test_0) && $installation_file_test_1_status && file_exists($installation_file_test_2) && file_exists($installation_file_test_3) ) {
@@ -6844,7 +6857,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.5";
+			$plugin_db_version = "2.1.0.4";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -6934,32 +6947,6 @@ if (!class_exists('wpSpamFree')) {
 				// Turn on Comment Moderation
 				//update_option('comment_moderation', 1);
 				//update_option('moderation_notify', 1);
-				
-				// Ensure Correct Permissions of IMG and JS file :: BEGIN
-				
-				// Pre-2.6 compatibility
-				if ( !defined('WP_CONTENT_URL') ) {
-					define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
-					}
-				if ( !defined('WP_CONTENT_DIR') ) {
-					define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-					}
-				// Guess the location
-				$wpsf_plugin_path = WP_CONTENT_DIR.'/plugins/'.plugin_basename(dirname(__FILE__));
-				$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
-			
-				$installation_file_test_2 				= $wpsf_plugin_path . '/img/wpsf-img.php';
-				$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsf-js.php';
-				
-				clearstatcache();
-				$installation_file_test_2_perm = substr(sprintf('%o', fileperms($installation_file_test_2)), -4);
-				$installation_file_test_3_perm = substr(sprintf('%o', fileperms($installation_file_test_3)), -4);
-				if ( $installation_file_test_2_perm < '0755' || $installation_file_test_3_perm < '0755' || !is_readable($installation_file_test_2) || !is_executable($installation_file_test_2) || !is_readable($installation_file_test_3) || !is_executable($installation_file_test_3) ) {
-					@chmod( $installation_file_test_2, 0755 );
-					@chmod( $installation_file_test_3, 0755 );
-					}
-					
-				// Ensure Correct Permissions of IMG and JS file :: BEGIN
 
 				}
 			}
