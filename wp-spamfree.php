@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.0.5
+Version: 2.1.0.6
 Author URI: http://www.hybrid6.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.5';
+	$wpSpamFreeVer='2.1.0.6';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -4326,27 +4326,6 @@ function spamfree_content_filter($commentdata) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' UA1003';
 		}
-	/*
-	if ( eregi( 'http://bsalsa.com', $commentdata_user_agent_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1004';
-		}
-	*/
-	/*
-	// These mark bogus user agents. Need more testing.	
-	if ( substr_count( $commentdata_user_agent_lc, 'mozilla/4.0 (compatible;' ) > 1 || substr_count( $commentdata_user_agent_lc, ' msie ' ) > 1 ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1005';
-		}
-	if ( eregi( ' msie ', $commentdata_user_agent_lc ) && eregi( 'firefox/', $commentdata_user_agent_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1006';
-		}
-	if ( eregi( 'user-agent: ', $commentdata_user_agent_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' UA1007';
-		}
-	*/
 	
 	if ( $commentdata_comment_type != 'trackback' && $commentdata_comment_type != 'pingback' ) {
 	
@@ -4355,12 +4334,6 @@ function spamfree_content_filter($commentdata) {
 		if ( !$user_http_accept_language ) {
 			$content_filter_status = '2';
 			$spamfree_error_code .= ' HAL1001';
-			}
-
-		//Test HTTP_ACCEPT and Rev DNS Authenticity
-		if ( trim($_SERVER['HTTP_ACCEPT']) == '*/*' && $ReverseDNSAuthenticity == '[Possibly Forged]' ) {
-			$content_filter_status = '2';
-			$spamfree_error_code .= ' HA-REVD-1001';
 			}
 
 		//Test PROXY STATUS if option
@@ -6844,7 +6817,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.5";
+			$plugin_db_version = "2.1.0.6";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
