@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.0.6
+Version: 2.1.0.7
 Author URI: http://www.hybrid6.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.0.6';
+	$wpSpamFreeVer='2.1.0.7';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1162,12 +1162,11 @@ function spamfree_contact_form($content) {
 	}
 	
 function spamfree_check_comment_type($commentdata) {
-	global $userdata, $user_login, $user_level, $user_ID, $user_email, $user_url, $user_identity;
-	get_currentuserinfo();
 	
-	if ( $user_level < 4 ) {
+	$spamfree_options = get_option('spamfree_options');
+	
+	if ( !is_admin() && !current_user_can('moderate_comments') && !current_user_can('edit_post') ) {
 		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: BEGIN
-		$spamfree_options			= get_option('spamfree_options');
 		$BlockAllTrackbacks 		= $spamfree_options['block_all_trackbacks'];
 		$BlockAllPingbacks 			= $spamfree_options['block_all_pingbacks'];
 	
@@ -1219,6 +1218,11 @@ function spamfree_check_comment_type($commentdata) {
 			}
 			
 		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: END
+		}
+
+	else if ( $spamfree_options['comment_logging_all'] ) {
+		$spamfree_error_code = 'No Error';
+		spamfree_log_data( $commentdata, $spamfree_error_code );
 		}
 			
 	return $commentdata;
@@ -5988,9 +5992,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function add_admin_pages(){
 			add_submenu_page("plugins.php","WP-SpamFree","WP-SpamFree",10, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
-			global $userdata, $user_login, $user_level, $user_ID, $user_email, $user_url, $user_identity;
-			get_currentuserinfo();
-			if ( $user_level >= 9 ) {
+			if ( current_user_can('level_8') ) {
 				add_submenu_page("options-general.php","WP-SpamFree","WP-SpamFree",1, __FILE__, array(&$this,"output_existing_menu_sub_admin_page"));
 				}
 			}
@@ -6817,7 +6819,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.0.6";
+			$plugin_db_version = "2.1.0.7";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
