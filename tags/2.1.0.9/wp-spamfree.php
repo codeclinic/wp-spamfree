@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: Scott Allen
-Version: 2.1.1.0
+Version: 2.1.0.9
 Author URI: http://www.hybrid6.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.1.0';
+	$wpSpamFreeVer='2.1.0.9';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -1099,7 +1099,6 @@ function spamfree_contact_form($content) {
 													'193.46.236.151',
 													'193.46.236.152',
 													'193.46.236.234',
-													'194.44.97.14',
 													);
 			// Check following variables to make sure not repeating										
 			$commentdata_remote_addr_lc = strtolower($_SERVER['REMOTE_ADDR']);
@@ -1118,7 +1117,6 @@ function spamfree_contact_form($content) {
 				// 67.227.135.200 SPAM NETWORK - WEB HOST, NOT ISP (host.lotosus.com)
 				// 66.60.98.1 SPAM NETWORK - WEB SITE/HOST, NOT ISP - (rdns.softwiseonline.com)
 				// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
-				// 194.44.97.14 , arkada.rovno.ua - SPAM NETWORK
 				$contact_form_blacklist_status = '2';
 				}
 			$user_agent_lc = strtolower(trim($_SERVER['HTTP_USER_AGENT']));
@@ -1218,7 +1216,7 @@ function spamfree_check_comment_type($commentdata) {
 				}
 			// LOG DATA :: END
 			}
-
+			
 		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: END
 		}
 
@@ -1450,7 +1448,7 @@ function spamfree_content_short($commentdata) {
 		}
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
-
+	
 	return $content_short_status;
 	// COMMENT LENGTH CHECK :: END
 	}
@@ -4382,7 +4380,6 @@ function spamfree_content_filter($commentdata) {
 								'193.46.236.151',
 								'193.46.236.152',
 								'193.46.236.234',
-								'194.44.97.14',
 								);
 	if ( in_array( $commentdata_remote_addr, $spamfree_ip_bans ) || eregi( "^78\.129\.202\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.144\.", $commentdata_remote_addr_lc ) || eregi( "^123\.237\.147.", $commentdata_remote_addr_lc ) || eregi( "^194\.8\.7([45])\.", $commentdata_remote_addr_lc ) || eregi( "^193\.37\.152.", $commentdata_remote_addr_lc ) || eregi( "^193\.46\.236\.", $commentdata_remote_addr_lc ) || eregi( "^92\.48\.122\.([0-9]|[12][0-9]|3[01])$", $commentdata_remote_addr_lc ) || eregi( "^116\.71\.", $commentdata_remote_addr_lc ) ) {
 		// 194.8.74.0 - 194.8.75.255 BAD spam network - BRITISH VIRGIN ISLANDS
@@ -4397,7 +4394,6 @@ function spamfree_content_filter($commentdata) {
 		// 67.227.135.200 SPAM NETWORK - WEB HOST, NOT ISP (host.lotosus.com)
 		// 66.60.98.1 SPAM NETWORK - WEB SITE/HOST, NOT ISP - (rdns.softwiseonline.com)
 		// 116.71.0.0 - 116.71.255.255 - SPAM NETWORK - PAKISTAN - Ptcl Triple Play Project
-		// 194.44.97.14 , arkada.rovno.ua - SPAM NETWORK
 
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' IP1002-'.$commentdata_remote_addr_lc;
@@ -4434,10 +4430,6 @@ function spamfree_content_filter($commentdata) {
 	if ( eregi( "\.opentransfer\.com$", $commentdata_remote_host_lc ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' RH1009-'.$commentdata_remote_host_lc;
-		}
-	if ( eregi( "arkada\.rovno\.ua$", $commentdata_remote_host_lc ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' RH1010-'.$commentdata_remote_host_lc;
 		}
 
 		
@@ -4483,10 +4475,6 @@ function spamfree_content_filter($commentdata) {
 	if ( eregi( "\.opentransfer\.com$", $ReverseDNS ) ) {
 		$content_filter_status = '2';
 		$spamfree_error_code .= ' REVD1029-'.$ReverseDNS;
-		}
-	if ( eregi( "arkada\.rovno\.ua$", $ReverseDNS ) ) {
-		$content_filter_status = '2';
-		$spamfree_error_code .= ' REVD1030-'.$ReverseDNS;
 		}		
 		
 	/*	
@@ -6831,7 +6819,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.1.0";
+			$plugin_db_version = "2.1.0.9";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
