@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: WP-SpamFree
-Plugin URI: http://www.hybrid6.com/webgeek/plugins/wp-spamfree
+Plugin URI: http://www.polepositionmarketing.com/library/wp-spamfree/
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
-Author: Scott Allen
-Version: 2.1.1.0
-Author URI: http://www.hybrid6.com/
+Author: WP-SpamFree
+Version: 2.1.1.1
+Author URI: http://www.polepositionmarketing.com/
 */
 
-/*  Copyright 2007-2009    Scott Allen  (email : wp.spamfree [at] hybrid6 [dot] com)
+/*  Copyright 2007-2010    Pole Position Marketing  (email : wpspamfree [at] polepositionmarketing [dot] com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.1.0';
+	$wpSpamFreeVer='2.1.1.1';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -167,7 +167,7 @@ function spamfree_counter($counter_option) {
 	$counter_option_min = 1;
 	if ( !$counter_option || $counter_option > $counter_option_max || $counter_option < $counter_option_min ) {
 		$spamfree_count = number_format( get_option('spamfree_count') );
-		echo '<a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="text-decoration:none;" rel="external" title="WP-SpamFree - WordPress Anti-Spam Plugin" >'.$spamfree_count.' spam blocked by WP-SpamFree</a>';
+		echo '<a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="text-decoration:none;" rel="external" title="WP-SpamFree - WordPress Anti-Spam Plugin" >'.$spamfree_count.' spam blocked by WP-SpamFree</a>';
 		return;
 		}
 	// Display Counter
@@ -204,7 +204,7 @@ function spamfree_counter($counter_option) {
 				else {
 					$spamfree_counter_title_text = 'WP-SpamFree WordPress Anti-Spam Plugin';
 					}
-				echo '<strong style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
+				echo '<strong style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
 				echo '<span style="color:#ffffff;font-size:20px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:14px;line-height:110%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM KILLED</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:9px;line-height:120%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">BY WP-SPAMFREE</span>';
@@ -217,12 +217,12 @@ function spamfree_counter($counter_option) {
 				else {
 					$spamfree_counter_title_text = 'WP-SpamFree - WordPress Anti-Spam Protection';
 					}
-				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
+				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
 				echo '<span style="color:#000000;font-size:9px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.' SPAM KILLED</span><br />'; 
 				echo '</a></strong>'; 
 				}
 			else if ( $counter_option == 5 ) {
-				echo '<strong style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree, a WordPress Anti-Spam Plugin" >';
+				echo '<strong style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="color:#FEB22B;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="Spam Killed by WP-SpamFree, a WordPress Anti-Spam Plugin" >';
 				echo '<span style="color:#FEB22B;font-size:14px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
@@ -233,7 +233,7 @@ function spamfree_counter($counter_option) {
 				else {
 					$spamfree_counter_title_text = 'Spam Killed by WP-SpamFree - Powerful WordPress Anti-Spam Protection';
 					}
-				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
+				echo '<strong style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="color:#000000;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
 				echo '<span style="color:#000000;font-size:14px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '</a></strong>'; 
 				}
@@ -287,7 +287,7 @@ function spamfree_counter_sm($counter_sm_option) {
 				else {
 					$spamfree_counter_title_text = 'Protected by WP-SpamFree - WordPress Spam Plugin';
 					}
-				echo '<strong style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
+				echo '<strong style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;line-height:100%;text-align:center;text-decoration:none;border-style:none;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;" rel="external" title="'.$spamfree_counter_title_text.'" >';
 				echo '<span style="color:#ffffff;font-size:18px;line-height:100%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">'.$spamfree_count.'</span><br />'; 
 				echo '<span style="color:#ffffff;font-size:10px;line-height:120%;font-family:Arial,Helvetica,sans-serif;font-weight:bold;text-decoration:none;border-style:none;">SPAM BLOCKED</span>';
 				echo '</a></strong>'; 
@@ -623,22 +623,22 @@ function spamfree_comment_form() {
 		$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
 		$server_ip_fourth_char = substr($_SERVER['SERVER_ADDR'], 3, 1);
 		if ( $server_ip_first_char == '6' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '7' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '8' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '9' ) {
-			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
 			}
 		else if ( $server_ip_fourth_char == '5' ) {
 			echo '<p style="font-size:9px;clear:both;"><a href="http://wordpress.org/extend/plugins/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else {
-			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
 			}
 		}
 	
@@ -1043,13 +1043,13 @@ function spamfree_contact_form($content) {
 			if ( $PromotePluginLink ) {
 				$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
 				if ( $server_ip_first_char == '7' ) {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;"><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >Contact Form</a> Powered by WP-SpamFree</p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree Contact Form for WordPress" >Contact Form</a> Powered by WP-SpamFree</p>'."\n";
 					}
 				else if ( $server_ip_first_char == '6' ) {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree Contact Form</a></p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Powered by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree Contact Form</a></p>'."\n";
 					}
 				else {
-					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Contact Form Powered by <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
+					$spamfree_contact_form_content .= '<p style="font-size:9px;clear:both;">Contact Form Powered by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree Contact Form for WordPress" >WP-SpamFree</a></p>'."\n";
 					}
 				$spamfree_contact_form_content .= '<p>&nbsp;</p>'."\n";
 				}
@@ -1218,7 +1218,7 @@ function spamfree_check_comment_type($commentdata) {
 				}
 			// LOG DATA :: END
 			}
-
+			
 		// ONLY IF NOT ADMINS, EDITORS, AUTHORS :: END
 		}
 
@@ -1450,7 +1450,7 @@ function spamfree_content_short($commentdata) {
 		}
 	
 	$spamfree_error_data = array( $spamfree_error_code, $blacklist_word_combo, $blacklist_word_combo_total );
-
+	
 	return $content_short_status;
 	// COMMENT LENGTH CHECK :: END
 	}
@@ -5838,7 +5838,7 @@ function spamfree_stats() {
 		echo '<p>No comment spam attempts have been detected yet.</p>';
 		}
 	else {
-		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.hybrid6.com/webgeek/plugins/wp-spamfree',  number_format($spamfree_count) ).'</p>';
+		echo '<p>'.sprintf(__('<a href="%1$s" target="_blank">WP-SpamFree</a> has blocked <strong>%2$s</strong> spam comments.'), 'http://www.polepositionmarketing.com/library/wp-spamfree/',  number_format($spamfree_count) ).'</p>';
 		}
 	}
 
@@ -6258,10 +6258,9 @@ if (!class_exists('wpSpamFree')) {
 			<img src='<?php echo $wpsf_plugin_url; ?>/img/5-stars-rating.gif' alt='' width='99' height='19' style='border-style:none;padding-top:3px;padding-bottom:0px;' /><br /><br />
 			<?php } ?>
 			
-			<strong>Documentation:</strong> <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >Plugin Homepage</a><br />
-			<strong>Tech Support:</strong> <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support</a><br />
+			<strong>Documentation:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" >Plugin Homepage</a><br />
+			<strong>Tech Support:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support</a><br />
 			<strong>Follow on Twitter:</strong> <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />			
-			<strong>Let Others Know:</strong> <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank" rel="external" >Leave Comments</a><br />
 
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
 			<input type="hidden" name="cmd" value="_s-xclick">
@@ -6346,7 +6345,7 @@ if (!class_exists('wpSpamFree')) {
 						$wpsf_perm_htaccess_file = substr(sprintf('%o', fileperms($wpsf_htaccess_file)), -4);
 						$wpsf_perm_htaccess_empty_file = substr(sprintf('%o', fileperms($wpsf_htaccess_empty_file)), -4);
 						if ( $wpsf_perm_log_dir < '0755' || !is_writable($wpsf_log_dir) || $wpsf_perm_log_file < '0644' || !is_writable($wpsf_log_file) || $wpsf_perm_log_empty_file < '0644' || !is_writable($wpsf_log_empty_file) || ( file_exists( $wpsf_htaccess_file ) && ( $wpsf_perm_htaccess_file < '0644' || !is_writable($wpsf_htaccess_file) ) ) || $wpsf_perm_htaccess_empty_file < '0644' || !is_writable($wpsf_htaccess_empty_file) ) {
-							echo '<br/>'."\n".'<span style="color:red;"><strong>The log file may not be writeable. You may need to manually correct the file permissions.<br/>Set the  permission for the "/wp-spamfree/data" directory to 755 and all files within to 644.</strong><br/>If that doesn\'t work then you may want to read the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs_5" target="_blank">FAQ</a> for this topic.</span><br/>'."\n";
+							echo '<br/>'."\n".'<span style="color:red;"><strong>The log file may not be writeable. You may need to manually correct the file permissions.<br/>Set the  permission for the "/wp-spamfree/data" directory to 755 and all files within to 644.</strong><br/>If that doesn\'t work then you may want to read the <a href="http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_faqs_5" target="_blank">FAQ</a> for this topic.</span><br/>'."\n";
 							}
 						}
 					?>
@@ -6689,9 +6688,9 @@ if (!class_exists('wpSpamFree')) {
 			
 			<p><a name="wpsf_configuration_m2"><strong>M2 - Use two methods to set cookies.</strong></a><br />This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.</p>
 
-			<p><a name="wpsf_configuration_blocked_comment_logging_mode"><strong>Blocked Comment Logging Mode</strong></a><br />This is a temporary diagnostic mode that logs blocked comment submissions for 7 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">support request</a>, and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. <em>This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)</em> </p>
+			<p><a name="wpsf_configuration_blocked_comment_logging_mode"><strong>Blocked Comment Logging Mode</strong></a><br />This is a temporary diagnostic mode that logs blocked comment submissions for 7 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank">support request</a>, and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. <em>This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)</em> </p>
 
-			<p><a name="wpsf_configuration_log_all_comments"><strong>Log All Comments</strong></a><br />Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture <em>all</em> comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">support request</a>. When we email you back we will ask you to forward the data to us by email.</p>
+			<p><a name="wpsf_configuration_log_all_comments"><strong>Log All Comments</strong></a><br />Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture <em>all</em> comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank">support request</a>. When we email you back we will ask you to forward the data to us by email.</p>
 			
 			<p>This extra data will be extremely valuable in helping us improve the spam protection capabilites of the plugin.</p>
 			
@@ -6705,7 +6704,7 @@ if (!class_exists('wpSpamFree')) {
 
 			<p><a name="wpsf_configuration_allow_proxy_users"><strong>Allow users behind proxy servers to comment?</strong></a><br />Most users should leave this unchecked. Many human spammers hide behind proxies. Leaving this unckecked adds an extra layer of spam protection. In the rare even that a non-spam commenter gets blocked by this, they will be notified what the situation is, and instructed to contact you to ask you to modify this setting.</p>
 			
-			<p><a name="wpsf_configuration_hide_extra_data"><strong>Hide extra technical data in comment notifications.</strong></a><br />The plugin now addes some extra technical data to the comment moderation and notification emails, including the referrer that brought the user to the page where they commented, the referrer that brought them to the WordPress comments processing page (helps with fighting spam), User-Agent, Remote Host, Reverse DNS, Proxy Info, Browser Language, and more. This data is helpful if you ever need to <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank">submit a spam sample</a>. If you dislike seeing the extra info, you can use this option to prevent the info from being displayed in the emails. If you don't mind seeing it, please leave it this unchecked, because if you ever need to submit a spam sample, it helps us track spam patterns.</p>
+			<p><a name="wpsf_configuration_hide_extra_data"><strong>Hide extra technical data in comment notifications.</strong></a><br />The plugin now addes some extra technical data to the comment moderation and notification emails, including the referrer that brought the user to the page where they commented, the referrer that brought them to the WordPress comments processing page (helps with fighting spam), User-Agent, Remote Host, Reverse DNS, Proxy Info, Browser Language, and more. This data is helpful if you ever need to <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank">submit a spam sample</a>. If you dislike seeing the extra info, you can use this option to prevent the info from being displayed in the emails. If you don't mind seeing it, please leave it this unchecked, because if you ever need to submit a spam sample, it helps us track spam patterns.</p>
 			
 			<p><a name="wpsf_configuration_help_promote_plugin"><strong>Help promote WP-SpamFree?</strong></a><br />This places a small link under the comments and contact form, letting others know what's blocking spam on your blog. This plugin is provided for free, so this is much appreciated. It's a small way you can give back and let others know about WP-SpamFree.</p>
 			
@@ -6718,7 +6717,7 @@ if (!class_exists('wpSpamFree')) {
 
 			<p><a name="wpsf_known_conflicts"><strong>Known Plugin Conflicts</strong></a></p>
 			
-			<p>For the most up-to-date info, view the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_known_conflicts" target="_blank" >Known Plugin Conflicts</a> list.</p>
+			<p>For the most up-to-date info, view the <a href="http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_known_conflicts" target="_blank" >Known Plugin Conflicts</a> list.</p>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
@@ -6727,7 +6726,7 @@ if (!class_exists('wpSpamFree')) {
 			<p><a name="wpsf_troubleshooting"><strong>Troubleshooting Guide / Support</strong></a></p>
 			<p>If you're having trouble getting things to work after installing the plugin, here are a few things to check:</p>
 			<ol style="list-style-type:decimal;padding-left:30px;">
-				<li>Check the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs" target="_blank">FAQ's</a>.<br />&nbsp;</li>
+				<li>Check the <a href="http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_faqs" target="_blank">FAQ's</a>.<br />&nbsp;</li>
 				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
 				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br /><strong>Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
@@ -6748,7 +6747,7 @@ if (!class_exists('wpSpamFree')) {
 			</ol>
 		</li>
         <li>On the WP-SpamFree Options page in the WordPress Admin, under <a href="#wpsf_general_options">General Options</a>, check the option "M2 - Use two methods to set cookies." and see if this helps.<br />&nbsp;</li>
-		<li>If have checked all of these, and still can't quite get it working, please submit a support request at the <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
+		<li>If have checked all of these, and still can't quite get it working, please submit a support request at the <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support Page</a>.</li>
 	</ol>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
@@ -6760,24 +6759,22 @@ if (!class_exists('wpSpamFree')) {
 			<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, there's a few things you can do to let others know:</p>
 			
 			<ul style="list-style-type:disc;padding-left:30px;">
-				<li><a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php#comments" target="_blank" >Post a comment.</a></li>
 				<li><a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" >Give WP-SpamFree a good rating</a> on WordPress.org.</li>
-				<li><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" >Place a graphic link</a>  on your site letting others know how they can help end blog spam. ( &lt/BLOGSPAM&gt; )</li>
+				<li><a href="http://www.polepositionmarketing.com/library/wp-spamfree/end-blog-spam.php" target="_blank" >Place a graphic link</a>  on your site letting others know how they can help end blog spam. ( &lt/BLOGSPAM&gt; )</li>
 			</ul>
 			
 			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
 			<p>&nbsp;</p>			
 			
-			<p><a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="<?php echo $wpsf_plugin_url; ?>/img/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" width="140" height="66" style="border-style:none;text-decoration:none;" /></a></p>
+			<p><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="<?php echo $wpsf_plugin_url; ?>/img/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" width="140" height="66" style="border-style:none;text-decoration:none;" /></a></p>
 			
 			<p><a name="wpsf_download_plugin_documentation"><strong>Download Plugin / Documentation</strong></a><br />
-			Latest Version: <a href="http://www.hybrid6.com/webgeek/downloads/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
-			Plugin Homepage / Documentation: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree" target="_blank" rel="external" >WP-SpamFree</a><br />
-			Leave Comments: <a href="http://www.hybrid6.com/webgeek/2007/11/wp-spamfree-1-wordpress-plugin-released.php" target="_blank" rel="external" >WP-SpamFree Release Announcement Blog Post</a><br />
+			Latest Version: <a href="http://downloads.wordpress.org/plugin/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
+			Plugin Homepage / Documentation: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
 			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
-			Tech Support/Questions: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
-			End Blog Spam: <a href="http://www.hybrid6.com/webgeek/plugins/wp-spamfree/end-blog-spam" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a><br />
+			Tech Support/Questions: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
+			End Blog Spam: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/end-blog-spam.php" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a><br />
 			Twitter: <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />
 
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
@@ -6831,7 +6828,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.1.0";
+			$plugin_db_version = "2.1.1.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed

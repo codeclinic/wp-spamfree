@@ -1,5 +1,5 @@
 === WP-SpamFree Anti-Spam ===
-Contributors: WebGeek
+Contributors: WP-SpamFree, WebGeek
 Donate link: http://www.hybrid6.com/spamfree-donate
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
 Requires at least: 2.1
@@ -18,8 +18,6 @@ Comment spam has been a huge problem for bloggers since the inception of blogs, 
 = New Features =
 * Now with Enhanced Comment Blacklist option! Instead of just sending comments to moderation as with WordPress's default Comment Blacklist functionality, with this turned on, anything that matchs a string in the blacklist will be completely blocked. Also adds a link in the comment notification emails that will let you blacklist a commenter's IP with one click.
 * See what's been blocked! Version 2.0 adds "Blocked Comment Logging Mode", a temporary diagnostic mode that logs blocked comments and contact form submissions for 7 days, then turns off automatically. If you want to see what's been blocked, or verify that everything is working, turn this on and see what WP-SpamFree is protecting your blog from.
-* Added option for smaller graphic counters to display spam stats, in addition to the existing normal-sized ones.
-* Added Widget for displaying spam counter. Shows small counter #1. Now you can show stats without knowing any code.
 
 = Key Features =
 1. Virtually eliminates automated comment spam from bots. It works like a firewall to ensure that your commenters are in fact, human.
@@ -103,10 +101,10 @@ If you want to modify the style of the form using CSS, all the form elements hav
 This adds a secondary non-JavaScript method to set cookies in addition to the standard JS method.
 
 **Blocked Comment Logging Mode**
-This is a temporary diagnostic mode that logs blocked comment submissions for 7 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a [support request](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support), and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)
+This is a temporary diagnostic mode that logs blocked comment submissions for 7 days, then turns off automatically. If you want to see what spam has been blocked on your site, this is the option to use. Also, if you experience any technical issues, this will help with diagnosis, as you can email this log file to support if necessary. If you suspect you are having a technical issue, please turn this on right away and start logging data. Then submit a [support request](http://www.polepositionmarketing.com/library/wp-spamfree/support.php), and we'll email you back asking to see the log file so we can help you fix whatever the issue may be. The log is cleared each time this feature is turned on, so make sure you download the file before turning it back on. Also the log is capped at 2MB for security. This feature may use slightly higher server resources, so for best performance, only use when necessary. (Most websites won't notice any difference.)
 
 **Log All Comments**
-Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture *all* comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a [support request](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support). When we email you back we will ask you to forward the data to us by email.
+Requires that Blocked Comment Logging Mode be engaged. Instead of only logging blocked comments, this will allow the log to capture *all* comments while logging mode is turned on. This provides more technical data for comment submissions than WordPress provides, and helps us improve the plugin. If you plan on submitting spam samples to us for analysis, it's helpful for you to turn this on, otherwise it's not necessary. If you have any spam comments that you feel WP-SpamFree should have blocked (usually human spam), then please submit a [support request](http://www.polepositionmarketing.com/library/wp-spamfree/support.php). When we email you back we will ask you to forward the data to us by email.
 
 This extra data will be extremely valuable in helping us improve the spam protection capabilites of the plugin.
 
@@ -125,13 +123,13 @@ These are self-explanatory.
 
 == Other Notes ==
 
-[Troubleshooting Guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting) | [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support)
+[Troubleshooting Guide](http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_troubleshooting) | [WP-SpamFree Support Page](http://www.polepositionmarketing.com/library/wp-spamfree/support.php)
 
 = Troubleshooting Guide / Support =
 
 If you're having trouble getting things to work after installing the plugin, here are a few things to check:
 
-1. Check the [FAQ's](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs).
+1. Check the [FAQ's](http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_faqs).
 
 2. If you haven't yet, please upgrade to the latest version.
 
@@ -153,28 +151,28 @@ If you're having trouble getting things to work after installing the plugin, her
 
 11. Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the `wp_head()` function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.
 
-12. Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the [Known Plugin Conflicts list](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_known_conflicts). If you've disabled any plugins on that list and still have a problem, then proceed. To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.
+12. Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the [Known Plugin Conflicts list](http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_known_conflicts). If you've disabled any plugins on that list and still have a problem, then proceed. To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.
 
 13. Make sure the theme you are using has the call to `wp_head()` (which most properly coded themes do) usually found in the header.php file. It will be located somewhere before the `</head>` tag. If not, you can insert it before the `</head>` tag and save the file. If you've never edited a theme before, proceed at your own risk: In the WordPress admin, go to Themes (Appearance) - Theme Editor; Click on Header (or header.php); Locate the line with `</head>` and insert `<?php wp_head(); ?>` before it.
 
 14. On the WP-SpamFree Options page in the WordPress Admin, under "General Options", check the option "M2 - Use two methods to set cookies." and see if this helps.
 
-15. If have checked all of these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
+15. If have checked all of these, and still can't quite get it working, please submit a support request at the [WP-SpamFree Support Page](http://www.polepositionmarketing.com/library/wp-spamfree/support.php).
 
 = Version History / Changelog =
 
-For a complete list of changes to the plugin, view the [Version History](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/version-history).
+For a complete list of changes to the plugin, view the [Version History](http://www.polepositionmarketing.com/library/wp-spamfree/version-history.php).
 
 = Updates / Documentation =
-For updates and documentation, visit the [homepage of the WP-SpamFree Comment Spam Plugin for WordPress](http://www.hybrid6.com/webgeek/plugins/wp-spamfree).
+For updates and documentation, visit the [homepage of the WP-SpamFree Comment Spam Plugin for WordPress](http://www.polepositionmarketing.com/library/wp-spamfree/).
 
 = WordPress Security Note =
-As with any WordPress plugin, for security reasons, you should only download plugins from the author's site and from official WordPress repositories. When other sites host a plugin that is developed by someone else, they may inject code into that could compromise the security of your blog. We cannot endorse a version of this that you may have downloaded from another site. If you have downloaded the "WP-SpamFree" plugin from another site, please download the current release from the [official WP-SpamFree site](http://www.hybrid6.com/webgeek/plugins/wp-spamfree) or from the [official WP-SpamFree page on WordPress.org](http://wordpress.org/extend/plugins/wp-spamfree/).
+As with any WordPress plugin, for security reasons, you should only download plugins from the author's site and from official WordPress repositories. When other sites host a plugin that is developed by someone else, they may inject code into that could compromise the security of your blog. We cannot endorse a version of this that you may have downloaded from another site. If you have downloaded the "WP-SpamFree" plugin from another site, please download the current release from the [official WP-SpamFree site](http://www.polepositionmarketing.com/library/wp-spamfree/) or from the [official WP-SpamFree page on WordPress.org](http://wordpress.org/extend/plugins/wp-spamfree/).
 
 == Frequently Asked Questions ==
 
-Please see the [FAQ's](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_faqs).
+Please see the [FAQ's](http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_faqs).
 
-Also, see the [troubleshooting guide](http://www.hybrid6.com/webgeek/plugins/wp-spamfree#wpsf_troubleshooting).
+Also, see the [troubleshooting guide](http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_troubleshooting).
 
-If you have any further questions, please submit them on the [support page](http://www.hybrid6.com/webgeek/plugins/wp-spamfree/support).
+If you have any further questions, please submit them on the [support page](http://www.polepositionmarketing.com/library/wp-spamfree/version-history.php).
