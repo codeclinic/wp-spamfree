@@ -4,7 +4,7 @@ Plugin Name: WP-SpamFree
 Plugin URI: http://www.polepositionmarketing.com/library/wp-spamfree/
 Description: An extremely powerful anti-spam plugin that virtually eliminates comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes spam-free contact form feature as well.
 Author: WP-SpamFree
-Version: 2.1.1.1
+Version: 2.1.1.2
 Author URI: http://www.polepositionmarketing.com/
 */
 
@@ -33,7 +33,7 @@ My use of the end curly braces "}" is a little funky in that I indent them, I kn
 */
 
 function spamfree_init() {
-	$wpSpamFreeVer='2.1.1.1';
+	$wpSpamFreeVer='2.1.1.2';
 	update_option('wp_spamfree_version', $wpSpamFreeVer);
 	spamfree_update_keys(0);
 	}
@@ -6264,10 +6264,10 @@ if (!class_exists('wpSpamFree')) {
 
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
 			<input type="hidden" name="cmd" value="_s-xclick">
-			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+			<input type="hidden" name="hosted_button_id" value="L2JVM2HQMKQ74">
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-			</form>	
+			</form>
 			</p>
 			
 			</div>
@@ -6779,10 +6779,10 @@ if (!class_exists('wpSpamFree')) {
 
 			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
 			<input type="hidden" name="cmd" value="_s-xclick">
-			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+			<input type="hidden" name="hosted_button_id" value="L2JVM2HQMKQ74">
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-			</form>	
+			</form>
 			</p>
 
 			<p>&nbsp;</p>
@@ -6828,7 +6828,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.1.1";
+			$plugin_db_version = "2.1.1.2";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
