@@ -1,6 +1,6 @@
 === WP-SpamFree Anti-Spam ===
 Contributors: WP-SpamFree, WebGeek
-Donate link: http://www.hybrid6.com/spamfree-donate
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9JTNSSXR8TSZU
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
 Requires at least: 2.1
 Tested up to: 3.0
