@@ -2,7 +2,7 @@
 Contributors: WP-SpamFree, WebGeek
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9JTNSSXR8TSZU
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
-Requires at least: 2.1
+Requires at least: 2.1.1.2
 Tested up to: 3.0
 Stable tag: trunk
 

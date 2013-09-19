@@ -171,7 +171,28 @@ function spamfree_counter($counter_option) {
 		return;
 		}
 	// Display Counter
-	/* Implementation: <?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?> */
+	/* Implementation: <?php if ( function_exists(spamfree_counter) ) { spamfree_counter(1); } ?>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+<style type="text/css">
+<!--
+.style1 {
+	font-size: 12px;
+	color: #006600;
+}
+-->
+</style>
+
+
+*/
 	$spamfree_count = number_format( get_option('spamfree_count') );
 	$counter_div_height = array('0','66','66','66','106','61','67','66','66','106');
 	$counter_count_padding_top = array('0','11','11','11','79','14','17','11','11','79');
@@ -623,22 +644,26 @@ function spamfree_comment_form() {
 		$server_ip_first_char = substr($_SERVER['SERVER_ADDR'], 0, 1);
 		$server_ip_fourth_char = substr($_SERVER['SERVER_ADDR'], 3, 1);
 		if ( $server_ip_first_char == '6' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a rel="nofollow" href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a> by Pole Position Marketing</p>
+'."\n";
 			}
 		else if ( $server_ip_first_char == '7' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a rel="nofollow" href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree  </a> by Pole Position Marketing</p>
+			'."\n";
 			}
 		else if ( $server_ip_first_char == '8' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a rel="nofollow" href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Comment Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else if ( $server_ip_first_char == '9' ) {
-			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree Plugin</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">WP-SpamFree by <a rel="nofollow" href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Pole Position Marketing</a>
+'."\n";
 			}
 		else if ( $server_ip_fourth_char == '5' ) {
-			echo '<p style="font-size:9px;clear:both;"><a href="http://wordpress.org/extend/plugins/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
+			echo '<p style="font-size:9px;clear:both;"><a rel="nofollow"http://wordpress.org/extend/plugins/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Anti-Spam Protection</a> by WP-SpamFree</p>'."\n";
 			}
 		else {
-			echo '<p style="font-size:9px;clear:both;">Spam Protection by <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >WP-SpamFree</a></p>'."\n";
+			echo '<p style="font-size:9px;clear:both;">WP-SpamFree by <a rel="nofollow" href="http://www.polepositionmarketing.com/library/wp-spamfree/" title="WP-SpamFree WordPress Anti-Spam Plugin" >Pole Position Marketing</a>
+'."\n";
 			}
 		}
 	
@@ -6017,10 +6042,10 @@ if (!class_exists('wpSpamFree')) {
 			$spamCount=spamfree_count();
 			$SiteURL = get_option('siteurl');
 			?>
-			<div class="wrap">
-			<h2>WP-SpamFree</h2>
+<div class="wrap">
+			<h2>WP-SpamFree </h2>
 			
-			<?php
+			 <?php
 			// Pre-2.6 compatibility
 			if ( !defined('WP_CONTENT_URL') ) {
 				define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
@@ -6047,7 +6072,7 @@ if (!class_exists('wpSpamFree')) {
 					}
 				}
 			$installation_file_test_2 				= $wpsf_plugin_path . '/img/wpsf-img.php';
-			$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsf-js.php';
+			$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsfv2-js.php';
 			
 			clearstatcache();
 			$installation_file_test_2_perm = substr(sprintf('%o', fileperms($installation_file_test_2)), -4);
@@ -6094,9 +6119,10 @@ if (!class_exists('wpSpamFree')) {
 				}
 
 			?>
-			<div style='width:600px;border-style:solid;border-width:1px;border-color:<?php echo $wp_installation_status_color; ?>;background-color:<?php echo $wp_installation_status_bg_color; ?>;padding:0px 15px 0px 15px;margin-top:15px;'>
-			<p><strong><?php echo "<img src='".$wpsf_plugin_url."/img/".$wp_installation_status_image.".png' alt='' width='24' height='24' style='border-style:none;vertical-align:middle;padding-right:7px;' /> Installation Status: <span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong></p>
-			</div>
+			 <div style="background: #FFFFCC; -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; padding: 15px; text-align: center; width: 395px; line-height: 1.6em;">
+					<a title="<?php _e('Click to visit the PluginBuddy Knowledge Base', 'it-l10n-backupbuddy');?>" href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="text-decoration: none; color: #000000;">					<strong><?php echo "<img src='http://www.polepositionmarketing.com/123.png' alt='' width='24' height='24' style='border-style:none;vertical-align:middle;padding-right:7px;' /> Installation Status: <span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong></a>
+  </div>
+
 
 			
 			<?php
@@ -6232,47 +6258,64 @@ if (!class_exists('wpSpamFree')) {
 			$spamfree_options = get_option('spamfree_options');
 			?>
 			
-			<div style="width:305px;height:250px;border-style:none;border-width:0px;border-color:#000000;padding:0px 15px 0px 15px;margin-top:15px;margin-right:15px;float:left;clear:left;">
 			
-			<p><a name="wpsf_top"><strong>Quick Navigation - Contents</strong></a></p>
 			
-			<ol style="list-style-type:decimal;padding-left:30px;">
-				<li><a href="#wpsf_general_options">General Options</a></li>
-				<li><a href="#wpsf_contact_form_options">Contact Form Options</a></li>
-				<li><a href="#wpsf_installation_instructions">Installation Instructions</a></li>
-				<li><a href="#wpsf_displaying_stats">Displaying Spam Stats on Your Blog</a></li>
-				<li><a href="#wpsf_adding_contact_form">Adding a Contact Form to Your Blog</a></li>
-				<li><a href="#wpsf_configuration">Configuration Information</a></li>
-				<li><a href="#wpsf_known_conflicts">Known Plugin Conflicts</a></li>
-				<li><a href="#wpsf_troubleshooting">Troubleshooting Guide / Support</a></li>
-				<li><a href="#wpsf_let_others_know">Let Others Know About WP-SpamFree</a></li>
-				<li><a href="#wpsf_download_plugin_documentation">Download Plugin / Documentation</a></li>
-			</ol>
-			</div>
-			
-			<div style="width:250px;height:250px;border-style:solid;border-width:1px;border-color:#000033;background-color:#CCCCFF;padding:0px 15px 0px 15px;margin-top:15px;margin-right:15px;float:left;">
-			
-			<p>
-			<?php if ( $spamCount > 100 ) { ?>
-			<strong>Happy with WP-SpamFree?</strong><br /> Let others know by <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >giving it a good rating</a> on WordPress.org!<br />
-			<img src='<?php echo $wpsf_plugin_url; ?>/img/5-stars-rating.gif' alt='' width='99' height='19' style='border-style:none;padding-top:3px;padding-bottom:0px;' /><br /><br />
-			<?php } ?>
-			
-			<strong>Documentation:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" >Plugin Homepage</a><br />
-			<strong>Tech Support:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support</a><br />
-			<strong>Follow on Twitter:</strong> <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />			
-
-			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
-			<input type="hidden" name="cmd" value="_s-xclick">
-			<input type="hidden" name="hosted_button_id" value="L2JVM2HQMKQ74">
-			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			</form>
-			</p>
-			
-			</div>
-
-
+			<table width="817" bordercolor="#ECE9D8" bgcolor="#D4E4EE">
+              <tr>
+                <td width="514"><ol style="list-style-type:decimal;padding-left:30px;">
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"> General Options</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_contact_form_options"> Contact Form Options</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_installation_instructions"> Installation Instructions</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_displaying_stats"> Displaying Spam Stats on Your Blog</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_adding_contact_form"> Adding a Contact Form to Your Blog</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_configuration"> Configuration Information</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_known_conflicts"> Known Plugin Conflicts</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_troubleshooting"> Troubleshooting Guide / Support</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_let_others_know"> Let Others Know About WP-SpamFree</a></li>
+                    <li><a href="#wpsf_general_options"><img src="http://polepositionmarketing.com/wp-content/1312.png" width="20" height="20"></a><a href="#wpsf_download_plugin_documentation"> Download Plugin / Documentation</a></li>
+                  </ol>
+                <td width="293" height="342"><table width="291" height="49" border="0">
+                    <tr>
+                      <td width="285" height="43"><div align="center"><a href="http://www.polepositionmarketing.com/emp-media/download/wp-spamfree.zip">   WP-SpamFree v2.1.1.2 </a><a href="http://www.polepositionmarketing.com/emp-media/download/wp-spamfree.zip"><img src="http://www.polepositionmarketing.com/plug.jpg" width="21" height="23"></a> </div></td>
+                    </tr>
+                  </table>
+                    <table width="290" border="0">
+                      <tr>
+                        <td><?php if ( $spamCount > 100 ) { ?>
+                          <p align="center">Let others know by <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >giving it a good rating</a> on WordPress.org!</p></td>
+                      </tr>
+                    </table>
+                    <table width="293" height="77" border="0">
+                      <tr>
+                        <td><div align="center">
+                          <p><strong>
+                          <?php } ?>
+                Documentation:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" >Plugin Homepage</a><br />
+                <strong>Tech Support:</strong> <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support</a></p>
+                          </div></td>
+                      </tr>
+                    </table>
+                    <table width="292" height="48" border="0">
+                      <tr>
+                        <td height="42"><div align="center">
+                          <p><strong>Follow on Twitter:</strong> <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a></p>
+                          </div></td>
+                      </tr>
+                    </table>
+                    <table width="292" border="0">
+                      <tr>
+                        <td height="29"><div align="center">
+                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                              <input type="hidden" name="cmd" value="_s-xclick">
+                              <input type="hidden" name="hosted_button_id" value="AJHKM4CMJ7XSC">
+                              <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                              <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                            </form>
+                        </div></td>
+                      </tr>
+                    </table>
+              </tr>
+            </table>
 			<p style="clear:both;">&nbsp;</p>
 			
 			<p><a name="wpsf_general_options"><strong>General Options</strong></a></p>
@@ -6728,15 +6771,17 @@ if (!class_exists('wpSpamFree')) {
 			<ol style="list-style-type:decimal;padding-left:30px;">
 				<li>Check the <a href="http://www.polepositionmarketing.com/library/wp-spamfree/#wpsf_faqs" target="_blank">FAQ's</a>.<br />&nbsp;</li>
 				<li>If you haven't yet, please upgrade to the latest version.<br />&nbsp;</li>
-				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br /><strong>Currently your plugin is: <?php echo "<span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong><br />&nbsp;</li>
+				<li>Check to make sure the plugin is installed properly. Many support requests for this plugin originate from improper installation and can be easily prevented. To check proper installation status, go to the WP-SpamFree page in your Admin. It's a submenu link on the Plugins page. Go the the 'Installation Status' area near the top and it will tell you if the plugin is installed correctly. If it tells you that the plugin is not installed correctly, please double-check what directory you have installed WP-SpamFree in, delete any WP-SpamFree files you have uploaded to your server, re-read the Installation Instructions, and start the Installation process over from step 1.<br />&nbsp;<br /><strong>Currently your plugin is: <a title="<?php _e('Click to visit the PluginBuddy Knowledge Base', 'it-l10n-backupbuddy');?>" href="http://www.polepositionmarketing.com/library/wp-spamfree/" style="text-decoration: none; color: #000000;"><strong><?php echo "<img src='http://www.clker.com/cliparts/1/f/c/1/12379140591570510706dholler_ok.svg.thumb.png' alt='' width='24' height='24' style='border-style:none;vertical-align:middle;padding-right:7px;' /> Installation Status: <span style='color:".$wp_installation_status_color.";'>".$wp_installation_status_msg_main."</span>"; ?></strong></a></strong><br />&nbsp;</li>
 				<li>Clear your browser's cache, clear your cookies, and restart your browser. Then reload the page.<br />&nbsp;</li>
 				<li>If you are receiving the error message: "Sorry, there was an error. Please enable JavaScript and Cookies in your browser and try again." then you need to make sure <em>JavaScript</em> and <em>cookies</em> are enabled in your browser. (JavaScript is different from Java. Java is not required.) These are enabled by default in web browsers. The status display will let you know if these are turned on or off (as best the page can detect - occasionally the detection does not work.) If this message comes up consistently even after JavaScript and cookies are enabled, then there most likely is an installation problem, plugin conflict, or JavaScript conflict. Read on for possible solutions.<br />&nbsp;</li>
 				<li>If you have multiple domains that resolve to the same server, or are parked on the same hosting account, make sure the domain set in the WordPress configuration options matches the domain where you are accessing the blog from. In other words, if you have people going to your blog using http://www.yourdomain.com/ and the WordPress configuration has: http://www.yourdomain2.com/ you will have a problem (not just with this plugin, but with a lot of things.)<br />&nbsp;</li>
 				<li>Check your WordPress Version. If you are using a release earlier than 2.3, you may want to upgrade for a whole slew of reasons, including features and security.<br />&nbsp;</li>
 				<li>Check the options you have selected to make sure they are not disabling a feature you want to use.<br />&nbsp;</li>
-				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />&nbsp;</li>
-				<li>Visit http://www.yourblog.com/wp-content/plugins/wp-spamfree/js/wpsf-js.php (where <em>yourblog.com</em> is your blog url) and check two things. <br />&nbsp;<br /><strong>First, see if the file comes normally or if it comes up blank or with errors.</strong> That would indicate a problem. Submit a support request (see last troubleshooting step) and copy and past any error messages on the page into your message. <br />&nbsp;<br /><strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />&nbsp;</li>
-        <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the <code>wp_head()</code> function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.<br />&nbsp;</li>
+				<li>Make sure that you are not using other front-end anti-spam plugins (CAPTCHA's, challenge questions, etc) since there's no longer a need for them, and these could likely conflict. (Back-end anti-spam plugins like Akismet are fine, although unnecessary.)<br />
+				  <br />
+			  <strong>Second, check for a 403 Forbidden error.</strong> That means there is a problem with your file permissions. If the files in the wp-spamfree folder don't have standard permissions (at least 644 or higher) they won't work. This usually only happens by manual modification, but strange things do happen. <strong>The <em>AskApache Password Protect Plugin</em> is known to cause this error.</strong> Users have reported that using its feature to protect the /wp-content/ directory creates an .htaccess file in that directory that creates improper permissions and conflicts with WP-SpamFree (and most likely other plugins as well). You'll need to disable this feature, or disable the <em>AskApache Password Protect Plugin</em> and delete any .htaccess files it has created in your /wp-content/ directory before using WP-SpamFree.<br />
+			  &nbsp;</li>
+			  <li>Check for conflicts with other JavaScripts installed on your site. This usually occurs with with JavaScripts unrelated to WordPress or plugins. However some themes contain JavaScripts that aren't compatible. (And some don't have the call to the <code>wp_head()</code> function which is also a problem. Read on to see how to test/fix this issue.) If in doubt, try switching themes. If that fixes it, then you know the theme was at fault. If you discover a conflicting theme, please let us know.<br />&nbsp;</li>
         <li>Check for conflicts with other WordPress plugins installed on your blog. Although errors don't occur often, this is one of the most common causes of the errors that do occur. I can't guarantee how well-written other plugins will be. First, see the <a href="#wpsf_known_conflicts">Known Plugin Conflicts</a> list. If you've disabled any plugins on that list and still have a problem, then proceed. <br />&nbsp;<br />To start testing for conflicts, temporarily deactivate all other plugins except WP-SpamFree. Then check to see if WP-SpamFree works by itself. (For best results make sure you are logged out and clear your cookies. Alternatively you can use another browser for testing.) If WP-SpamFree allows you to post a comment with no errors, then you know there is a plugin conflict. The next step is to activate each plugin, one at a time, log out, and try to post a comment. Then log in, deactivate that plugin, and repeat with the next plugin. (If possible, use a second browser to make it easier. Then you don't have to keep logging in and out with the first browser.) Be sure to clear cookies between attempts (before loading the page you want to comment on). If you do identify a plugin that conflicts, please let me know so I can work on bridging the compatibility issues.<br />&nbsp;</li>
 		<li>Make sure the theme you are using has the call to <code>wp_head()</code> (which most properly coded themes do) usually found in the <code>header.php</code> file. It will be located somewhere before the <code>&lt;/head&gt;</code> tag. If not, you can insert it before the <code>&lt;/head&gt;</code> tag and save the file. If you've never edited a theme before, proceed at your own risk: <br />&nbsp;
 			<ol style="list-style-type:decimal;padding-left:30px;">
@@ -6754,47 +6799,10 @@ if (!class_exists('wpSpamFree')) {
 
 			<p>&nbsp;</p>
 			
-  			<p><a name="wpsf_let_others_know"><strong>Let Others Know About WP-SpamFree</strong></a></p>
-	
-			<p><strong>How does it feel to blog without being bombarded by automated comment spam?</strong> If you're happy with WP-SpamFree, there's a few things you can do to let others know:</p>
-			
-			<ul style="list-style-type:disc;padding-left:30px;">
-				<li><a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" >Give WP-SpamFree a good rating</a> on WordPress.org.</li>
-				<li><a href="http://www.polepositionmarketing.com/library/wp-spamfree/end-blog-spam.php" target="_blank" >Place a graphic link</a>  on your site letting others know how they can help end blog spam. ( &lt/BLOGSPAM&gt; )</li>
-			</ul>
-			
-			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
 
-			<p>&nbsp;</p>			
-			
-			<p><a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" style="border-style:none;text-decoration:none;" ><img src="<?php echo $wpsf_plugin_url; ?>/img/end-blog-spam-button-01-black.png" alt="End Blog Spam! WP-SpamFree Comment Spam Protection for WordPress" width="140" height="66" style="border-style:none;text-decoration:none;" /></a></p>
-			
-			<p><a name="wpsf_download_plugin_documentation"><strong>Download Plugin / Documentation</strong></a><br />
-			Latest Version: <a href="http://downloads.wordpress.org/plugin/wp-spamfree.zip" target="_blank" rel="external" >Download Now</a><br />
-			Plugin Homepage / Documentation: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
-			WordPress.org Page: <a href="http://wordpress.org/extend/plugins/wp-spamfree/" target="_blank" rel="external" >WP-SpamFree</a><br />
-			Tech Support/Questions: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/support.php" target="_blank" rel="external" >WP-SpamFree Support Page</a><br />
-			End Blog Spam: <a href="http://www.polepositionmarketing.com/library/wp-spamfree/end-blog-spam.php" target="_blank" rel="external" >Let Others Know About WP-SpamFree!</a><br />
-			Twitter: <a href="http://twitter.com/WPSpamFree" target="_blank" rel="external" >@WPSpamFree</a><br />
-
-			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="margin-top:10px;">
-			<input type="hidden" name="cmd" value="_s-xclick">
-			<input type="hidden" name="hosted_button_id" value="L2JVM2HQMKQ74">
-			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-			<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			</form>
-			</p>
-
-			<p>&nbsp;</p>
 
 			<p><em><?php echo $wpSpamFreeVerAdmin; ?></em></p>
-	
-			<p><div style="float:right;font-size:12px;">[ <a href="#wpsf_top">BACK TO TOP</a> ]</div></p>
-
-			<p>&nbsp;</p>
-
-			<p>&nbsp;</p>
-			</div>
+</div>
 			<?php
 			}
 
@@ -6818,7 +6826,7 @@ if (!class_exists('wpSpamFree')) {
 					}
 				else {
 					echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS BEGIN -->'."\n";
-					echo '<script type="text/javascript" src="'.$wpsf_plugin_url.'/js/wpsf-js.php"></script> '."\n";
+					echo '<script type="text/javascript" src="'.$wpsf_plugin_url.'/js/wpsfv2-js.php"></script> '."\n";
 					echo '<!-- Protected by WP-SpamFree'.$wpSpamFreeVerJS.' :: JS END -->'."\n";
 					}				
 				echo "\n";
@@ -6828,7 +6836,7 @@ if (!class_exists('wpSpamFree')) {
 		
 		function install_on_activation() {
 			global $wpdb;
-			$plugin_db_version = "2.1.1.2";
+			$plugin_db_version = "2.1.1.1";
 			$installed_ver = get_option('wp_spamfree_version');
 			$spamfree_options = get_option('spamfree_options');
 			//only run installation if not installed or if previous version installed
@@ -6933,7 +6941,7 @@ if (!class_exists('wpSpamFree')) {
 				$wpsf_plugin_url = WP_CONTENT_URL.'/plugins/'.plugin_basename(dirname(__FILE__));
 			
 				$installation_file_test_2 				= $wpsf_plugin_path . '/img/wpsf-img.php';
-				$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsf-js.php';
+				$installation_file_test_3 				= $wpsf_plugin_path . '/js/wpsfv2-js.php';
 				
 				clearstatcache();
 				$installation_file_test_2_perm = substr(sprintf('%o', fileperms($installation_file_test_2)), -4);
@@ -6955,5 +6963,11 @@ if (!class_exists('wpSpamFree')) {
 if (class_exists('wpSpamFree')) {
 	$wpSpamFree = new wpSpamFree();
 	}
+
+
+
+
+
+
 
 ?>
