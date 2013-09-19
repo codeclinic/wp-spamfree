@@ -2,9 +2,9 @@
 Contributors: WP-SpamFree, Aziz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AJHKM4CMJ7XSC
 Tags: spam, antispam, anti-spam, comments, comment, wp-spamfree, plugin, security, wordpress, javascript, contact, form, wpmu
-Requires at least: 2.1.1.2
+Requires at least: 2.1
 Tested up to: 3.0
-Stable tag: trunk
+Stable tag: 2.1.1.2
 
 Powerful anti-spam plugin that eliminates blog comment spam. Finally, you can enjoy a spam-free WordPress blog! Includes contact form.
 
